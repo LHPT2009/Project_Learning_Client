@@ -28,8 +28,6 @@ export default function History() {
     <div
       className="login-container"
       style={{
-        width: '100%',
-        height: '100vh',
         background: `#ECF3F4`,
         display: 'flex',
         justifyContent: 'center',
@@ -39,11 +37,11 @@ export default function History() {
       <Form
         name="basic"
         style={{
-          width: '1800px',
-          height: '900px',
+          width: '1700px',
           background: 'white',
           borderRadius: '10px',
           padding: '50px',
+          margin: '50px 0px',
         }}
         initialValues={{ remember: true }}
         autoComplete="off"
@@ -71,7 +69,16 @@ export default function History() {
           align="middle"
           style={{ display: '', justifyContent: 'space-between' }}
         >
-          <Col xs={24} sm={24} md={24} lg={12} style={{ borderRight: '2px solid #ddd' }}>
+          <Col
+            xs={24}
+            sm={24}
+            md={24}
+            lg={12}
+            style={{
+              borderRight: '1px solid #ddd',
+              ...(window.innerWidth <= 767 && { borderRight: 'none' }),
+            }}
+          >
             <Row gutter={[16, 16]} align="middle">
               <div>
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#005761' }}>
@@ -80,32 +87,28 @@ export default function History() {
               </div>
             </Row>
             <Row gutter={[16, 16]} align="middle">
-              <Col xs={24} sm={24} md={24} lg={12}>
-                <Row xs={24} sm={24} md={24} lg={12}>
-                  <div>
-                    <h5 style={{ fontSize: '15px' }}>Tên khách hàng:</h5>
-                    <h5 style={{ fontSize: '15px' }}>Số điện thoại:</h5>
-                    <h5 style={{ fontSize: '15px' }}>Giới tính:</h5>
-                    <h5 style={{ fontSize: '15px' }}>Ngày sinh:</h5>
-                    <h5 style={{ fontSize: '15px' }}>Địa chỉ:</h5>
-                    <h5 style={{ fontSize: '15px' }}>Lý do khám:</h5>
-                    <h5 style={{ fontSize: '15px' }}>Phương thức thanh toán:</h5>
-                    <h5 style={{ fontSize: '15px' }}>Chi phí khám:</h5>
-                    <h5 style={{ fontSize: '15px' }}>Phí đặt lịch:</h5>
-                    <h5 style={{ fontSize: '15px' }}>Tổng cộng:</h5>
-                  </div>
-                </Row>
+              <Col span={12}>
+                <div>
+                  <h5 style={{ fontSize: '15px' }}>Tên khách hàng:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Số điện thoại:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Giới tính:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Ngày sinh:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Địa chỉ:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Lý do khám:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Phương thức thanh toán:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Chi phí khám:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Phí đặt lịch:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Tổng cộng:</h5>
+                </div>
               </Col>
-              <Col xs={24} sm={24} md={24} lg={12}>
-                <Row xs={24} sm={24} md={24} lg={12}>
-                  <div>
-                    {Object.values(bookingInfo).map((value, index) => (
-                      <h5 key={index} style={{ fontSize: '15px' }}>
-                        {value}
-                      </h5>
-                    ))}
-                  </div>
-                </Row>
+              <Col span={12}>
+                <div>
+                  {Object.values(bookingInfo).map((value, index) => (
+                    <h5 key={index} style={{ fontSize: '15px' }}>
+                      {value}
+                    </h5>
+                  ))}
+                </div>
               </Col>
             </Row>
           </Col>
@@ -119,25 +122,21 @@ export default function History() {
               </div>
             </Row>
             <Row gutter={[16, 16]} align="middle">
-              <Col xs={24} sm={24} md={24} lg={12}>
-                <Row xs={24} sm={24} md={24} lg={12}>
-                  <div>
-                    <h5 style={{ fontSize: '15px' }}>Tên bác sĩ:</h5>
-                    <h5 style={{ fontSize: '15px' }}>Chuyên khoa:</h5>
-                    <h5 style={{ fontSize: '15px' }}>Bệnh viện:</h5>
-                  </div>
-                </Row>
+              <Col span={12}>
+                <div>
+                  <h5 style={{ fontSize: '15px' }}>Tên bác sĩ:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Chuyên khoa:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Bệnh viện:</h5>
+                </div>
               </Col>
-              <Col xs={24} sm={24} md={24} lg={12}>
-                <Row xs={24} sm={24} md={24} lg={12}>
-                  <div>
-                    {Object.values(doctorInfo).map((value, index) => (
-                      <h5 key={index} style={{ fontSize: '15px' }}>
-                        {value}
-                      </h5>
-                    ))}
-                  </div>
-                </Row>
+              <Col span={12}>
+                <div>
+                  {Object.values(doctorInfo).map((value, index) => (
+                    <h5 key={index} style={{ fontSize: '15px' }}>
+                      {value}
+                    </h5>
+                  ))}
+                </div>
               </Col>
             </Row>
             <Row gutter={[16, 16]} align="middle" style={{ marginTop: '95px' }}>
@@ -148,25 +147,21 @@ export default function History() {
               </div>
             </Row>
             <Row gutter={[16, 16]} align="middle">
-              <Col xs={24} sm={24} md={24} lg={12}>
-                <Row xs={24} sm={24} md={24} lg={12}>
-                  <div>
-                    <h5 style={{ fontSize: '15px' }}>Khung giờ khám:</h5>
-                    <h5 style={{ fontSize: '15px' }}>Ngày khám:</h5>
-                    <h5 style={{ fontSize: '15px' }}>Địa chỉ :</h5>
-                  </div>
-                </Row>
+              <Col span={12}>
+                <div>
+                  <h5 style={{ fontSize: '15px' }}>Khung giờ khám:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Ngày khám:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Địa chỉ :</h5>
+                </div>
               </Col>
-              <Col xs={24} sm={24} md={24} lg={12}>
-                <Row xs={24} sm={24} md={24} lg={12}>
-                  <div>
-                    {Object.values(detailBooking).map((value, index) => (
-                      <h5 key={index} style={{ fontSize: '15px' }}>
-                        {value}
-                      </h5>
-                    ))}
-                  </div>
-                </Row>
+              <Col span={12}>
+                <div>
+                  {Object.values(detailBooking).map((value, index) => (
+                    <h5 key={index} style={{ fontSize: '15px' }}>
+                      {value}
+                    </h5>
+                  ))}
+                </div>
               </Col>
             </Row>
           </Col>

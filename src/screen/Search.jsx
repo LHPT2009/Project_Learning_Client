@@ -1,5 +1,9 @@
-import { Image, Input } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Input, Typography, Button, Flex, Avatar, Layout } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+const { Text, Title } = Typography;
+const { Content } = Layout;
+
 const Search = () => {
   const specialityList = [
     {
@@ -59,64 +63,132 @@ const Search = () => {
       speciality: 'Tai Mũi Họng - Nhi khoa',
     },
   ];
+
+  //
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const updateWindowWidth = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', updateWindowWidth);
+
+    return () => {
+      window.removeEventListener('resize', updateWindowWidth);
+    };
+  }, [window.innerWidth]);
+
   return (
-    <div>
-      <>
-        <Input
-          addonBefore={<SearchOutlined />}
-          placeholder="Tìm kiếm"
-          size="large"
+    <Content style={{ padding: windowWidth > 600 ? '0px 100px' : '0px 20px' }}>
+      <Input
+        addonBefore={<SearchOutlined />}
+        size="large"
+        placeholder="Tìm kiếm"
+        style={{
+          margin: '20px 0',
+          borderRadius: '6px',
+        }}
+        variant="outlined"
+      />
+      <Title
+        level={5}
+        style={{
+          color: '#005761',
+          fontWeight: 'bold',
+        }}
+      >
+        Chuyên khoa
+      </Title>
+      {specialityList.map((item, index) => (
+        <Button
+          type="text"
+          key={index}
           style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '10vh',
-            margin: 'auto',
-            borderRadius: '20px',
+            color: '#000',
+            height: '50px',
+            margin: '10px 0',
+            padding: '0',
+            width: '100%',
+            textAlign: 'left',
           }}
-        />
-      </>
-      <div>
-        <h3 style={{ color: '#005761' }}>Chuyên khoa</h3>
-      </div>
-      <div>
-        {specialityList.map((item, index) => (
-          <div key={index} style={{ marginBottom: '10px' }}>
-            <Image src={item.src} style={{ width: '50px', height: '50px' }} />
-            <span>{item.text}</span>
-          </div>
-        ))}
-      </div>
-      <div>
-        <h3 style={{ color: '#005761' }}>Bệnh viện</h3>
-      </div>
-      <div>
-        {hospitalList.map((item, index) => (
-          <div key={index} style={{ marginBottom: '10px' }}>
-            <div>
-              <Image src={item.src} style={{ width: '40px', height: '40px' }} />
-              <span> {item.text}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div>
-        <h3 style={{ color: '#005761' }}>Bác sĩ</h3>
-      </div>
-      <div>
-        {doctorList.map((item, index) => (
-          <div key={index} style={{ marginBottom: '10px' }}>
-            <div>
-              <Image src={item.src} style={{ width: '40px', height: '40px' }} />
-              <div style={{ display: 'inline-block', marginLeft: '10px', marginTop: '10px' }}>
-                <div>{item.doctorName}</div>
-                <div>{item.speciality}</div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+        >
+          <Avatar
+            shape="square"
+            preview={false}
+            src={item.src}
+            style={{ width: '50px', height: '50px', marginRight: '10px' }}
+          />
+          <Text>{item.text}</Text>
+        </Button>
+      ))}
+      <Title
+        level={5}
+        style={{
+          color: '#005761',
+          fontWeight: 'bold',
+        }}
+      >
+        Bệnh viện
+      </Title>
+      {hospitalList.map((item, index) => (
+        <Button
+          type="text"
+          key={index}
+          style={{
+            color: '#000',
+            height: '50px',
+            margin: '10px 0',
+            padding: '0',
+            width: '100%',
+            textAlign: 'left',
+          }}
+        >
+          <Avatar
+            shape="square"
+            preview={false}
+            src={item.src}
+            style={{ width: '50px', height: '50px', marginRight: '10px' }}
+          />
+          <Text>{item.text}</Text>
+        </Button>
+      ))}
+      <Title
+        level={5}
+        style={{
+          color: '#005761',
+          fontWeight: 'bold',
+        }}
+      >
+        Bác sĩ
+      </Title>
+      {doctorList.map((item, index) => (
+        <Button
+          type="text"
+          key={index}
+          style={{
+            color: '#000',
+            height: '60px',
+            margin: '10px 0',
+            padding: '0',
+            width: '100%',
+            textAlign: 'left',
+          }}
+        >
+          <Avatar
+            shape="circle"
+            preview={false}
+            src={item.src}
+            style={{ width: '50px', height: '50px', marginRight: '10px', marginTop: '-30px' }}
+          />
+          <Text>
+            {item.doctorName}
+            <br />
+            {item.speciality}
+          </Text>
+        </Button>
+      ))}
+    </Content>
   );
 };
 

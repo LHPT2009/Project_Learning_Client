@@ -1,28 +1,41 @@
 import React from 'react';
-import { Button, Result } from 'antd';
+import { Button, Image, Space, Typography } from 'antd';
+import SuccessImage from '../asset/image/Success.png';
+
+const { Title } = Typography;
+
 export default function Success() {
   return (
     <div
       style={{
         background: '#ECF3F4',
-        height: '100vh',
+        height: '70vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
       }}
     >
-      <div style={{ borderRadius: '20px', background: '#FFF', width: '600px' }}>
-        <Result
-          status="success"
-          title="Successfully Booking"
-          subTitle="Transaction number: 2017182818828182881 "
-          extra={[
-            <Button key="console" style={{ background: '#00ADB3', color: 'white' }}>
-              Xem lịch sử đặt lịch
-            </Button>,
-          ]}
+      <Space
+        direction="vertical"
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Image
+          key="custom-image"
+          alt="Custom Image"
+          src={SuccessImage}
+          style={{ width: '237px', height: '237px' }}
         />
-      </div>
+        <Title level={2} style={{ lineHeight: '15px' }}>
+          Bạn đã đặt lịch thành công!
+        </Title>
+        <Button type="primary" size="large" style={{ backgroundColor: '#00ADB3' }}>
+          Trở lại trang chủ
+        </Button>
+      </Space>
     </div>
   );
 }
