@@ -1,112 +1,88 @@
-import { Button, Avatar, Select, Menu, Image, Layout } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import React from 'react';
-import LogoClinic from '../../asset/image/Logo.png';
-import America from '../../asset/image/America.png';
-import Vietnam from '../../asset/image/Vietnam.png';
+import './style.css';
+import React, { useState } from 'react';
+import { Drawer, Menu } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
+const MenuComponent = () => {
+  const [openMenu, setOpenMenu] = useState(false);
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-
-const { Header } = Layout;
-
-const items = [
-  {
-    key: '1',
-    icon: <UserOutlined />,
-    label: 'Hồ sơ cá nhân',
-  },
-  {
-    key: '2',
-    icon: <FontAwesomeIcon icon={faArrowRightFromBracket} />,
-    label: 'Đăng xuất',
-  },
-];
-
-const lngs = {
-  vn: { nativeName: 'Vietnam', image: Vietnam },
-  en: { nativeName: 'English', image: America },
-};
-
-const HeaderLayout = () => {
-  const { Option } = Select;
   return (
-    <Header
+    <div
       style={{
-        backgroundColor: '#0B111D',
-        padding: '0px 100px',
+        position: 'fixed', // Add this line
+        width: '100%', // Add this line to make it full-width
+        top: 0, // Add this line to position it at the top
+        zIndex: 1000, // Add this line to make sure it's on top of other elements
       }}
     >
-      <Menu
-        theme="dark"
-        mode="horizontal"
+      <div
         style={{
-          backgroundColor: '#0B111D',
-          color: '#fff',
-          display: 'flex',
+          backgroundColor: 'darkorange',
+          height: '60px',
+          paddingLeft: '12px',
+          paddingTop: '12px',
+          position: 'fixed', // Add this line
+          width: '100%', // Add this line to make it full-width
+          top: 0, // Add this line to position it at the top
+          zIndex: 1000, // Add this line to make sure it's on top of other elements
         }}
-        defaultActiveFirst={false}
-        activeKey={null}
-        defaultSelectedKeys={[]}
-        selectedKeys={[]}
+        className="menuIcon"
       >
-        <Menu.Item style={{ flex: 1 }}>
-          <Image src={LogoClinic} height="44px" width="134px" alt="Logo Clinic" preview={false} />
-        </Menu.Item>
-        <Menu.Item>
-          <Select
-            defaultValue="vn"
-            allowClear={false}
-            size="large"
-            style={{ marginTop: '3px', width: '80px', backgroundColor: '#1E212D' }}
-          >
-            {Object.keys(lngs).map((lng) => (
-              <Option key={lng} value={lng}>
-                <Avatar
-                  shape="square"
-                  style={{ marginRight: '35px', width: '38px', height: '30px' }}
-                  src={lngs[lng].image}
-                  alt="avatar"
-                />
-              </Option>
-            ))}
-          </Select>
-        </Menu.Item>
-        <Menu.Item>
-          <Button
-            type="primary"
-            size="large"
-            style={{ backgroundColor: '#00ADB3', width: '120px' }}
-          >
-            Đặt lịch
-          </Button>
-        </Menu.Item>
-        <Menu.Item>
-          <Button
-            type="primary"
-            size="large"
-            style={{ backgroundColor: '#00ADB3', width: '120px' }}
-          >
-            Đăng nhập
-          </Button>
-        </Menu.Item>
-        <Menu.Item>
-          <Button
-            type="default"
-            size="large"
-            style={{
-              border: '2px solid #00ADB3',
-              backgroundColor: '#0B111D',
-              color: '#00ADB3',
-              width: '120px',
-            }}
-          >
-            Đăng ký
-          </Button>
-        </Menu.Item>
-      </Menu>
-    </Header>
+        <MenuOutlined
+          style={{ color: 'white', fontSize: '30px' }}
+          onClick={() => {
+            setOpenMenu(true);
+          }}
+        />
+      </div>
+      <span className="headerMenu">
+        <ListMenu />
+      </span>
+      <Drawer
+        open={openMenu}
+        placement="left"
+        onClose={() => {
+          setOpenMenu(false);
+        }}
+        closable={false}
+        bodyStyle={{ backgroundColor: 'darkorange' }}
+      >
+        <ListMenu isInline />
+      </Drawer>
+    </div>
   );
 };
 
-export default HeaderLayout;
+const ListMenu = ({ isInline = false }) => {
+  return (
+    <Menu
+      mode={isInline ? 'inline' : 'horizontal'}
+      style={{
+        backgroundColor: 'darkorange',
+        color: 'white',
+        fontSize: 24,
+        border: 'none',
+        height: '60px',
+      }}
+      items={[
+        {
+          label: 'Home',
+          key: 'home',
+        },
+        {
+          label: 'Contact Us',
+          key: 'contact',
+        },
+        {
+          label: 'About Us',
+          key: 'about',
+        },
+        {
+          label: 'Login',
+          key: 'login',
+        },
+      ]}
+    ></Menu>
+  );
+};
+
+export default MenuComponent;

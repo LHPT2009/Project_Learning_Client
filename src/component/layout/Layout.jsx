@@ -8,7 +8,9 @@ const { Content } = Layout;
 export default function LayoutPro({ children }) {
   return (
     <Layout style={{ height: 'auto' }}>
-      <HeaderLayout />
+      <div style={{ marginBottom: '60px' }}>
+        <HeaderLayout />
+      </div>
       <Content>{children}</Content>
       <FooterLayout />
     </Layout>
