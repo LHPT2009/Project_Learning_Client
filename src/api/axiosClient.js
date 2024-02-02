@@ -1,9 +1,11 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const axiosClient = axios.create({
-  baseURL: 'https://api.com/', // input API from BE
+  baseURL: 'http://localhost:8080', // input API from BE
   headers: {
     'Content-Type': 'application/json',
+    Authorization: `Bearer ${Cookies.get('accessToken')}`,
   },
 });
 

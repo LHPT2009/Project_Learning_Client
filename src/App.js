@@ -1,13 +1,17 @@
 import NotFound from 'screen/NotFound';
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
-import Booking from 'screen/Booking';
-import HomePage from 'screen/HomePage';
-import Search from 'screen/Search';
-import History from 'screen/History';
-import ListDoctor from 'screen/ListDoctor';
-import Success from 'screen/Success';
+import Booking from './screen/Booking';
+import HomePage from './screen/HomePage';
+import Search from './screen/Search';
+import History from './screen/History';
+import ListDoctor from './screen/ListDoctor';
+import Success from './screen/Success';
 import Layout from './component/layout/Layout';
+import LoginUser from 'screen/LoginUser';
+import Register from 'screen/Register';
+import ForgotPassword from 'screen/ForgotPassword';
+import Reset from 'screen/Reset';
 
 function App() {
   return (
@@ -24,6 +28,10 @@ function App() {
                 <Route path="/list" element={<ListDoctor />} />
                 <Route path="/history" element={<History />} />
                 <Route path="/success" element={<Success />} />
+                <Route path="/login" element={<LoginUser />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/forgot" element={<ForgotPassword />} />
+                <Route path="/reset" element={<Reset />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>
