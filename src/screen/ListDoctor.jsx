@@ -1,14 +1,63 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Select, Col, Row, Image, Button, Layout, Space, Typography, Flex } from 'antd';
 import { EnvironmentOutlined, CalendarOutlined } from '@ant-design/icons';
+import { useLocation } from 'react-router-dom';
+
 import bglist from '../asset/image/Background_List.png';
+import { fetchDoctorsBySpecialty } from '../features/Doctor/doctorSlice';
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import 'dayjs/locale/vi';
+
+dayjs.extend(timezone);
+dayjs.locale('vi'); // Đặt ngôn ngữ mặc định là tiếng Việt
 
 const { Content, Header } = Layout;
 const { Text, Title, Link } = Typography;
 const ListDotor = () => {
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
+  const { Option } = Select;
+
+  // const [selectDay, setSelectDay] = useState('');
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const specialists = searchParams.get('specialists');
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchDoctorsBySpecialty(specialists));
+  }, []);
+
+  const arrdoctorsbyspecialty = useSelector((state) => state.doctor.doctorsspecialty);
+
+  // const [arrDate, setArrDate] = useState([]);
+
+  // const CalDate = () => {
+  //   dayjs.tz.setDefault('Asia/Ho_Chi_Minh'); // Set múi giờ cho Việt Nam
+  //   const currentDate = dayjs().add(1, 'day');
+  //   const newDates = [];
+
+  //   for (let i = 0; i < 7; i++) {
+  //     const date = currentDate.add(i, 'day');
+  //     const formattedDate = date.format('DD/MM/YYYY'); // Định dạng thời gian
+  //     const dayOfWeek = date.format('dddd');
+
+  //     newDates.push({ date: formattedDate, day: dayOfWeek });
+  //   }
+
+  //   setArrDate(newDates);
+  // };
+
+  // // useEffect để gọi hàm CalDate khi component được render
+  // useEffect(() => {
+  //   CalDate();
+  // }, []);
+
+  // const handleChange = (day) => {
+  //   console.log('Ngày bạn chọn: ', day);
+  //   setSelectDay(day);
+  // };
 
   const customStyle = {
     backgroundImage: `url(${bglist})`,
@@ -57,89 +106,101 @@ const ListDotor = () => {
         </Content>
       </Header>
       <Content style={{ padding: '0px 50px' }}>
-        <Row
-          gutter={[16, 16]}
-          style={{
-            backgroundColor: 'white',
-            width: '100%',
-            borderRadius: '10px',
-            padding: '50px 0px',
-            margin: '0px 0px 50px 0px',
-          }}
-        >
-          <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-            <Row>
-              <Col xs={24} sm={12} md={12} lg={12} xl={6}>
-                <Image
-                  src={
-                    'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Free-Image.png'
-                  }
-                  width={150}
-                  height={150}
-                />
-              </Col>
-              <Col xs={24} sm={12} md={12} lg={12} xl={18}>
+        {/* {arrdoctorsbyspecialty.map((item) => (
+          <Row
+            gutter={[16, 16]}
+            style={{
+              backgroundColor: 'white',
+              width: '100%',
+              borderRadius: '10px',
+              padding: '50px 0px',
+              margin: '0px 0px 50px 0px',
+            }}
+          >
+            <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+              <Row>
+                <Col xs={24} sm={12} md={12} lg={12} xl={6}>
+                  <Image src={item.avatar ? item.avatar : imageDefault} width={150} height={150} />
+                </Col>
+                <Col xs={24} sm={12} md={12} lg={12} xl={18}>
+                  <Space direction="vertical">
+                    <Title
+                      level={4}
+                      style={{ lineHeight: '20px', color: '#005761', fontWeight: 'bold' }}
+                    >
+                      Bác sĩ {item.fullName}
+                    </Title>
+                    <Text style={{ lineHeight: '20px' }}>{item.description} asdasdas</Text>
+                    <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
+                      <EnvironmentOutlined style={{ marginRight: '5px', color: '#005761' }} />
+                      asdasd
+                    </Text>
+                  </Space>
+                </Col>
+              </Row>
+            </Col>
+            <Col xs={24} sm={12} md={12} lg={12} xl={8}>
+              <Space direction="vertical">
+                <Select placeholder="Chọn ngày" style={{ width: 250 }} onChange={handleChange}>
+                  {arrDate.map((item) => (
+                    <Select.Option key={item.id} value={`${item.day}`}>
+                      {item.day} - {item.date}
+                    </Select.Option>
+                  ))}
+                </Select>
+                <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
+                  <CalendarOutlined style={{ marginRight: '5px', color: '#005761' }} />
+                  LỊCH KHÁM
+                </Text>
                 <Flex wrap="wrap" gap="small">
-                  <Title
-                    level={4}
-                    style={{ lineHeight: '20px', color: '#005761', fontWeight: 'bold' }}
-                  >
-                    Bác sĩ Hoàng Thị Bích
-                  </Title>
-                  <Text style={{ lineHeight: '20px' }}>
-                    Gần 20 năm kinh nghiệm trong lĩnh vực xương khớp Hiện công tác tại bệnh viện Lão
-                    Khoa Trung Ương Bác sĩ nhận bệnh từ 18 tuổi trở lên
-                  </Text>
-                  <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-                    <EnvironmentOutlined style={{ marginRight: '5px', color: '#005761' }} />
-                    Hà Nội
-                  </Text>
+                  {item.schedules !== null && item.schedules.length !== 0 ? (
+                    item.schedules
+                      .filter(
+                        (itemSche) =>
+                          itemSche.schedulesDate.toLowerCase() === selectDay.toLowerCase()
+                      )
+                      .map((itemSche) => {
+                        if (itemSche.status === 'ACTIVE') {
+                          return (
+                            <Button
+                              style={{ marginLeft: '10px', width: '150px' }}
+                              block
+                              key={itemSche.id}
+                            >
+                              {itemSche.startTime} - {itemSche.endTime}
+                            </Button>
+                          );
+                        } else {
+                          return (
+                            <Button
+                              type="default"
+                              style={{ marginLeft: '10px', width: '200px' }}
+                              disabled
+                            >
+                              Xxxxxx
+                            </Button>
+                          );
+                        }
+                      })
+                  ) : (
+                    <Button type="default" style={{ marginLeft: '10px', width: '200px' }} disabled>
+                      Không có khung giờ nào
+                    </Button>
+                  )}
                 </Flex>
-              </Col>
-            </Row>
-          </Col>
-          <Col xs={24} sm={12} md={12} lg={12} xl={8}>
-            <Space direction="vertical">
-              <Select
-                defaultValue="Thứ 6 - 19/1"
-                style={{ width: 150 }}
-                onChange={handleChange}
-                options={[{ value: 'Thứ 6 - 19/1', label: 'Thứ 6 - 19/1' }]}
-              />
-              <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-                <CalendarOutlined style={{ marginRight: '5px', color: '#005761' }} />
-                LỊCH KHÁM
-              </Text>
-              <Flex wrap="wrap" gap="small">
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-              </Flex>
-              <Text style={{ lineHeight: '20px' }}>Chọn và đặt lịch (chi phí 0đ)</Text>
-              <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>ĐỊA CHỈ KHÁM</Text>
-              <Text style={{ lineHeight: '10px' }}>Phòng khám Đa khoa Quốc tế Nhân Hậu</Text>
-              <Text style={{ lineHeight: '10px' }}>
-                522-524 Nguyễn Chí Thanh, Phường 7, Quận 10, Thành phố Hồ Chí Minh
-              </Text>
-              <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-                GIÁ KHÁM:
-                <Text style={{ lineHeight: '20px', fontWeight: 'lighter' }}>
-                  120.000đ{' '}
+                <Text style={{ lineHeight: '20px' }}>Chọn và đặt lịch (chi phí 0đ)</Text>
+                <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>ĐỊA CHỈ KHÁM</Text>
+                <Text style={{ lineHeight: '10px' }}>{item.nameHospital}</Text>
+                <Text style={{ lineHeight: '10px' }}>{item.addressHospital}</Text>
+                <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>GIÁ KHÁM:</Text>
+                <Select
+                  defaultValue="Thứ 6 - 19/1"
+                  style={{ width: 150 }}
+                  onChange={handleChange}
+                  options={[{ value: 'Thứ 6 - 19/1', label: 'Thứ 6 - 19/1' }]}
+                />
+                <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
+                  LOẠI BẢO HIỂM ÁP DỤNG.{' '}
                   <Link
                     href="https://ant.design"
                     target="_blank"
@@ -148,230 +209,10 @@ const ListDotor = () => {
                     Xem chi tiết.
                   </Link>
                 </Text>
-              </Text>
-              <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-                LOẠI BẢO HIỂM ÁP DỤNG.{' '}
-                <Link
-                  href="https://ant.design"
-                  target="_blank"
-                  style={{ lineHeight: '20px', fontWeight: 'lighter', color: '#00ADB3' }}
-                >
-                  Xem chi tiết.
-                </Link>
-              </Text>
-            </Space>
-          </Col>
-        </Row>
-        <Row
-          gutter={[16, 16]}
-          style={{
-            backgroundColor: 'white',
-            width: '100%',
-            borderRadius: '10px',
-            padding: '50px 0px',
-            margin: '0px 0px 50px 0px',
-          }}
-        >
-          <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-            <Row>
-              <Col xs={24} sm={12} md={12} lg={12} xl={6}>
-                <Image
-                  src={
-                    'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Free-Image.png'
-                  }
-                  width={150}
-                  height={150}
-                />
-              </Col>
-              <Col xs={24} sm={12} md={12} lg={12} xl={18}>
-                <Flex wrap="wrap" gap="small">
-                  <Title
-                    level={4}
-                    style={{ lineHeight: '20px', color: '#005761', fontWeight: 'bold' }}
-                  >
-                    Bác sĩ Hoàng Thị Bích
-                  </Title>
-                  <Text style={{ lineHeight: '20px' }}>
-                    Gần 20 năm kinh nghiệm trong lĩnh vực xương khớp Hiện công tác tại bệnh viện Lão
-                    Khoa Trung Ương Bác sĩ nhận bệnh từ 18 tuổi trở lên
-                  </Text>
-                  <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-                    <EnvironmentOutlined style={{ marginRight: '5px', color: '#005761' }} />
-                    Hà Nội
-                  </Text>
-                </Flex>
-              </Col>
-            </Row>
-          </Col>
-          <Col xs={24} sm={12} md={12} lg={12} xl={8}>
-            <Space direction="vertical">
-              <Select
-                defaultValue="Thứ 6 - 19/1"
-                style={{ width: 150 }}
-                onChange={handleChange}
-                options={[{ value: 'Thứ 6 - 19/1', label: 'Thứ 6 - 19/1' }]}
-              />
-              <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-                <CalendarOutlined style={{ marginRight: '5px', color: '#005761' }} />
-                LỊCH KHÁM
-              </Text>
-              <Flex wrap="wrap" gap="small">
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-              </Flex>
-              <Text style={{ lineHeight: '20px' }}>Chọn và đặt lịch (chi phí 0đ)</Text>
-              <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>ĐỊA CHỈ KHÁM</Text>
-              <Text style={{ lineHeight: '10px' }}>Phòng khám Đa khoa Quốc tế Nhân Hậu</Text>
-              <Text style={{ lineHeight: '10px' }}>
-                522-524 Nguyễn Chí Thanh, Phường 7, Quận 10, Thành phố Hồ Chí Minh
-              </Text>
-              <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-                GIÁ KHÁM:
-                <Text style={{ lineHeight: '20px', fontWeight: 'lighter' }}>
-                  120.000đ{' '}
-                  <Link
-                    href="https://ant.design"
-                    target="_blank"
-                    style={{ lineHeight: '20px', fontWeight: 'lighter', color: '#00ADB3' }}
-                  >
-                    Xem chi tiết.
-                  </Link>
-                </Text>
-              </Text>
-              <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-                LOẠI BẢO HIỂM ÁP DỤNG.{' '}
-                <Link
-                  href="https://ant.design"
-                  target="_blank"
-                  style={{ lineHeight: '20px', fontWeight: 'lighter', color: '#00ADB3' }}
-                >
-                  Xem chi tiết.
-                </Link>
-              </Text>
-            </Space>
-          </Col>
-        </Row>
-        <Row
-          gutter={[16, 16]}
-          style={{
-            backgroundColor: 'white',
-            width: '100%',
-            borderRadius: '10px',
-            padding: '50px 0px',
-            margin: '0px 0px 50px 0px',
-          }}
-        >
-          <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-            <Row>
-              <Col xs={24} sm={12} md={12} lg={12} xl={6}>
-                <Image
-                  src={
-                    'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Free-Image.png'
-                  }
-                  width={150}
-                  height={150}
-                />
-              </Col>
-              <Col xs={24} sm={12} md={12} lg={12} xl={18}>
-                <Flex wrap="wrap" gap="small">
-                  <Title
-                    level={4}
-                    style={{ lineHeight: '20px', color: '#005761', fontWeight: 'bold' }}
-                  >
-                    Bác sĩ Hoàng Thị Bích
-                  </Title>
-                  <Text style={{ lineHeight: '20px' }}>
-                    Gần 20 năm kinh nghiệm trong lĩnh vực xương khớp Hiện công tác tại bệnh viện Lão
-                    Khoa Trung Ương Bác sĩ nhận bệnh từ 18 tuổi trở lên
-                  </Text>
-                  <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-                    <EnvironmentOutlined style={{ marginRight: '5px', color: '#005761' }} />
-                    Hà Nội
-                  </Text>
-                </Flex>
-              </Col>
-            </Row>
-          </Col>
-          <Col xs={24} sm={12} md={12} lg={12} xl={8}>
-            <Space direction="vertical">
-              <Select
-                defaultValue="Thứ 6 - 19/1"
-                style={{ width: 150 }}
-                onChange={handleChange}
-                options={[{ value: 'Thứ 6 - 19/1', label: 'Thứ 6 - 19/1' }]}
-              />
-              <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-                <CalendarOutlined style={{ marginRight: '5px', color: '#005761' }} />
-                LỊCH KHÁM
-              </Text>
-              <Flex wrap="wrap" gap="small">
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-                <Button style={{ marginLeft: '10px', width: 100 }} block>
-                  07:00-08:00
-                </Button>
-              </Flex>
-              <Text style={{ lineHeight: '20px' }}>Chọn và đặt lịch (chi phí 0đ)</Text>
-              <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>ĐỊA CHỈ KHÁM</Text>
-              <Text style={{ lineHeight: '10px' }}>Phòng khám Đa khoa Quốc tế Nhân Hậu</Text>
-              <Text style={{ lineHeight: '10px' }}>
-                522-524 Nguyễn Chí Thanh, Phường 7, Quận 10, Thành phố Hồ Chí Minh
-              </Text>
-              <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-                GIÁ KHÁM:
-                <Text style={{ lineHeight: '20px', fontWeight: 'lighter' }}>
-                  120.000đ{' '}
-                  <Link
-                    href="https://ant.design"
-                    target="_blank"
-                    style={{ lineHeight: '20px', fontWeight: 'lighter', color: '#00ADB3' }}
-                  >
-                    Xem chi tiết.
-                  </Link>
-                </Text>
-              </Text>
-              <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-                LOẠI BẢO HIỂM ÁP DỤNG.{' '}
-                <Link
-                  href="https://ant.design"
-                  target="_blank"
-                  style={{ lineHeight: '20px', fontWeight: 'lighter', color: '#00ADB3' }}
-                >
-                  Xem chi tiết.
-                </Link>
-              </Text>
-            </Space>
-          </Col>
-        </Row>
+              </Space>
+            </Col>
+          </Row>
+        ))} */}
       </Content>
     </Layout>
   );

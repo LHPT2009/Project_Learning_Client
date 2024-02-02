@@ -1,8 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import usersReducer from '../features/Users/usersSlice';
+import clientReducer from '../features/Client/clientSlice';
+import doctorSlice from '../features/Doctor/doctorSlice';
+import specialistSlice from '../features/Specialist/specialistSlice';
 
 const rootReducer = {
-  users: usersReducer,
+  client: clientReducer,
+  doctor: doctorSlice,
+  specialist: specialistSlice,
 };
 
 const store = configureStore({

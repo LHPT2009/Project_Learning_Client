@@ -1,5 +1,5 @@
-import React from 'react';
-import { Layout, Carousel, Row, Col, Typography, Space, Image, Button, Rate } from 'antd';
+import React, { useEffect } from 'react';
+import { Layout, Carousel, Row, Col, Typography, Space, Image, Button, Rate, Avatar } from 'antd';
 import bgposter from '../asset/image/Background_Poster.png';
 import itposter from '../asset/image/Item_Poster.png';
 
@@ -9,6 +9,11 @@ import IconThree from '../asset/image/Icon_Three.png';
 import IconFour from '../asset/image/Icon_Four.png';
 import IconFive from '../asset/image/Icon_Five.png';
 import IconAvatar from '../asset/image/Icon_Avatar.png';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchDoctors } from '../features/Doctor/doctorSlice';
+import { fetchSpecialists } from '../features/Specialist/specialistSlice';
+import { Link } from 'react-router-dom';
 
 const { Content } = Layout;
 
@@ -33,7 +38,40 @@ const customItemImageStyle = {
 
 const HomePage = () => {
   const { Text, Title } = Typography;
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchDoctors(8));
+    dispatch(fetchSpecialists(8));
+  }, []);
+
+  const isValidURL = (url, imageDefault) => {
+    try {
+      const urlObject = new URL(url);
+
+      // Kiểm tra nếu URL sử dụng giao thức http hoặc https
+      if (urlObject.protocol !== 'http:' && urlObject.protocol !== 'https:') {
+        return imageDefault;
+      }
+
+      // Kiểm tra nếu URL không chứa khoảng trắng
+      if (url.includes(' ')) {
+        return imageDefault;
+      }
+
+      // Các kiểm tra khác tùy thuộc vào yêu cầu cụ thể của bạn
+
+      return url;
+    } catch (error) {
+      return imageDefault;
+    }
+  };
+
+  const doctors = useSelector((state) => state.doctor.doctors);
+  const specialists = useSelector((state) => state.specialist.specialists);
+
+  console.log(doctors);
+  console.log(specialists);
   return (
     <Layout style={{ height: 'auto' }}>
       <Content>
@@ -286,230 +324,41 @@ const HomePage = () => {
               Cơ sở y tế uy tín{' '}
             </Title>
           </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '90px', border: '1px solid #00ADB3' }}
+          {/* xu ly (start) */}
+          {specialists.map((item) => (
+            <Col
+              key={item.id}
+              xs={24}
+              sm={24}
+              md={24}
+              lg={6}
+              style={{
+                padding: '0px 20px',
+                margin: '20px 0px',
+              }}
             >
-              <Space direction="horizontal">
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconFive}
-                  style={{ width: '71px', height: '66px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '90px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="horizontal">
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconFive}
-                  style={{ width: '71px', height: '66px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '90px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="horizontal">
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconFive}
-                  style={{ width: '71px', height: '66px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '90px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="horizontal">
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconFive}
-                  style={{ width: '71px', height: '66px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '90px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="horizontal">
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconFive}
-                  style={{ width: '71px', height: '66px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '90px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="horizontal">
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconFive}
-                  style={{ width: '71px', height: '66px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '90px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="horizontal">
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconFive}
-                  style={{ width: '71px', height: '66px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '90px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="horizontal">
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconFive}
-                  style={{ width: '71px', height: '66px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-              </Space>
-            </Button>
-          </Col>
+              <Link to={`/list?specialists=${item.id}`}>
+                <Button
+                  type="text"
+                  style={{ width: '100%', height: '90px', border: '1px solid #00ADB3' }}
+                >
+                  <Space direction="horizontal">
+                    <Image
+                      preview={false}
+                      key="custom-image"
+                      alt="Custom Image"
+                      src={isValidURL(item.thumbnail, IconFive)}
+                      style={{ width: '71px', height: '66px' }}
+                    />
+                    <Title level={4} style={{ paddingBottom: '15px' }}>
+                      {item.name}
+                    </Title>
+                  </Space>
+                </Button>
+              </Link>
+            </Col>
+          ))}
+          {/* xu ly (end) */}
           <Col
             xs={24}
             sm={24}
@@ -559,246 +408,41 @@ const HomePage = () => {
               Bác sĩ nổi bật
             </Title>
           </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '330px', border: '1px solid #00ADB3' }}
+          {/* xu ly bac si (start) */}
+          {doctors.map((item) => (
+            <Col
+              key={item.id}
+              xs={24}
+              sm={24}
+              md={24}
+              lg={6}
+              style={{
+                padding: '0px 20px',
+                margin: '20px 0px',
+              }}
             >
-              <Space direction="vertical" style={{ padding: '20px' }}>
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconAvatar}
-                  style={{ width: '163px', height: '163px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-                <Text>Sức khỏe tâm thần,Tư vấn tâm lý</Text>
-                <Rate disabled defaultValue={5} />
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '330px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="vertical" style={{ padding: '20px' }}>
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconAvatar}
-                  style={{ width: '163px', height: '163px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-                <Text>Sức khỏe tâm thần,Tư vấn tâm lý</Text>
-                <Rate disabled defaultValue={5} />
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '330px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="vertical" style={{ padding: '20px' }}>
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconAvatar}
-                  style={{ width: '163px', height: '163px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-                <Text>Sức khỏe tâm thần,Tư vấn tâm lý</Text>
-                <Rate disabled defaultValue={5} />
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '330px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="vertical" style={{ padding: '20px' }}>
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconAvatar}
-                  style={{ width: '163px', height: '163px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-                <Text>Sức khỏe tâm thần,Tư vấn tâm lý</Text>
-                <Rate disabled defaultValue={5} />
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '330px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="vertical" style={{ padding: '20px' }}>
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconAvatar}
-                  style={{ width: '163px', height: '163px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-                <Text>Sức khỏe tâm thần,Tư vấn tâm lý</Text>
-                <Rate disabled defaultValue={5} />
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '330px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="vertical" style={{ padding: '20px' }}>
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconAvatar}
-                  style={{ width: '163px', height: '163px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-                <Text>Sức khỏe tâm thần,Tư vấn tâm lý</Text>
-                <Rate disabled defaultValue={5} />
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '330px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="vertical" style={{ padding: '20px' }}>
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconAvatar}
-                  style={{ width: '163px', height: '163px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-                <Text>Sức khỏe tâm thần,Tư vấn tâm lý</Text>
-                <Rate disabled defaultValue={5} />
-              </Space>
-            </Button>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={6}
-            style={{
-              padding: '0px 20px',
-              margin: '20px 0px',
-            }}
-          >
-            <Button
-              type="text"
-              style={{ width: '100%', height: '330px', border: '1px solid #00ADB3' }}
-            >
-              <Space direction="vertical" style={{ padding: '20px' }}>
-                <Image
-                  preview={false}
-                  key="custom-image"
-                  alt="Custom Image"
-                  src={IconAvatar}
-                  style={{ width: '163px', height: '163px' }}
-                />
-                <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
-                </Title>
-                <Text>Sức khỏe tâm thần,Tư vấn tâm lý</Text>
-                <Rate disabled defaultValue={5} />
-              </Space>
-            </Button>
-          </Col>
+              <Button
+                type="text"
+                style={{ width: '100%', height: '330px', border: '1px solid #00ADB3' }}
+              >
+                <Space direction="vertical" style={{ padding: '20px' }}>
+                  <Avatar
+                    preview={false}
+                    key="custom-image"
+                    alt="Custom Image"
+                    src={isValidURL(item.image, IconAvatar)}
+                    style={{ width: '163px', height: '163px' }}
+                  />
+                  <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
+                    {item.fullNameDoctor}
+                  </Title>
+                  <Text>{item.specialityId[0].name}</Text>
+                  <Rate disabled defaultValue={5} />
+                </Space>
+              </Button>
+            </Col>
+          ))}
+          {/* xu ly bac si (end) */}
           <Col
             xs={24}
             sm={24}
