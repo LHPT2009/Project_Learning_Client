@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Row, Col } from 'antd';
 
 export default function History() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const bookingInfo = {
     name: 'Nguyễn Văn A',
     phone: '09876554333',

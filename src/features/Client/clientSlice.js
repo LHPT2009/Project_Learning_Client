@@ -20,9 +20,8 @@ const clientSlice = createSlice({
   },
   reducers: {
     loginClient: (state, action) => {
-      const { username, email, roles } = action.payload;
-      state.client = { username, email, roles };
-      state.isClient = roles.includes('ROLE_USER');
+      state.client = action.payload;
+      state.isClient = action.payload.roles.includes('ROLE_USER');
     },
     logout: (state) => {
       state.client = null;
@@ -47,9 +46,5 @@ const clientSlice = createSlice({
 });
 
 export const { logout, loginClient } = clientSlice.actions;
-// export const selectClient = (state) => state.client.client; // Lấy thông tin client từ state
-// export const selectIsClient = (state) => state.client.isClient; // Lấy trạng thái ROLE_USER từ state
-// export const selectLoadingStatus = (state) => state.client.loading; // Lấy trạng thái loading từ state
-// export const selectError = (state) => state.client.error; // Lấy trạng thái lỗi từ state
 
 export default clientSlice.reducer;

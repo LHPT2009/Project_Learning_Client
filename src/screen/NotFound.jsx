@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Result } from 'antd';
 
 export default function NotFound() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div
       style={{

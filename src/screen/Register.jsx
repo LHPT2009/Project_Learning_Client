@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Form, Input, DatePicker, Radio, Row, Col, Typography, message } from 'antd';
 import Logo from '../asset/image/logo_clinic.png';
 import bgform from '../asset/image/Background_Form.png';
@@ -8,6 +8,9 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { Text } = Typography;
   const {
     control,
@@ -29,16 +32,14 @@ export default function Register() {
       email: data.email,
       address: data.address,
       roles: ['ROLE_USER'],
-    }
+    };
 
     try {
       dispatch(register(dataRegister));
       message.success('Đã lưu!');
-      navigate("/login")
-
+      navigate('/login');
     } catch (error) {
       console.error('Error while submitting form:', error);
-
     }
   };
 
@@ -156,24 +157,24 @@ export default function Register() {
             />
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-            <Form.Item
-              label="Giới tính"
-              name="gender"
-            >
+            <Form.Item label="Giới tính" name="gender">
               <Controller
                 render={({ field }) => (
-
-                  <Radio.Group >
-                    <Radio {...field} value="Nam"> Nam </Radio>
-                    <Radio {...field} value="Nữ"> Nữ </Radio>
+                  <Radio.Group>
+                    <Radio {...field} value="Nam">
+                      {' '}
+                      Nam{' '}
+                    </Radio>
+                    <Radio {...field} value="Nữ">
+                      {' '}
+                      Nữ{' '}
+                    </Radio>
                   </Radio.Group>
                 )}
                 control={control}
                 name="gender"
               />
             </Form.Item>
-
-
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24}>
             <Form.Item label="Ngày sinh" name="date_of_birth">
@@ -185,7 +186,6 @@ export default function Register() {
                 name="dateOfBirth"
               />
             </Form.Item>
-
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24}>
             <Controller
