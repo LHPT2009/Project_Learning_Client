@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Image, Space, Typography } from 'antd';
 import SuccessImage from '../asset/image/Success.png';
 
 const { Title } = Typography;
 
 export default function Success() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div
       style={{

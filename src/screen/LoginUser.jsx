@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
 import Logo from '../asset/image/logo_clinic.png';
 import bgform from '../asset/image/Background_Form.png';
@@ -11,7 +11,6 @@ import clientApi from 'api/clientApi';
 import Cookies from 'js-cookie';
 import { loginClient } from '../features/Client/clientSlice';
 
-
 const schema = yup
   .object({
     username: yup.string().required('Mời bạn nhập tên tài khoản!'),
@@ -20,6 +19,9 @@ const schema = yup
   .required();
 
 export default function LoginUser() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {

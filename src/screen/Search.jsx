@@ -5,6 +5,9 @@ const { Text, Title } = Typography;
 const { Content } = Layout;
 
 const Search = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const specialityList = [
     {
       src: 'https://cdn.bookingcare.vn/fo/w1920/2023/06/07/160505-bo-sung-icon-goi-khamom-sot.png',

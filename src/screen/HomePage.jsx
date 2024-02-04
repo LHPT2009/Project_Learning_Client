@@ -11,7 +11,7 @@ import IconFive from '../asset/image/Icon_Five.png';
 import IconAvatar from '../asset/image/Icon_Avatar.png';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchDoctors } from '../features/Doctor/doctorSlice';
+// import { fetchDoctors } from '../features/Doctor/doctorSlice';
 import { fetchSpecialists } from '../features/Specialist/specialistSlice';
 import { Link } from 'react-router-dom';
 
@@ -37,12 +37,16 @@ const customItemImageStyle = {
 };
 
 const HomePage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { Text, Title } = Typography;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchDoctors(8));
-    dispatch(fetchSpecialists(8));
+    // dispatch(fetchDoctors(3));
+    dispatch(fetchSpecialists(3));
   }, []);
 
   const isValidURL = (url, imageDefault) => {
@@ -409,7 +413,7 @@ const HomePage = () => {
             </Title>
           </Col>
           {/* xu ly bac si (start) */}
-          {doctors.map((item) => (
+          {/* {doctors.map((item) => (
             <Col
               key={item.id}
               xs={24}
@@ -441,7 +445,7 @@ const HomePage = () => {
                 </Space>
               </Button>
             </Col>
-          ))}
+          ))} */}
           {/* xu ly bac si (end) */}
           <Col
             xs={24}

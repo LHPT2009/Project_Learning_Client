@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import Logo from '../asset/image/logo_clinic.png';
 import bgform from '../asset/image/Background_Form.png';
@@ -19,6 +19,9 @@ const schema = yup
   .required();
 
 export default function Reset() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const {
     control,
     handleSubmit,

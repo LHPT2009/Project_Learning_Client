@@ -1,4 +1,4 @@
-import './Style.css';
+import './style.css';
 import React, { useState } from 'react';
 import { Drawer, Menu, Image, Layout, Button, Select, Avatar, Row, Col, Flex, Input } from 'antd';
 import { MenuOutlined, SearchOutlined } from '@ant-design/icons';

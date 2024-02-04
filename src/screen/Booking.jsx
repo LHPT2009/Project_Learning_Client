@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Layout,
   theme,
@@ -13,13 +13,44 @@ import {
   Form,
   DatePicker,
   Radio,
+  message,
 } from 'antd';
 
 import { UserOutlined } from '@ant-design/icons';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 const { Content } = Layout;
 
 export default function Booking() {
+  // const navigate = useNavigate();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { Text, Title } = Typography;
+
+  const infoBooking = useSelector((state) => state.booking.infoBooking);
+  const infoUser = useSelector((state) => state.client.client);
+
+  const [description, setDescription] = useState('');
+  const [payment, setPayment] = useState('1');
+
+  // const checkBookingPage = () => {
+  //   if (infoBooking == null) {
+  //     message.error('Hãy chọn thông tin trước khi đặt phòng!');
+
+  //     navigate('/list');
+  //   } else if (infoUser == null) {
+  //     message.error('Hãy đăng nhập!');
+  //     navigate('/login');
+  //   } else {
+  //     message.success('Hãy kiểm tra thông tin trước khi đặt!');
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   checkBookingPage();
+  // }, [infoBooking, infoUser]);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -30,6 +61,32 @@ export default function Booking() {
   };
   const RadioGroup = Radio.Group;
   const { TextArea } = Input;
+
+  const listPayment = [
+    {
+      id: 1,
+      name: 'Thanh toán bằng tiền mặt',
+    },
+    {
+      id: 2,
+      name: 'Thanh toán bằng VNPAY',
+    },
+  ];
+
+  const formatSendBooking = {
+    code: 'xxxx',
+    idUser: infoUser.id,
+    description: description,
+    bookingDate: infoBooking.bookingDate,
+    idPackage: infoBooking.idPackage,
+    idDoctor: infoBooking.idDoctor,
+    idScheduleDetail: infoBooking.idScheduleDetail,
+    idPayment: payment,
+  };
+
+  const sendBooking = () => {
+    console.log('Gửi thông tin đặt lịch', formatSendBooking);
+  };
 
   return (
     <>
@@ -93,22 +150,22 @@ export default function Booking() {
             <Col xs={24} sm={24} md={24} lg={24}>
               <Form labelCol={{ span: 2 }} wrapperCol={{ span: 24 }} layout="vertical">
                 <Form.Item label="Tên khách hàng" labelCol={{ span: 24 }}>
-                  <Input />
+                  <Input disabled />
                 </Form.Item>
                 <Form.Item label="Số điện thoại" labelCol={{ span: 24 }}>
-                  <Input />
+                  <Input disabled />
                 </Form.Item>
                 <Form.Item label="Giới tính" labelCol={{ span: 24 }}>
-                  <Select>
+                  <Select disabled>
                     <Select.Option value="demo" labelCol={{ span: 24 }}>
                       Demo
                     </Select.Option>
                   </Select>
                 </Form.Item>
                 <Form.Item label="Ngày sinh" labelCol={{ span: 24 }}>
-                  <DatePicker style={{ width: '100%' }} />
+                  <DatePicker style={{ width: '100%' }} disabled />
                 </Form.Item>
-                <Form.Item label="Chọn tỉnh/thành phố" labelCol={{ span: 24 }}>
+                {/* <Form.Item label="Chọn tỉnh/thành phố" labelCol={{ span: 24 }}>
                   <Select>
                     <Select.Option value="demo" labelCol={{ span: 24 }}>
                       Demo
@@ -134,18 +191,24 @@ export default function Booking() {
                   labelCol={{ span: 24 }}
                 >
                   <Input />
+                </Form.Item> */}
+                <Form.Item label="Địa chỉ" labelCol={{ span: 24 }}>
+                  <Input disabled />
                 </Form.Item>
                 <Form.Item label="Lí do khám" labelCol={{ span: 24 }}>
-                  <TextArea />
+                  <Input onClick={(e) => setDescription(e.target.value)} />
                 </Form.Item>
                 <Form.Item label="Phương thức thanh toán" labelCol={{ span: 24 }}>
                   <RadioGroup>
-                    <Radio style={radioStyle} value={1}>
-                      Thanh toán bằng tiền mặt
-                    </Radio>
-                    <Radio style={radioStyle} value={2}>
-                      Thanh toán bằng VNPAY
-                    </Radio>
+                    {listPayment.map((item) => (
+                      <Radio
+                        style={radioStyle}
+                        value={item.id}
+                        onClick={(e) => setPayment(e.target.value)}
+                      >
+                        {item.name}
+                      </Radio>
+                    ))}
                   </RadioGroup>
                 </Form.Item>
                 <Form.Item label="Chi phí khám" labelCol={{ span: 24 }}>
@@ -192,6 +255,7 @@ export default function Booking() {
                     type="primary"
                     size="large"
                     style={{ backgroundColor: '#00ADB3', width: '100%' }}
+                    onClick={() => sendBooking()}
                   >
                     Xác nhận đặt lịch khám
                   </Button>

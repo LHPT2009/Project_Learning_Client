@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
 import Logo from '../asset/image/logo_clinic.png';
 import bgform from '../asset/image/Background_Form.png';
 
 export default function ForgotPassword() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const customImageStyle = {
     backgroundImage: `url(${bgform})`,
     backgroundSize: 'cover',
