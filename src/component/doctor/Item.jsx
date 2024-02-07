@@ -5,8 +5,9 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import 'dayjs/locale/vi';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addInfoBooking } from '../../features/Booking/bookingSlice';
+import { fetchGetDoctorById } from '../../features/Doctor/doctorSlice';
 
 dayjs.extend(timezone);
 dayjs.locale('vi');
@@ -19,7 +20,10 @@ const DataItem = ({ dataItem }) => {
   const imageDefault =
     'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Free-Image.png';
   const [day, setDay] = useState();
+  const [date, setDate] = useState();
   const [arrDate, setArrDate] = useState([]);
+
+  const checkuser = useSelector((state) => state.client.client);
 
   const [idSchedules, setIdSchedules] = useState();
   const [timeSchedules, setTimeSchedules] = useState();
@@ -30,13 +34,13 @@ const DataItem = ({ dataItem }) => {
   const [arrFilterSchedules, setArrFilterSchedules] = useState([]);
 
   const dayMapping = {
-    'thứ hai': 'Thứ 2',
-    'thứ ba': 'Thứ 3',
-    'thứ tư': 'Thứ 4',
-    'thứ năm': 'Thứ 5',
-    'thứ sáu': 'Thứ 6',
-    'thứ bảy': 'Thứ 7',
-    'chủ nhật': 'Chủ Nhật',
+    'thứ hai': 'Monday',
+    'thứ ba': 'Tuesday',
+    'thứ tư': 'Wednesday',
+    'thứ năm': 'Thursday',
+    'thứ sáu': 'Friday',
+    'thứ bảy': 'Saturday',
+    'chủ nhật': 'Sunday',
   };
 
   const CalDate = () => {
@@ -46,10 +50,11 @@ const DataItem = ({ dataItem }) => {
 
     for (let i = 0; i < 7; i++) {
       const date = currentDate.add(i, 'day');
-      const formattedDate = date.format('DD/MM/YYYY');
+      const formattedDate = date.format('YYYY-MM-DD');
       const dayOfWeek = date.format('dddd');
+      const showformatDate = date.format('DD/MM/YYYY');
 
-      newDates.push({ date: formattedDate, day: dayOfWeek });
+      newDates.push({ date: formattedDate, day: dayOfWeek, showformatDate: showformatDate });
     }
 
     setArrDate(newDates);
@@ -61,20 +66,21 @@ const DataItem = ({ dataItem }) => {
 
   const FilterSchedules = (selectDay) => {
     setArrFilterSchedules([]);
-
-    dataItem.schedules.forEach((item) => {
-      if (
-        dayMapping[selectDay.toLowerCase()] === item.schedulesDate &&
-        item.status === 'INACTIVE'
-      ) {
-        setArrFilterSchedules((prevArr) => [...prevArr, item]);
-      }
-    });
+    if (dataItem.schedulesDetailSet === null) {
+      setArrFilterSchedules([]);
+    } else if (dataItem.schedulesDetailSet !== null) {
+      dataItem.schedulesDetailSet.forEach((item) => {
+        if (dayMapping[selectDay] === item.schedulesDate && item !== null) {
+          setArrFilterSchedules((prevArr) => [...prevArr, item]);
+        }
+      });
+    }
   };
 
   const formatInfo = {
     idDoctor: dataItem.id,
-    bookingDate: day,
+    bookingDay: day,
+    bookingDate: date,
     idScheduleDetail: idSchedules,
     timeScheduleDetail: timeSchedules,
     idPackage: idPackage,
@@ -86,17 +92,17 @@ const DataItem = ({ dataItem }) => {
       message.error('Chọn thời gian của bạn!');
     } else if (idPackage == null && pricePakage == null) {
       message.error('Chọn gói khám của bạn!');
+    } else if (checkuser == null) {
+      message.error('Chọn mời bạn đăng nhập!');
+      navigate('/login');
     } else {
+      dispatch(fetchGetDoctorById(dataItem.id));
       dispatch(addInfoBooking(formatInfo));
       navigate('/booking');
     }
   };
 
-  const listPackage = [
-    { id: 1, name: 'Gói 1', price: 10000 },
-    { id: 2, name: 'Gói 2', price: 20000 },
-    { id: 3, name: 'Gói 3', price: 30000 },
-  ];
+  const listPackage = dataItem.packagePrices;
 
   return (
     <>
@@ -127,10 +133,10 @@ const DataItem = ({ dataItem }) => {
                 >
                   Bác sĩ {dataItem.fullName}
                 </Title>
-                <Text style={{ lineHeight: '20px' }}>{dataItem.description} asdasdas</Text>
+                <Text style={{ lineHeight: '20px' }}>{dataItem.description}</Text>
                 <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
                   <EnvironmentOutlined style={{ marginRight: '5px', color: '#005761' }} />
-                  asdasd
+                  {dataItem.nameHospital}
                 </Text>
               </Space>
             </Col>
@@ -143,16 +149,21 @@ const DataItem = ({ dataItem }) => {
               style={{ width: 250 }}
               onChange={(value, option) => {
                 if (option) {
-                  setDay(option.value);
-                  FilterSchedules(option.value);
+                  const [selectedDay, selectedDate] = option.value.split(' - ');
+
+                  setDay(selectedDay);
+                  setDate(selectedDate);
+                  FilterSchedules(selectedDay);
                 }
               }}
             >
-              {arrDate.map((dataItem) => (
-                <Select.Option key={dataItem.id} value={dataItem.day}>
-                  {dataItem.day} - {dataItem.date}
-                </Select.Option>
-              ))}
+              {arrDate.map((dataItem) => {
+                return (
+                  <Select.Option key={dataItem.id} value={`${dataItem.day} - ${dataItem.date}`}>
+                    {dataItem.day} - {dataItem.showformatDate}
+                  </Select.Option>
+                );
+              })}
             </Select>
             <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
               <CalendarOutlined style={{ marginRight: '5px', color: '#005761' }} />
@@ -189,7 +200,7 @@ const DataItem = ({ dataItem }) => {
             <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>GIÁ KHÁM:</Text>
             <Select
               defaultValue="Chọn gói khám"
-              style={{ width: 150 }}
+              style={{ width: 250 }}
               onChange={(value, option) => {
                 if (option) {
                   setIdPackage(option.key);
@@ -198,8 +209,8 @@ const DataItem = ({ dataItem }) => {
               }}
             >
               {listPackage.map((item) => (
-                <Select.Option key={item.id} value={item.price}>
-                  {item.name} - {item.price}
+                <Select.Option key={item.packageId} value={item.price}>
+                  {item.packageName} - {item.price}
                 </Select.Option>
               ))}
             </Select>

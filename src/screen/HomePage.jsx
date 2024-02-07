@@ -11,7 +11,7 @@ import IconFive from '../asset/image/Icon_Five.png';
 import IconAvatar from '../asset/image/Icon_Avatar.png';
 
 import { useDispatch, useSelector } from 'react-redux';
-// import { fetchDoctors } from '../features/Doctor/doctorSlice';
+import { fetchDoctors } from '../features/Doctor/doctorSlice';
 import { fetchSpecialists } from '../features/Specialist/specialistSlice';
 import { Link } from 'react-router-dom';
 
@@ -45,7 +45,7 @@ const HomePage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // dispatch(fetchDoctors(3));
+    dispatch(fetchDoctors(3));
     dispatch(fetchSpecialists(3));
   }, []);
 
@@ -53,17 +53,13 @@ const HomePage = () => {
     try {
       const urlObject = new URL(url);
 
-      // Kiểm tra nếu URL sử dụng giao thức http hoặc https
       if (urlObject.protocol !== 'http:' && urlObject.protocol !== 'https:') {
         return imageDefault;
       }
 
-      // Kiểm tra nếu URL không chứa khoảng trắng
       if (url.includes(' ')) {
         return imageDefault;
       }
-
-      // Các kiểm tra khác tùy thuộc vào yêu cầu cụ thể của bạn
 
       return url;
     } catch (error) {

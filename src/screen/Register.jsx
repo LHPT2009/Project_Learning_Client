@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Button, Form, Input, DatePicker, Radio, Row, Col, Typography, message } from 'antd';
 import Logo from '../asset/image/logo_clinic.png';
 import bgform from '../asset/image/Background_Form.png';
-import { register } from 'features/Client/clientSlice';
+import { fetchregister } from 'features/Client/clientSlice';
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +35,7 @@ export default function Register() {
     };
 
     try {
-      dispatch(register(dataRegister));
+      dispatch(fetchregister(dataRegister));
       message.success('Đã lưu!');
       navigate('/login');
     } catch (error) {

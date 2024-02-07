@@ -20,7 +20,9 @@ const ListDotor = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchDoctorsBySpecialty(specialists));
+    dispatch(fetchDoctorsBySpecialty(specialists)).then((item) => {
+      console.log('check du lieu: ', item.payload);
+    });
   }, []);
 
   const arrdoctorsbyspecialty = useSelector((state) => state.doctor.doctorsspecialty);

@@ -9,7 +9,7 @@ import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import clientApi from 'api/clientApi';
 import Cookies from 'js-cookie';
-import { loginClient } from '../features/Client/clientSlice';
+import { loginClient, fetchGetUserById } from '../features/Client/clientSlice';
 
 const schema = yup
   .object({
@@ -36,7 +36,7 @@ export default function LoginUser() {
 
       if (response.data.token) {
         dispatch(loginClient(response.data));
-
+        dispatch(fetchGetUserById(response.data.id));
         Cookies.set('accessToken', response.data.token, { expires: 1 });
         Cookies.set('refreshToken', response.data.refreshToken, { expires: 1 });
 

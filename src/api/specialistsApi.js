@@ -2,7 +2,7 @@ import axiosClient from './axiosClient';
 
 const specialistsApi = {
   getSpecialistsOutstanding(quantity) {
-    const url = `/api/specialists/radom?limit=${quantity}`;
+    const url = `/api/specialists/random?limit=${quantity}`;
     return axiosClient.get(url);
   },
 };
