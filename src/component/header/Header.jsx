@@ -1,11 +1,28 @@
-import './style.css';
+import './Style.css';
 import React, { useState } from 'react';
-import { Drawer, Menu, Image, Layout, Button, Select, Avatar, Row, Col, Flex, Input } from 'antd';
-import { MenuOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  Drawer,
+  Menu,
+  Image,
+  Layout,
+  Button,
+  Select,
+  Avatar,
+  Row,
+  Col,
+  Flex,
+  Input,
+  Dropdown,
+  message,
+} from 'antd';
+import { MenuOutlined, SearchOutlined, DownOutlined } from '@ant-design/icons';
 import LogoClinic from '../../asset/image/Logo.png';
 import America from '../../asset/image/America.png';
 import Vietnam from '../../asset/image/Vietnam.png';
-import { Link } from 'react-router-dom';
+import LogoAdmin from '../../asset/image/LogoAdmin.png';
+import { Link, useNavigate } from 'react-router-dom';
+import { logout } from 'features/Client/clientSlice';
+import { useSelector, useDispatch } from 'react-redux';
 
 const { Header } = Layout;
 
@@ -17,6 +34,15 @@ const lngs = {
 const MenuComponent = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const { Option } = Select;
+  const infoUser = useSelector((state) => state.client.userinfo);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logoutAccount = () => {
+    message.success('Cảm ơn bạn đã sử dụng dịch vụ!');
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div
@@ -59,7 +85,114 @@ const MenuComponent = () => {
         />
       </div>
       <span className="headerMenu">
-        <ListMenu />
+        {/* <ListMenu userData={infoUser} /> */}
+
+        <Header
+          style={{
+            backgroundColor: '#0B111D',
+            padding: '0px 100px',
+          }}
+        >
+          <Row>
+            <Col span={8} style={{ textAlign: 'start' }}>
+              <Link to={'/'}>
+                <Image
+                  src={LogoClinic}
+                  height="44px"
+                  width="134px"
+                  alt="Logo Clinic"
+                  preview={false}
+                />
+              </Link>
+            </Col>
+            <Col span={8} style={{ textAlign: 'center', paddingTop: '2px' }}>
+              <Input
+                size="large"
+                placeholder="Tìm kiếm"
+                prefix={<SearchOutlined />}
+                style={{ width: '80%' }}
+              />
+            </Col>
+            <Col span={8} style={{ textAlign: 'end' }}>
+              <Flex gap="large" justify="end" style={{ paddingTop: '12px' }}>
+                <Select
+                  defaultValue="vn"
+                  allowClear={false}
+                  size="large"
+                  style={{ width: '80px', backgroundColor: '#1E212D' }}
+                >
+                  {Object.keys(lngs).map((lng) => (
+                    <Option key={lng} value={lng}>
+                      <Avatar
+                        shape="square"
+                        style={{ marginRight: '35px', width: '38px', height: '30px' }}
+                        src={lngs[lng].image}
+                        alt="avatar"
+                      />
+                    </Option>
+                  ))}
+                </Select>
+                {infoUser ? (
+                  <>
+                    <Dropdown
+                      trigger={['click']}
+                      overlay={
+                        <Menu>
+                          <Menu.Item key="1">Thông tin cá nhân</Menu.Item>
+                          <Menu.Item key="2" onClick={logoutAccount}>
+                            Đăng xuất
+                          </Menu.Item>
+                        </Menu>
+                      }
+                      placement="bottom"
+                    >
+                      <Button type="link" style={{ color: '#fff', height: '45px' }}>
+                        Chào Tùng
+                        <DownOutlined />
+                        <Avatar
+                          style={{
+                            width: '38px',
+                            height: '38px',
+                          }}
+                          src={<img src={LogoAdmin} alt="avatar" />}
+                        />
+                      </Button>
+                    </Dropdown>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      type="primary"
+                      size="large"
+                      style={{ backgroundColor: '#00ADB3', width: '120px' }}
+                    >
+                      Đặt lịch
+                    </Button>
+                    <Button
+                      type="primary"
+                      size="large"
+                      style={{ backgroundColor: '#00ADB3', width: '120px' }}
+                    >
+                      Đăng nhập
+                    </Button>
+                    <Button
+                      type="default"
+                      size="large"
+                      style={{
+                        border: '2px solid #00ADB3',
+                        backgroundColor: '#0B111D',
+                        color: '#00ADB3',
+                        width: '120px',
+                      }}
+                    >
+                      Đăng ký
+                    </Button>
+                  </>
+                )}
+              </Flex>
+            </Col>
+          </Row>
+        </Header>
       </span>
       <Drawer
         open={openMenu}
@@ -121,156 +254,126 @@ const MenuComponent = () => {
             </Button>
           </Col>
         </Row>
-        <ListMenuApp isInline />
-      </Drawer>
-    </div>
-  );
-};
-
-const ListMenu = () => {
-  return (
-    <Header
-      style={{
-        backgroundColor: '#0B111D',
-        padding: '0px 100px',
-      }}
-    >
-      <Row>
-        <Col span={8} style={{ textAlign: 'start' }}>
-          <Link to={'/'}>
-            <Image src={LogoClinic} height="44px" width="134px" alt="Logo Clinic" preview={false} />
-          </Link>
-        </Col>
-        <Col span={8} style={{ textAlign: 'center', paddingTop: '2px' }}>
-          <Input
-            size="large"
-            placeholder="Tìm kiếm"
-            prefix={<SearchOutlined />}
-            style={{ width: '80%' }}
-          />
-        </Col>
-        <Col span={8} style={{ textAlign: 'end' }}>
-          <Flex gap="large" justify="end" style={{ paddingTop: '12px' }}>
-            <Select
-              defaultValue="vn"
-              allowClear={false}
+        {/* <ListMenuApp isInline userData={infoUser} /> */}
+        <Menu
+          mode={openMenu ? 'inline' : 'horizontal'}
+          style={{
+            backgroundColor: '#0B111D',
+            color: 'white',
+            fontSize: 24,
+            textAlign: 'center',
+            marginTop: openMenu ? '30px' : '0px',
+            height: '100vh',
+          }}
+          defaultActiveFirst={false}
+          activeKey={null}
+          defaultSelectedKeys={[]}
+          selectedKeys={[]}
+        >
+          <Menu.Item
+            style={{
+              marginInline: '0px',
+              paddingInline: '0px',
+              margin: '0px 0px 20px 0px',
+            }}
+          >
+            <Input
               size="large"
-              style={{ width: '80px', backgroundColor: '#1E212D' }}
-            >
-              {Object.keys(lngs).map((lng) => (
-                <Option key={lng} value={lng}>
-                  <Avatar
-                    shape="square"
-                    style={{ marginRight: '35px', width: '38px', height: '30px' }}
-                    src={lngs[lng].image}
-                    alt="avatar"
-                  />
-                </Option>
-              ))}
-            </Select>
+              placeholder="Tìm kiếm"
+              prefix={<SearchOutlined />}
+              style={{ width: '100%' }}
+            />
+          </Menu.Item>
+          <Menu.Item
+            style={{ marginInline: '0px', paddingInline: '0px', margin: '0px 0px 20px 0px' }}
+          >
             <Button
               type="primary"
               size="large"
-              style={{ backgroundColor: '#00ADB3', width: '120px' }}
+              style={{
+                backgroundColor: '#00ADB3',
+                width: openMenu ? '100%' : '120px',
+              }}
             >
               Đặt lịch
             </Button>
-            <Button
-              type="primary"
-              size="large"
-              style={{ backgroundColor: '#00ADB3', width: '120px' }}
-            >
-              Đăng nhập
-            </Button>
-            <Button
-              type="default"
-              size="large"
-              style={{
-                border: '2px solid #00ADB3',
-                backgroundColor: '#0B111D',
-                color: '#00ADB3',
-                width: '120px',
-              }}
-            >
-              Đăng ký
-            </Button>
-          </Flex>
-        </Col>
-      </Row>
-    </Header>
-  );
-};
-
-const ListMenuApp = ({ isInline = false }) => {
-  return (
-    <Menu
-      mode={isInline ? 'inline' : 'horizontal'}
-      style={{
-        backgroundColor: '#0B111D',
-        color: 'white',
-        fontSize: 24,
-        textAlign: 'center',
-        marginTop: isInline ? '30px' : '0px',
-        height: '100vh',
-      }}
-      defaultActiveFirst={false}
-      activeKey={null}
-      defaultSelectedKeys={[]}
-      selectedKeys={[]}
-    >
-      <Menu.Item
-        style={{
-          marginInline: '0px',
-          paddingInline: '0px',
-          margin: '0px 0px 20px 0px',
-        }}
-      >
-        <Input
-          size="large"
-          placeholder="Tìm kiếm"
-          prefix={<SearchOutlined />}
-          style={{ width: '100%' }}
-        />
-      </Menu.Item>
-      <Menu.Item style={{ marginInline: '0px', paddingInline: '0px', margin: '0px 0px 20px 0px' }}>
-        <Button
-          type="primary"
-          size="large"
-          style={{
-            backgroundColor: '#00ADB3',
-            width: isInline ? '100%' : '120px',
-          }}
-        >
-          Đặt lịch
-        </Button>
-      </Menu.Item>
-      <Menu.Item style={{ marginInline: '0px', paddingInline: '0px', margin: '0px 0px 20px 0px' }}>
-        <Button
-          type="primary"
-          size="large"
-          style={{ backgroundColor: '#00ADB3', width: isInline ? '100%' : '120px' }}
-        >
-          Đăng nhập
-        </Button>
-      </Menu.Item>
-      <Menu.Item style={{ marginInline: '0px', paddingInline: '0px', margin: '0px 0px 20px 0px' }}>
-        <Button
-          type="primary"
-          size="large"
-          style={{
-            border: '2px solid #00ADB3',
-            backgroundColor: '#0B111D',
-            color: '#00ADB3',
-            width: '100%',
-            padding: '2px',
-            height: '35px',
-            marginBottom: '5px',
-          }}
-        >
-          Đăng ký
-        </Button>
-      </Menu.Item>
-    </Menu>
+          </Menu.Item>
+          {infoUser ? (
+            <>
+              <Menu.Item
+                style={{ marginInline: '0px', paddingInline: '0px', margin: '0px 0px 20px 0px' }}
+              >
+                <Dropdown
+                  trigger={['click']}
+                  overlay={
+                    <Menu>
+                      <Menu.Item key="1">Thông tin cá nhân</Menu.Item>
+                      <Menu.Item key="2" onClick={logoutAccount}>
+                        Đăng xuất
+                      </Menu.Item>
+                    </Menu>
+                  }
+                  placement="bottom"
+                >
+                  <Button
+                    type="link"
+                    style={{
+                      color: '#fff',
+                      height: '45px',
+                      backgroundColor: '#00ADB3',
+                      width: openMenu ? '100%' : '120px',
+                    }}
+                  >
+                    Chào Tùng
+                    <DownOutlined />
+                    <Avatar
+                      style={{
+                        width: '38px',
+                        height: '38px',
+                      }}
+                      src={<img src={LogoAdmin} alt="avatar" />}
+                    />
+                  </Button>
+                </Dropdown>
+              </Menu.Item>
+            </>
+          ) : (
+            <>
+              <Menu.Item
+                style={{ marginInline: '0px', paddingInline: '0px', margin: '0px 0px 20px 0px' }}
+              >
+                <Button
+                  type="primary"
+                  size="large"
+                  style={{ backgroundColor: '#00ADB3', width: openMenu ? '100%' : '120px' }}
+                >
+                  Đăng nhập
+                </Button>
+              </Menu.Item>
+              <Menu.Item
+                style={{ marginInline: '0px', paddingInline: '0px', margin: '0px 0px 20px 0px' }}
+              >
+                <Button
+                  type="primary"
+                  size="large"
+                  style={{
+                    border: '2px solid #00ADB3',
+                    backgroundColor: '#0B111D',
+                    color: '#00ADB3',
+                    width: '100%',
+                    padding: '2px',
+                    height: '35px',
+                    marginBottom: '5px',
+                  }}
+                >
+                  Đăng ký
+                </Button>
+              </Menu.Item>
+            </>
+          )}
+        </Menu>
+      </Drawer>
+    </div>
   );
 };
 

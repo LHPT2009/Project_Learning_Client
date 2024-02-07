@@ -1,12 +1,37 @@
 import React, { useEffect } from 'react';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import Logo from '../asset/image/logo_clinic.png';
 import bgform from '../asset/image/Background_Form.png';
-
+import { useForm, Controller } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { fetchForgot } from 'features/Client/clientSlice';
 export default function ForgotPassword() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+  const handleOk = async (data) => {
+    const dataForgot = {
+      email: data.email,
+    };
+
+    try {
+      dispatch(fetchForgot(dataForgot));
+      message.success('Đã gửi!');
+      navigate('/forgot');
+    } catch (error) {
+      console.error('Error while submitting form:', error);
+    }
+  };
   const customImageStyle = {
     backgroundImage: `url(${bgform})`,
     backgroundSize: 'cover',
@@ -22,6 +47,7 @@ export default function ForgotPassword() {
   return (
     <div style={customImageStyle}>
       <Form
+        onFinish={handleSubmit(handleOk)}
         name="basic"
         style={{
           width: 'auto',
@@ -61,23 +87,21 @@ export default function ForgotPassword() {
             Quên mật khẩu
           </h2>
         </div>
-        <Form.Item
-          label={
-            <>
-              <p>Vui lòng nhập Email của bạn</p>
-              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
-            </>
-          }
-          name="Email"
-          rules={[
-            {
-              required: true,
-              message: 'Vui lòng nhập email của bạn!',
-            },
-          ]}
-        >
-          <Input placeholder="Nhập email" />
-        </Form.Item>
+        <Controller
+          name="email"
+          control={control}
+          rules={{ required: 'Vui lòng nhập email!' }}
+          render={({ field }) => (
+            <Form.Item
+              label="Vui lòng nhập email"
+              hasFeedback
+              validateStatus={errors.email ? 'error' : ''}
+              help={errors.email && errors.email.message}
+            >
+              <Input {...field} />
+            </Form.Item>
+          )}
+        />
         <Form.Item>
           <Button
             type="primary"

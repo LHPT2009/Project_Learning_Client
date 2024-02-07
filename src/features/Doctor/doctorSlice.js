@@ -10,15 +10,21 @@ export const fetchDoctorsBySpecialty = createAsyncThunk(
   'doctor/fetchDoctorsBySpecialty',
   async (specialists) => {
     const response = await doctorsApi.getDoctorsBySpecialty(specialists);
-    return response;
+    return response.data;
   }
 );
+
+export const fetchGetDoctorById = createAsyncThunk('doctor/fetchGetDoctorById', async (id) => {
+  const response = await doctorsApi.getDoctorById(id);
+  return response.data;
+});
 
 const doctorSlice = createSlice({
   name: 'doctors',
   initialState: {
     doctors: [],
     doctorsspecialty: [],
+    doctorsbyid: {},
     loading: false,
     error: null,
   },
@@ -48,6 +54,20 @@ const doctorSlice = createSlice({
       state.doctorsspecialty = action.payload;
     });
     builder.addCase(fetchDoctorsBySpecialty.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
+    // API fetchGetDoctorById
+    builder.addCase(fetchGetDoctorById.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchGetDoctorById.fulfilled, (state, action) => {
+      state.loading = false;
+      state.doctorsbyid = action.payload;
+    });
+    builder.addCase(fetchGetDoctorById.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });

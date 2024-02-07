@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import Logo from '../asset/image/logo_clinic.png';
 import bgform from '../asset/image/Background_Form.png';
 import { useForm, Controller } from 'react-hook-form';
-// import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-// import { useNavigate } from 'react-router-dom';
-// import clientApi from 'api/clientApi';
-// import Cookies from 'js-cookie';
-// import { loginClient } from '../features/Client/clientSlice';
+import { useNavigate } from 'react-router-dom';
+
+import { updateNewPass } from '../features/Client/clientSlice';
 
 const schema = yup
   .object({
@@ -19,17 +18,35 @@ const schema = yup
   .required();
 
 export default function Reset() {
+
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = (data) => {
-    console.log(`${data.password} -- ${data.repassword}`);
+
+    const dataNewPassWord = {
+      code: code,
+      password: data.password,
+    }
+
+    dispatch(updateNewPass(dataNewPassWord))
+    navigate('/login');
+
+
+    console.log(dataNewPassWord);
   };
 
   const customImageStyle = {
@@ -44,6 +61,22 @@ export default function Reset() {
     justifyContent: 'center',
     alignItems: 'center',
   };
+  // Theo dõi giá trị của trường password và repassword
+  const password = watch("password", "");
+  const repassword = watch("repassword", "");
+
+  // Kiểm tra xem mật khẩu và mật khẩu xác nhận có khớp nhau hay không
+  const passwordsMatch = password === repassword;
+  
+  // Sử dụng useEffect để cập nhật trạng thái của nút "Submit" khi giá trị của password và repassword thay đổi
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+  useEffect(() => {
+    if (!passwordsMatch) {
+      setIsSubmitDisabled(true);
+    } else {
+      setIsSubmitDisabled(false);
+    }
+  }, [password, repassword, passwordsMatch]);
 
   return (
     <div style={customImageStyle}>
@@ -124,10 +157,12 @@ export default function Reset() {
           />
         </Form.Item>
         <Form.Item>
+          {!passwordsMatch && <span style={{ color: 'red' }}>Mật khẩu không khớp</span>}
           <Button
             type="primary"
             htmlType="submit"
             style={{ background: '#00adb3', width: '100%', marginTop: '30px' }}
+            disabled={isSubmitDisabled}
           >
             Tiếp tục
           </Button>

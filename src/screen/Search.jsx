@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Typography, Button, Flex, Avatar, Layout } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+import { fetchDoctors } from '../features/Doctor/doctorSlice';
+import { fetchSpecialists } from '../features/Specialist/specialistSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchHospitals } from 'features/Hospital/hospitalsSlice';
 const { Text, Title } = Typography;
 const { Content } = Layout;
 
@@ -8,64 +12,41 @@ const Search = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  const specialityList = [
-    {
-      src: 'https://cdn.bookingcare.vn/fo/w1920/2023/06/07/160505-bo-sung-icon-goi-khamom-sot.png',
-      text: 'Cúm & Sốt',
-    },
-    {
-      src: 'https://cdn.bookingcare.vn/fo/w1920/2023/12/26/110200-huyen-icon-xet-nghiem.png',
-      text: 'Sốt xuất huyết',
-    },
-    {
-      src: 'https://cdn.bookingcare.vn/fo/w1920/2023/06/07/160452-bo-sung-icon-goi-khamgan.png',
-      text: 'Gan',
-    },
-    {
-      src: 'https://cdn.bookingcare.vn/fo/w1920/2023/06/07/180825-bo-sung-icon-goi-khamdi-ung-1.png',
-      text: 'Dị ứng',
-    },
-  ];
-  const hospitalList = [
-    {
-      src: 'https://cdn.bookingcare.vn/fo/w640/2020/06/03/114348-bv-viet-duc.jpg',
-      text: 'Bệnh viện Hữu nghị Việt Đức',
-    },
-    {
-      src: 'https://cdn.bookingcare.vn/fo/w640/2021/09/14/095119-benh-vien-cho-ray-h1.jpg',
-      text: 'Bệnh viện Chợ Rẫy',
-    },
-    {
-      src: 'https://cdn.bookingcare.vn/fo/w640/2020/05/29/112414-pk-dhyd1.jpg',
-      text: 'Phòng khám Bệnh viện Đại học Y Dược 1',
-    },
-    {
-      src: 'https://cdn.bookingcare.vn/fo/w640/2021/04/29/145224-bn-nam-hoc-va-hiem-muon-hn.jpg',
-      text: 'Bệnh viện Nam học và Hiếm muộn Hà Nội',
-    },
-  ];
-  const doctorList = [
-    {
-      src: 'https://i.ibb.co/ZWBPNyP/Capture.png',
-      doctorName: 'Thạc sĩ, Bác sĩ Nguyễn Văn Nghị ',
-      speciality: 'Tiểu đường - Nội tiết - Ung bướu - Tuyến giáp',
-    },
-    {
-      src: 'https://i.ibb.co/ZWBPNyP/Capture.png',
-      doctorName: 'Bác sĩ Chuyên khoa II Nguyễn Tuấn Minh',
-      speciality: 'Sản Phụ khoa',
-    },
-    {
-      src: 'https://i.ibb.co/ZWBPNyP/Capture.png',
-      doctorName: 'Giáo sư, Tiến sĩ Hà Văn Quyết',
-      speciality: 'Tiêu hoá - Bệnh Viêm gan',
-    },
-    {
-      src: 'https://i.ibb.co/ZWBPNyP/Capture.png',
-      doctorName: 'Phó Giáo sư, Tiến sĩ, Bác sĩ Nguyễn Thị Hoài An',
-      speciality: 'Tai Mũi Họng - Nhi khoa',
-    },
-  ];
+  const { Text, Title } = Typography;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchHospitals(5));
+    dispatch(fetchDoctors(5));
+    dispatch(fetchSpecialists(5));
+    // dispatch(fetchHospitals(5));
+  }, []);
+
+  const isValidURL = (url, imageDefault) => {
+    try {
+      const urlObject = new URL(url);
+
+      // Kiểm tra nếu URL sử dụng giao thức http hoặc https
+      if (urlObject.protocol !== 'http:' && urlObject.protocol !== 'https:') {
+        return imageDefault;
+      }
+
+      // Kiểm tra nếu URL không chứa khoảng trắng
+      if (url.includes(' ')) {
+        return imageDefault;
+      }
+
+      // Các kiểm tra khác tùy thuộc vào yêu cầu cụ thể của bạn
+
+      return url;
+    } catch (error) {
+      return imageDefault;
+    }
+  };
+
+  const doctors = useSelector((state) => state.doctor.doctors);
+  const specialists = useSelector((state) => state.specialist.specialists);
+  const hospitals = useSelector((state) => state.hospital.hospitals);
 
   //
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -103,7 +84,7 @@ const Search = () => {
       >
         Chuyên khoa
       </Title>
-      {specialityList.map((item, index) => (
+      {specialists.map((item, index) => (
         <Button
           type="text"
           key={index}
@@ -119,10 +100,10 @@ const Search = () => {
           <Avatar
             shape="square"
             preview={false}
-            src={item.src}
+            src={isValidURL(item.thumbnail)}
             style={{ width: '50px', height: '50px', marginRight: '10px' }}
           />
-          <Text>{item.text}</Text>
+          <Text>{item.name}</Text>
         </Button>
       ))}
       <Title
@@ -134,7 +115,7 @@ const Search = () => {
       >
         Bệnh viện
       </Title>
-      {hospitalList.map((item, index) => (
+      {hospitals.map((item, index) => (
         <Button
           type="text"
           key={index}
@@ -150,10 +131,10 @@ const Search = () => {
           <Avatar
             shape="square"
             preview={false}
-            src={item.src}
+            src={isValidURL(item.listUrl[0])}
             style={{ width: '50px', height: '50px', marginRight: '10px' }}
           />
-          <Text>{item.text}</Text>
+          <Text>{item.name}</Text>
         </Button>
       ))}
       <Title
@@ -165,7 +146,7 @@ const Search = () => {
       >
         Bác sĩ
       </Title>
-      {doctorList.map((item, index) => (
+      {doctors.map((item, index) => (
         <Button
           type="text"
           key={index}
@@ -181,13 +162,13 @@ const Search = () => {
           <Avatar
             shape="circle"
             preview={false}
-            src={item.src}
+            src={isValidURL(item.image)}
             style={{ width: '50px', height: '50px', marginRight: '10px', marginTop: '-30px' }}
           />
           <Text>
-            {item.doctorName}
+            {item.fullNameDoctor}
             <br />
-            {item.speciality}
+            {item.specialityId[0].name}
           </Text>
         </Button>
       ))}

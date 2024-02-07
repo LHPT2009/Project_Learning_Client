@@ -4,7 +4,6 @@ import {
   theme,
   Button,
   Input,
-  Select,
   Avatar,
   Col,
   Row,
@@ -15,42 +14,94 @@ import {
   Radio,
   message,
 } from 'antd';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { addTempBooking } from '../features/Booking/bookingSlice';
+import { fetchPayments } from '../features/Payment/paymentSlice';
+import { fetchCreateTransaction } from '../features/Transaction/transactionSlice';
 import { UserOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 const { Content } = Layout;
 
+const generateRandomNumbers = () => {
+  const characters = '0123456789';
+  let randomString = '';
+
+  for (let i = 0; i < 5; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    randomString += characters.charAt(randomIndex);
+  }
+
+  return randomString;
+};
+
+function formatDate(inputDateString) {
+  const originalDate = new Date(inputDateString);
+
+  const year = originalDate.getFullYear();
+  const month = (originalDate.getMonth() + 1).toString().padStart(2, '0');
+  const day = originalDate.getDate().toString().padStart(2, '0');
+
+  const formattedDate = `${year}-${month}-${day}`;
+
+  return formattedDate;
+}
+
 export default function Booking() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  const { Text, Title } = Typography;
+
+  const dispatch = useDispatch();
 
   const infoBooking = useSelector((state) => state.booking.infoBooking);
   const infoUser = useSelector((state) => state.client.client);
+  const listPayment = useSelector((state) => state.payment.payments);
+  const loadFullDataUser = useSelector((state) => state.client.userinfo[0]);
+  const infoDoctor = useSelector((state) => state.doctor.doctorsbyid);
 
-  const [description, setDescription] = useState('');
-  const [payment, setPayment] = useState('1');
+  useEffect(() => {
+    dispatch(fetchPayments());
+  }, []);
 
-  // const checkBookingPage = () => {
-  //   if (infoBooking == null) {
-  //     message.error('Hãy chọn thông tin trước khi đặt phòng!');
+  const schema = yup
+    .object({
+      // fullname: yup.string().required('Hãy ghi họ và tên!'),
+      // phone: yup.string().required('Hãy ghi số điện thoại!'),
+      // gender: yup.string().required('chọn giới!'),
+      // dateOfBirth: yup.string().required('chọn ngày sinh!'),
+      // address: yup.string().required('Hãy ghi địa chỉ!'),
+      // description: yup.string().required('Hãy ghi lý do đến khám!'),
+      idPaymentMethod: yup.string().required('Chọn phương thức thanh toán!'),
+    })
+    .required();
 
-  //     navigate('/list');
-  //   } else if (infoUser == null) {
-  //     message.error('Hãy đăng nhập!');
-  //     navigate('/login');
-  //   } else {
-  //     message.success('Hãy kiểm tra thông tin trước khi đặt!');
-  //   }
-  // };
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      fullname: loadFullDataUser ? loadFullDataUser.fullname : '',
+      phone: loadFullDataUser ? loadFullDataUser.phone : '',
+      gender: loadFullDataUser ? loadFullDataUser.gender : '',
+      dateOfBirth: formatDate(loadFullDataUser ? loadFullDataUser.dateOfBirth : ''),
+      address: loadFullDataUser ? loadFullDataUser.address : '',
+      description: '',
+    },
+  });
 
-  // useEffect(() => {
-  //   checkBookingPage();
-  // }, [infoBooking, infoUser]);
+  const { Text, Title } = Typography;
+
+  const formatter = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  });
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -60,32 +111,42 @@ export default function Booking() {
     display: 'block',
   };
   const RadioGroup = Radio.Group;
-  const { TextArea } = Input;
 
-  const listPayment = [
-    {
-      id: 1,
-      name: 'Thanh toán bằng tiền mặt',
-    },
-    {
-      id: 2,
-      name: 'Thanh toán bằng VNPAY',
-    },
-  ];
+  const sendBooking = (data) => {
+    const formatsending = {
+      code: `${generateRandomNumbers()}`,
+      idUser: infoUser.id,
+      bookingDate: infoBooking.bookingDate,
+      idPackage: infoBooking.idPackage,
+      idDoctor: infoBooking.idDoctor,
+      idScheduleDetail: infoBooking.idScheduleDetail,
+      ...data,
+    };
 
-  const formatSendBooking = {
-    code: 'xxxx',
-    idUser: infoUser.id,
-    description: description,
-    bookingDate: infoBooking.bookingDate,
-    idPackage: infoBooking.idPackage,
-    idDoctor: infoBooking.idDoctor,
-    idScheduleDetail: infoBooking.idScheduleDetail,
-    idPayment: payment,
-  };
+    console.log(formatsending);
+    if (formatsending.idPaymentMethod === '1') {
+      dispatch(fetchCreateTransaction(formatsending))
+        .then((item) => {
+          message.success('Đã đặt lịch thành công!');
+          // navigate('/success');
+        })
+        .catch((err) => {
+          message.error('Đã xảy ra lỗi: ', err);
+        });
+    }
 
-  const sendBooking = () => {
-    console.log('Gửi thông tin đặt lịch', formatSendBooking);
+    if (formatsending.idPaymentMethod === '2') {
+      dispatch(addTempBooking(formatsending));
+      dispatch(fetchCreateTransaction(formatsending))
+        .then((item) => {
+          message.loading('Đang xử lý đặt lịch!');
+          // navigate('/success');
+          window.open(`${item.payload}`, '_blank');
+        })
+        .catch((err) => {
+          message.error('Đã xảy ra lỗi: ', err);
+        });
+    }
   };
 
   return (
@@ -122,7 +183,7 @@ export default function Booking() {
           <Title level={3} style={{ color: '#005761' }}>
             Thông tin bác sĩ
           </Title>
-          <Row>
+          {/* <Row>
             <Col
               xs={24}
               sm={24}
@@ -130,41 +191,90 @@ export default function Booking() {
               lg={6}
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-              <Avatar size={150} icon={<UserOutlined />} />
+              <Avatar size={150} icon={<UserOutlined />} src={infoDoctor?.image} />
             </Col>
             <Col xs={24} sm={24} md={24} lg={18}>
               <Space direction="vertical">
                 <Title level={3} style={{ color: '#005761' }}>
-                  Bác sĩ chuyên khoa I Nguyễn Văn A
+                  Bác sĩ chuyên khoa I {infoDoctor.fullNameDoctor}
                 </Title>
-                <Text>Cơ xương khớp</Text>
-                <Text>Bệnh viện Đa khoa trung ương</Text>
-                <Text>Ngày: Thứ hai - 15/1/2024</Text>
+                <Text>{infoDoctor.hospitalsName}</Text>
+                <Text>{infoDoctor.hospitalsName}</Text>
+                <Text>
+                  Ngày: {infoBooking.timeScheduleDetail} - {infoBooking.bookingDay} -{' '}
+                  {infoBooking.bookingDate}
+                </Text>
               </Space>
             </Col>
-          </Row>
+          </Row> */}
           <Title level={3} style={{ color: '#005761' }}>
             Thông tin khách hàng
           </Title>
           <Row>
             <Col xs={24} sm={24} md={24} lg={24}>
-              <Form labelCol={{ span: 2 }} wrapperCol={{ span: 24 }} layout="vertical">
-                <Form.Item label="Tên khách hàng" labelCol={{ span: 24 }}>
-                  <Input disabled />
+              <Form
+                labelCol={{ span: 2 }}
+                wrapperCol={{ span: 24 }}
+                layout="vertical"
+                onFinish={handleSubmit(sendBooking)}
+              >
+                <Form.Item
+                  label="Tên khách hàng"
+                  labelCol={{ span: 24 }}
+                  help={
+                    errors.fullname && (
+                      <span style={{ color: 'red' }}>{errors.fullname.message}</span>
+                    )
+                  }
+                >
+                  <Controller
+                    name="fullname"
+                    control={control}
+                    render={({ field }) => <Input {...field} />}
+                  />
                 </Form.Item>
-                <Form.Item label="Số điện thoại" labelCol={{ span: 24 }}>
-                  <Input disabled />
+                <Form.Item
+                  label="Số điện thoại"
+                  labelCol={{ span: 24 }}
+                  help={
+                    errors.phone && <span style={{ color: 'red' }}>{errors.phone.message}</span>
+                  }
+                >
+                  <Controller
+                    name="phone"
+                    control={control}
+                    render={({ field }) => <Input {...field} />}
+                  />
                 </Form.Item>
-                <Form.Item label="Giới tính" labelCol={{ span: 24 }}>
-                  <Select disabled>
-                    <Select.Option value="demo" labelCol={{ span: 24 }}>
-                      Demo
-                    </Select.Option>
-                  </Select>
+                <Form.Item
+                  label="Giới tính"
+                  labelCol={{ span: 24 }}
+                  help={
+                    errors.gender && <span style={{ color: 'red' }}>{errors.gender.message}</span>
+                  }
+                >
+                  <Controller
+                    name="gender"
+                    control={control}
+                    render={({ field }) => <Input {...field} />}
+                  />
                 </Form.Item>
-                <Form.Item label="Ngày sinh" labelCol={{ span: 24 }}>
-                  <DatePicker style={{ width: '100%' }} disabled />
+                <Form.Item
+                  label="Ngày sinh"
+                  labelCol={{ span: 24 }}
+                  help={
+                    errors.dateOfBirth && (
+                      <span style={{ color: 'red' }}>{errors.dateOfBirth.message}</span>
+                    )
+                  }
+                >
+                  <Controller
+                    name="dateOfBirth"
+                    control={control}
+                    render={({ field }) => <Input {...field} />}
+                  />
                 </Form.Item>
+
                 {/* <Form.Item label="Chọn tỉnh/thành phố" labelCol={{ span: 24 }}>
                   <Select>
                     <Select.Option value="demo" labelCol={{ span: 24 }}>
@@ -192,24 +302,62 @@ export default function Booking() {
                 >
                   <Input />
                 </Form.Item> */}
-                <Form.Item label="Địa chỉ" labelCol={{ span: 24 }}>
-                  <Input disabled />
+                <Form.Item
+                  label="Địa chỉ"
+                  labelCol={{ span: 24 }}
+                  help={
+                    errors.address && <span style={{ color: 'red' }}>{errors.address.message}</span>
+                  }
+                >
+                  <Controller
+                    name="address"
+                    control={control}
+                    render={({ field }) => <Input {...field} />}
+                  />
                 </Form.Item>
-                <Form.Item label="Lí do khám" labelCol={{ span: 24 }}>
-                  <Input onClick={(e) => setDescription(e.target.value)} />
+                <Form.Item
+                  label="Lí do khám"
+                  labelCol={{ span: 24 }}
+                  help={
+                    errors.description && (
+                      <span style={{ color: 'red' }}>{errors.description.message}</span>
+                    )
+                  }
+                >
+                  <Controller
+                    name="description"
+                    control={control}
+                    render={({ field }) => (
+                      <Input.TextArea
+                        name="description"
+                        {...field}
+                        placeholder="Nhập mô tả tình trạng"
+                      />
+                    )}
+                  />
                 </Form.Item>
-                <Form.Item label="Phương thức thanh toán" labelCol={{ span: 24 }}>
-                  <RadioGroup>
-                    {listPayment.map((item) => (
-                      <Radio
-                        style={radioStyle}
-                        value={item.id}
-                        onClick={(e) => setPayment(e.target.value)}
-                      >
-                        {item.name}
-                      </Radio>
-                    ))}
-                  </RadioGroup>
+                <Form.Item
+                  label="Phương thức thanh toán"
+                  labelCol={{ span: 24 }}
+                  help={
+                    errors.idPaymentMethod && (
+                      <span style={{ color: 'red' }}>{errors.idPaymentMethod.message}</span>
+                    )
+                  }
+                >
+                  <Controller
+                    name="idPaymentMethod"
+                    control={control}
+                    render={({ field }) => (
+                      <RadioGroup key="idPaymentMethod" {...field}>
+                        {listPayment.map((item) => (
+                          <Radio style={radioStyle} value={item.id}>
+                            {item.name}
+                          </Radio>
+                        ))}
+                      </RadioGroup>
+                    )}
+                  />
                 </Form.Item>
                 <Form.Item label="Chi phí khám" labelCol={{ span: 24 }}>
                   <Row>
@@ -243,9 +391,11 @@ export default function Booking() {
                       }}
                     >
                       <Space direction="vertical">
-                        <Text>500.000đ</Text>
-                        <Text>50.000đ</Text>
-                        <Text style={{ color: 'red' }}>550.000đ</Text>
+                        <Text>{formatter.format(infoBooking.pricePakage)}</Text>
+                        <Text>{formatter.format(50000)}</Text>
+                        <Text style={{ color: 'red' }}>
+                          {formatter.format(infoBooking.pricePakage + 50000)}
+                        </Text>
                       </Space>
                     </Col>
                   </Row>
@@ -255,7 +405,8 @@ export default function Booking() {
                     type="primary"
                     size="large"
                     style={{ backgroundColor: '#00ADB3', width: '100%' }}
-                    onClick={() => sendBooking()}
+                    // onClick={() => sendBooking()}
+                    htmlType="submit"
                   >
                     Xác nhận đặt lịch khám
                   </Button>

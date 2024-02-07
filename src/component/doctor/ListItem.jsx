@@ -4,7 +4,7 @@ import Item from './Item';
 const ListItemArr = ({ arrdoctors }) => {
   return (
     <>
-      {arrdoctors.map((item) => (
+      {arrdoctors?.map((item) => (
         <Item dataItem={item} />
       ))}
     </>
