@@ -7,7 +7,6 @@ const transactionApi = {
   },
   transactionCallback(vnp_Response, datarequest) {
     const url = `/api/transaction/callback?vnp_Response=${vnp_Response}`;
-    console.log('check data: ', datarequest);
     return axiosClient.post(url, datarequest);
   },
 };

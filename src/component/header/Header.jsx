@@ -1,4 +1,4 @@
-import './Style.css';
+import './style.css';
 import React, { useState } from 'react';
 import {
   Drawer,
@@ -34,15 +34,25 @@ const lngs = {
 const MenuComponent = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const { Option } = Select;
-  const infoUser = useSelector((state) => state.client.userinfo);
+  const checkUser = useSelector((state) => state.client.client);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const logoutAccount = () => {
     message.success('Cảm ơn bạn đã sử dụng dịch vụ!');
-    logout();
+    dispatch(logout());
     navigate('/login');
   };
+
+  const routeLogin = () => {
+    navigate('/login');
+  };
+
+  const routeRegister = () => {
+    navigate('/register');
+  };
+
+  // const infoUser = useSelector((state) => state.client.userinfo[0]);
 
   return (
     <div
@@ -85,8 +95,6 @@ const MenuComponent = () => {
         />
       </div>
       <span className="headerMenu">
-        {/* <ListMenu userData={infoUser} /> */}
-
         <Header
           style={{
             backgroundColor: '#0B111D',
@@ -132,13 +140,18 @@ const MenuComponent = () => {
                     </Option>
                   ))}
                 </Select>
-                {infoUser ? (
+                {checkUser !== null ? (
                   <>
                     <Dropdown
                       trigger={['click']}
                       overlay={
                         <Menu>
-                          <Menu.Item key="1">Thông tin cá nhân</Menu.Item>
+                          <Menu.Item
+                            key="1"
+                            onClick={() => message.warning('Chức năng đang phát triển...')}
+                          >
+                            Thông tin cá nhân
+                          </Menu.Item>
                           <Menu.Item key="2" onClick={logoutAccount}>
                             Đăng xuất
                           </Menu.Item>
@@ -147,7 +160,7 @@ const MenuComponent = () => {
                       placement="bottom"
                     >
                       <Button type="link" style={{ color: '#fff', height: '45px' }}>
-                        Chào Tùng
+                        {/* Chào {infoUser.fullname} */}
                         <DownOutlined />
                         <Avatar
                           style={{
@@ -172,6 +185,7 @@ const MenuComponent = () => {
                       type="primary"
                       size="large"
                       style={{ backgroundColor: '#00ADB3', width: '120px' }}
+                      onClick={routeLogin}
                     >
                       Đăng nhập
                     </Button>
@@ -184,6 +198,7 @@ const MenuComponent = () => {
                         color: '#00ADB3',
                         width: '120px',
                       }}
+                      onClick={routeRegister}
                     >
                       Đăng ký
                     </Button>
@@ -254,7 +269,6 @@ const MenuComponent = () => {
             </Button>
           </Col>
         </Row>
-        {/* <ListMenuApp isInline userData={infoUser} /> */}
         <Menu
           mode={openMenu ? 'inline' : 'horizontal'}
           style={{
@@ -298,7 +312,7 @@ const MenuComponent = () => {
               Đặt lịch
             </Button>
           </Menu.Item>
-          {infoUser ? (
+          {checkUser !== null ? (
             <>
               <Menu.Item
                 style={{ marginInline: '0px', paddingInline: '0px', margin: '0px 0px 20px 0px' }}
@@ -307,7 +321,12 @@ const MenuComponent = () => {
                   trigger={['click']}
                   overlay={
                     <Menu>
-                      <Menu.Item key="1">Thông tin cá nhân</Menu.Item>
+                      <Menu.Item
+                        key="1"
+                        onClick={() => message.warning('Chức năng đang phát triển...')}
+                      >
+                        Thông tin cá nhân
+                      </Menu.Item>
                       <Menu.Item key="2" onClick={logoutAccount}>
                         Đăng xuất
                       </Menu.Item>
@@ -324,7 +343,7 @@ const MenuComponent = () => {
                       width: openMenu ? '100%' : '120px',
                     }}
                   >
-                    Chào Tùng
+                    {/* Chào {infoUser.fullname} */}
                     <DownOutlined />
                     <Avatar
                       style={{
@@ -346,6 +365,7 @@ const MenuComponent = () => {
                   type="primary"
                   size="large"
                   style={{ backgroundColor: '#00ADB3', width: openMenu ? '100%' : '120px' }}
+                  onClick={routeLogin}
                 >
                   Đăng nhập
                 </Button>
@@ -365,6 +385,7 @@ const MenuComponent = () => {
                     height: '35px',
                     marginBottom: '5px',
                   }}
+                  onClick={routeRegister}
                 >
                   Đăng ký
                 </Button>

@@ -2,13 +2,21 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import clientApi from '../../api/clientApi';
 
 export const fetchClientLogin = createAsyncThunk('client/fetchClientLogin', async (userData) => {
-  const response = await clientApi.login(userData);
-  return response.data;
+  try {
+    const response = await clientApi.login(userData);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
 });
 
 export const fetchregister = createAsyncThunk('user/fetchRegister', async (dataRegister) => {
-  const response = await clientApi.register(dataRegister);
-  return response.data;
+  try {
+    const response = await clientApi.register(dataRegister);
+    return response;
+  } catch (err) {
+    return err.response;
+  }
 });
 
 export const fetchGetUserById = createAsyncThunk('user/fetchGetUserById', async (id) => {
@@ -22,9 +30,14 @@ export const fetchForgot = createAsyncThunk('user/fetchForgot', async (dataForgo
 });
 
 export const updateNewPass = createAsyncThunk('user/updateNewPass', async (dataNewPass) => {
-  const response = await clientApi.updateNewPass(dataNewPass);
-  return response.data;
+  try {
+    const response = await clientApi.updateNewPass(dataNewPass);
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
 });
+
 const clientSlice = createSlice({
   name: 'client',
   initialState: {
@@ -44,6 +57,9 @@ const clientSlice = createSlice({
       state.client = null;
       state.userinfo = {};
       state.isClient = false;
+    },
+    clearMessageError: (state) => {
+      state.errorregister = null;
     },
   },
   extraReducers: (builder) => {
@@ -78,6 +94,6 @@ const clientSlice = createSlice({
   },
 });
 
-export const { logout, loginClient } = clientSlice.actions;
+export const { logout, loginClient, clearMessageError } = clientSlice.actions;
 
 export default clientSlice.reducer;

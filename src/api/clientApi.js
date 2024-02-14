@@ -11,8 +11,7 @@ const clientApi = {
       const response = await axiosClient.post(url, dataRegister);
       return response;
     } catch (error) {
-      console.error('Error fetching user with role:', error.message);
-      return [];
+      throw error;
     }
   },
   getUserById: async (id) => {
