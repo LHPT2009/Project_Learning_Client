@@ -224,23 +224,30 @@ const DataItem = ({ dataItem }) => {
                 Xem chi tiết.
               </Link>
             </Text>
-            <Button
-              type="primary"
-              size="middle"
-              style={{ width: 250, backgroundColor: '#00ADB3' }}
-              onClick={() => addInfo()}
-            >
-              Đặt phòng
-            </Button>
-            <Link to={'/login'}>
-              <Button
-                type="primary"
-                size="middle"
-                style={{ width: 250, backgroundColor: '#00ADB3' }}
-              >
-                Hãy đăng nhập trước khi đặt phòng
-              </Button>
-            </Link>
+            {checkuser !== null ? (
+              <>
+                <Button
+                  type="primary"
+                  size="middle"
+                  style={{ width: 250, backgroundColor: '#00ADB3' }}
+                  onClick={() => addInfo()}
+                >
+                  Đặt phòng
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to={'/login?goBack=true'}>
+                  <Button
+                    type="primary"
+                    size="middle"
+                    style={{ width: 250, backgroundColor: '#00ADB3' }}
+                  >
+                    Hãy đăng nhập trước khi đặt phòng
+                  </Button>
+                </Link>
+              </>
+            )}
           </Space>
         </Col>
       </Row>

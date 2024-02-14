@@ -1,29 +1,43 @@
-import React, { useEffect } from 'react';
-import { Button, Form, Input, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Form, Input, message, Spin } from 'antd';
 import Logo from '../asset/image/logo_clinic.png';
 import bgform from '../asset/image/Background_Form.png';
 import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchForgot } from 'features/Client/clientSlice';
+import { LoadingOutlined } from '@ant-design/icons';
+
 export default function ForgotPassword() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  const [spinning, setSpinning] = useState(true);
+  setTimeout(() => {
+    setSpinning(false);
+  }, 500);
+  const schema = yup
+    .object({
+      email: yup.string().required('Hãy điền thông tin mail!'),
+    })
+    .required();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ resolver: yupResolver(schema) });
+
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
   const handleOk = async (data) => {
     const dataForgot = {
       email: data.email,
     };
-
     try {
       dispatch(fetchForgot(dataForgot));
       message.success('Đã gửi!');
@@ -44,8 +58,12 @@ export default function ForgotPassword() {
     justifyContent: 'center',
     alignItems: 'center',
   };
+  const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
+
   return (
     <div style={customImageStyle}>
+      <Spin spinning={spinning} indicator={antIcon} fullscreen style={{ background: '#ECF3F4' }} />
+
       <Form
         onFinish={handleSubmit(handleOk)}
         name="basic"
@@ -87,26 +105,27 @@ export default function ForgotPassword() {
             Quên mật khẩu
           </h2>
         </div>
-        <Controller
-          name="email"
-          control={control}
-          rules={{ required: 'Vui lòng nhập email!' }}
-          render={({ field }) => (
-            <Form.Item
-              label="Vui lòng nhập email"
-              hasFeedback
-              validateStatus={errors.email ? 'error' : ''}
-              help={errors.email && errors.email.message}
-            >
-              <Input {...field} />
-            </Form.Item>
-          )}
-        />
+        <Form.Item
+          label={
+            <>
+              Vui lòng nhập email <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+            </>
+          }
+          hasFeedback
+          validateStatus={errors.email ? 'error' : ''}
+          help={errors.email && errors.email.message}
+        >
+          <Controller name="email" control={control} render={({ field }) => <Input {...field} />} />
+        </Form.Item>
         <Form.Item>
           <Button
             type="primary"
             htmlType="submit"
-            style={{ background: '#00adb3', width: '100%', marginTop: '30px' }}
+            style={{
+              background: '#00adb3',
+              width: '100%',
+              // , marginTop: '10px'
+            }}
           >
             Đặt lại mật khẩu của bạn
           </Button>

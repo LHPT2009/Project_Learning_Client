@@ -1,5 +1,18 @@
-import React, { useEffect } from 'react';
-import { Layout, Carousel, Row, Col, Typography, Space, Image, Button, Rate, Avatar } from 'antd';
+import React, { useEffect, useState } from 'react';
+import {
+  Layout,
+  Carousel,
+  Row,
+  Col,
+  Typography,
+  Space,
+  Image,
+  Button,
+  Rate,
+  Avatar,
+  Result,
+  Spin,
+} from 'antd';
 import bgposter from '../asset/image/Background_Poster.png';
 import itposter from '../asset/image/Item_Poster.png';
 
@@ -14,6 +27,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchDoctors } from '../features/Doctor/doctorSlice';
 import { fetchSpecialists } from '../features/Specialist/specialistSlice';
 import { Link } from 'react-router-dom';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const { Content } = Layout;
 
@@ -41,12 +55,14 @@ const HomePage = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const [spinning, setSpinning] = useState(true);
+
   const { Text, Title } = Typography;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchDoctors(3));
-    dispatch(fetchSpecialists(3));
+    dispatch(fetchDoctors(8));
+    dispatch(fetchSpecialists(8));
   }, []);
 
   const isValidURL = (url, imageDefault) => {
@@ -70,10 +86,17 @@ const HomePage = () => {
   const doctors = useSelector((state) => state.doctor.doctors);
   const specialists = useSelector((state) => state.specialist.specialists);
 
-  console.log(doctors);
-  console.log(specialists);
+  useEffect(() => {
+    setTimeout(() => {
+      setSpinning(false);
+    }, 500);
+  }, [doctors, specialists]);
+
+  const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
+
   return (
     <Layout style={{ height: 'auto' }}>
+      <Spin spinning={spinning} indicator={antIcon} fullscreen style={{ background: '#ECF3F4' }} />
       <Content>
         <Carousel autoplay>
           <div>
@@ -324,75 +347,86 @@ const HomePage = () => {
               Cơ sở y tế uy tín{' '}
             </Title>
           </Col>
-          {/* xu ly (start) */}
-          {specialists.map((item) => (
-            <Col
-              key={item.id}
-              xs={24}
-              sm={24}
-              md={24}
-              lg={6}
-              style={{
-                padding: '0px 20px',
-                margin: '20px 0px',
-              }}
-            >
-              <Link to={`/list?specialists=${item.id}`}>
-                <Button
-                  type="text"
-                  style={{ width: '100%', height: '90px', border: '1px solid #00ADB3' }}
+          {specialists ? (
+            <>
+              {specialists.map((item) => (
+                <Col
+                  key={item.id}
+                  xs={24}
+                  sm={24}
+                  md={24}
+                  lg={6}
+                  style={{
+                    padding: '0px 20px',
+                    margin: '20px 0px',
+                  }}
                 >
-                  <Space direction="horizontal">
-                    <Image
-                      preview={false}
-                      key="custom-image"
-                      alt="Custom Image"
-                      src={isValidURL(item.thumbnail, IconFive)}
-                      style={{ width: '71px', height: '66px' }}
-                    />
-                    <Title level={4} style={{ paddingBottom: '15px' }}>
-                      {item.name}
-                    </Title>
-                  </Space>
+                  <Link to={`/list?specialists=${item.id}`}>
+                    <Button
+                      type="text"
+                      style={{ width: '100%', height: '90px', border: '1px solid #00ADB3' }}
+                    >
+                      <Space direction="horizontal">
+                        <Image
+                          preview={false}
+                          key="custom-image"
+                          alt="Custom Image"
+                          src={isValidURL(item.thumbnail, IconFive)}
+                          style={{ width: '71px', height: '66px' }}
+                        />
+                        <Title level={4} style={{ paddingBottom: '15px' }}>
+                          {item.name}
+                        </Title>
+                      </Space>
+                    </Button>
+                  </Link>
+                </Col>
+              ))}
+              <Col
+                xs={24}
+                sm={24}
+                md={24}
+                lg={24}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: '20px',
+                }}
+              >
+                <Button
+                  type="default"
+                  size="large"
+                  style={{
+                    border: '2px solid #00ADB3',
+                    backgroundColor: '#ECF3F4',
+                    color: '#005761',
+                    width: '120px',
+                  }}
+                >
+                  Xem thêm
                 </Button>
-              </Link>
-            </Col>
-          ))}
-          {/* xu ly (end) */}
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={24}
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: '20px',
-            }}
-          >
-            <Button
-              type="default"
-              size="large"
-              style={{
-                border: '2px solid #00ADB3',
-                backgroundColor: '#ECF3F4',
-                color: '#005761',
-                width: '120px',
-              }}
-            >
-              Xem thêm
-            </Button>
-          </Col>
+              </Col>
+            </>
+          ) : (
+            <>
+              <Result
+                status="info"
+                title="Đang trong quá trình cập nhật..."
+                style={{
+                  width: '100%',
+                  height: '300px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                }}
+              />
+            </>
+          )}
         </Row>
 
-        <Row
-          style={
-            {
-              // backgroundColor: '#ECF3F4',
-            }
-          }
-        >
+        <Row>
           <Col
             xs={24}
             sm={24}
@@ -408,66 +442,83 @@ const HomePage = () => {
               Bác sĩ nổi bật
             </Title>
           </Col>
-          {/* xu ly bac si (start) */}
-          {/* {doctors.map((item) => (
-            <Col
-              key={item.id}
-              xs={24}
-              sm={24}
-              md={24}
-              lg={6}
-              style={{
-                padding: '0px 20px',
-                margin: '20px 0px',
-              }}
-            >
-              <Button
-                type="text"
-                style={{ width: '100%', height: '330px', border: '1px solid #00ADB3' }}
+          {doctors ? (
+            <>
+              {doctors.map((item) => (
+                <Col
+                  key={item.id}
+                  xs={24}
+                  sm={24}
+                  md={24}
+                  lg={6}
+                  style={{
+                    padding: '0px 20px',
+                    margin: '20px 0px',
+                  }}
+                >
+                  <Button
+                    type="text"
+                    style={{ width: '100%', height: '330px', border: '1px solid #00ADB3' }}
+                  >
+                    <Space direction="vertical" style={{ padding: '20px' }}>
+                      <Avatar
+                        preview={false}
+                        key="custom-image"
+                        alt="Custom Image"
+                        src={isValidURL(item.image, IconAvatar)}
+                        style={{ width: '163px', height: '163px' }}
+                      />
+                      <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
+                        {item.fullNameDoctor}
+                      </Title>
+                      <Text>{item.specialityId[0].name}</Text>
+                      <Rate disabled defaultValue={5} />
+                    </Space>
+                  </Button>
+                </Col>
+              ))}
+              <Col
+                xs={24}
+                sm={24}
+                md={24}
+                lg={24}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: '20px',
+                }}
               >
-                <Space direction="vertical" style={{ padding: '20px' }}>
-                  <Avatar
-                    preview={false}
-                    key="custom-image"
-                    alt="Custom Image"
-                    src={isValidURL(item.image, IconAvatar)}
-                    style={{ width: '163px', height: '163px' }}
-                  />
-                  <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                    {item.fullNameDoctor}
-                  </Title>
-                  <Text>{item.specialityId[0].name}</Text>
-                  <Rate disabled defaultValue={5} />
-                </Space>
-              </Button>
-            </Col>
-          ))} */}
-          {/* xu ly bac si (end) */}
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={24}
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: '20px',
-            }}
-          >
-            <Button
-              type="default"
-              size="large"
-              style={{
-                border: '2px solid #00ADB3',
-                backgroundColor: '#ECF3F4',
-                color: '#005761',
-                width: '120px',
-              }}
-            >
-              Xem thêm
-            </Button>
-          </Col>
+                <Button
+                  type="default"
+                  size="large"
+                  style={{
+                    border: '2px solid #00ADB3',
+                    backgroundColor: '#ECF3F4',
+                    color: '#005761',
+                    width: '120px',
+                  }}
+                >
+                  Xem thêm
+                </Button>
+              </Col>
+            </>
+          ) : (
+            <>
+              <Result
+                status="info"
+                title="Đang trong quá trình cập nhật..."
+                style={{
+                  width: '100%',
+                  height: '300px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                }}
+              />
+            </>
+          )}
         </Row>
       </Content>
     </Layout>

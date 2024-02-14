@@ -1,15 +1,16 @@
-import React, { useEffect } from 'react';
-import { Button, Form, Input } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Form, Input, message, Spin } from 'antd';
 import Logo from '../asset/image/logo_clinic.png';
 import bgform from '../asset/image/Background_Form.png';
 import { useForm, Controller } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import clientApi from 'api/clientApi';
 import Cookies from 'js-cookie';
 import { loginClient, fetchGetUserById } from '../features/Client/clientSlice';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const schema = yup
   .object({
@@ -18,10 +19,30 @@ const schema = yup
   })
   .required();
 
+const key = 'updatable';
+
 export default function LoginUser() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  const [spinning, setSpinning] = useState(true);
+  const checkUser = useSelector((state) => state.client.client);
+
+  useEffect(() => {
+    checklogin();
+  }, []);
+
+  const checklogin = () => {
+    if (checkUser === null) {
+      setTimeout(() => {
+        setSpinning(false);
+      }, 500);
+    } else {
+      navigate('/');
+    }
+  };
+  const params = new URLSearchParams(window.location.search);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
@@ -33,6 +54,7 @@ export default function LoginUser() {
   const onSubmit = async (data) => {
     try {
       const response = await clientApi.login(data);
+      const checkgoback = params.get('goBack');
 
       if (response.data.token) {
         dispatch(loginClient(response.data));
@@ -41,15 +63,21 @@ export default function LoginUser() {
         Cookies.set('refreshToken', response.data.refreshToken, { expires: 1 });
 
         if (response.data.roles.includes('ROLE_USER')) {
-          navigate('/');
+          if (checkgoback === null) {
+            navigate('/');
+            message.success('Chào mừng bạn đã trở lại!');
+          } else {
+            navigate(-1);
+            message.success('Mời bạn tiếp tục');
+          }
         } else {
           alert('Bạn không có quyền truy cập!');
           Cookies.remove('accessToken');
           Cookies.remove('refreshToken');
         }
       }
-      console.log('API Response:', response.data);
     } catch (error) {
+      message.error('Tại khoản hoặc mật khẩu của bạn hiện đang không đúng!');
       console.error('Error calling login API:', error);
     }
   };
@@ -67,8 +95,11 @@ export default function LoginUser() {
     alignItems: 'center',
   };
 
+  const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
+
   return (
     <div style={customImageStyle}>
+      <Spin spinning={spinning} indicator={antIcon} fullscreen style={{ background: '#ECF3F4' }} />
       <Form
         name="basic"
         style={{
