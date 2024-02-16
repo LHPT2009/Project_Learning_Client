@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { LoadingOutlined } from '@ant-design/icons';
-
+import { useTranslation } from 'react-i18next';
 const schema = yup
   .object({
     username: yup.string().required('Mời bạn nhập tên tài khoản!'),
@@ -39,6 +39,8 @@ export default function Register() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const { t } = useTranslation();
 
   const [spinning, setSpinning] = useState(true);
   setTimeout(() => {
@@ -178,11 +180,11 @@ export default function Register() {
               color: '#00adb3',
             }}
           >
-            Đăng ký
+            {t('description.columncontent.register.title')}
           </h2>
         </div>
         <Form.Item
-          label="Tên tài khoản"
+          label= {t('description.columncontent.register.username')}
           hasFeedback
           validateStatus={errors.username ? 'error' : ''}
           help={errors.username && errors.username.message}
@@ -195,7 +197,7 @@ export default function Register() {
           />
         </Form.Item>
         <Form.Item
-          label="Mật khẩu"
+          label={t('description.columncontent.register.password')}
           hasFeedback
           validateStatus={errors.password ? 'error' : ''}
           help={errors.password && errors.password.message}
@@ -209,7 +211,7 @@ export default function Register() {
         </Form.Item>
 
         <Form.Item
-          label="Họ và tên"
+          label={t('description.columncontent.register.fullname')}
           hasFeedback
           validateStatus={errors.fullname ? 'error' : ''}
           help={errors.fullname && errors.fullname.message}
@@ -223,7 +225,7 @@ export default function Register() {
         </Form.Item>
 
         <Form.Item
-          label="Giới tính"
+          label={t('description.columncontent.register.gender')}
           name="gender"
           hasFeedback
           validateStatus={errors.gender ? 'error' : ''}
@@ -234,11 +236,11 @@ export default function Register() {
               <Radio.Group>
                 <Radio {...field} value="Nam">
                   {' '}
-                  Nam{' '}
+                  {t('description.columncontent.register.male')}{' '}
                 </Radio>
                 <Radio {...field} value="Nữ">
                   {' '}
-                  Nữ{' '}
+                  {t('description.columncontent.register.female')}{' '}
                 </Radio>
               </Radio.Group>
             )}
@@ -248,7 +250,7 @@ export default function Register() {
         </Form.Item>
 
         <Form.Item
-          label="Ngày sinh"
+          label={t('description.columncontent.register.dateOfBirth')}
           name="dateOfBirth"
           hasFeedback
           validateStatus={errors.dateOfBirth ? 'error' : ''}
@@ -264,7 +266,7 @@ export default function Register() {
         </Form.Item>
 
         <Form.Item
-          label="Số điện thoại"
+          label={t('description.columncontent.register.phone')}
           hasFeedback
           validateStatus={errors.phone ? 'error' : ''}
           help={errors.phone && errors.phone.message}
@@ -292,7 +294,7 @@ export default function Register() {
         </Form.Item>
 
         <Form.Item
-          label="Địa chỉ"
+          label={t('description.columncontent.register.address')}
           hasFeedback
           validateStatus={errors.address ? 'error' : ''}
           help={errors.address && errors.address.message}
@@ -311,7 +313,7 @@ export default function Register() {
             htmlType="submit"
             style={{ background: '#00adb3', width: '100%', marginTop: '30px' }}
           >
-            Đăng ký
+            {t('description.columncontent.register.submit')}
           </Button>
         </Form.Item>
       </Form>

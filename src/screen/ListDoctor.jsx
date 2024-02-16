@@ -7,14 +7,14 @@ import ListItemArr from 'component/doctor/ListItem';
 import bglist from '../asset/image/Background_List.png';
 import { fetchDoctorsBySpecialty } from '../features/Doctor/doctorSlice';
 import { LoadingOutlined } from '@ant-design/icons';
-
+import { useTranslation } from 'react-i18next';
 const { Content, Header } = Layout;
 const { Text, Title, Link } = Typography;
 const ListDotor = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
+  const { t } = useTranslation();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const specialists = searchParams.get('specialists');
@@ -55,32 +55,28 @@ const ListDotor = () => {
             <Content style={{ padding: '0px 50px' }}>
               <Space direction="vertical" size="middle">
                 <Title level={2} style={{ lineHeight: '15px' }}>
-                  Cơ Xương Khớp
+                  {t('description.columncontent.listdoctor.title1')}
                 </Title>
                 <Title level={3} style={{ lineHeight: '25px' }}>
-                  Bác sĩ xương khớp giỏi
+                {t('description.columncontent.listdoctor.title2')}
                 </Title>
                 <Title level={4} style={{ lineHeight: '20px' }}>
-                  Danh sách các bác sĩ uy tín đầu ngành Cơ Xương Khớp tại Việt Nam:
+                {t('description.columncontent.listdoctor.title3')}
                 </Title>
                 <Text style={{ lineHeight: '15px' }}>
-                  - Các chuyên gia có quá trình đào tạo bài bản, nhiều kinh nghiệm
+                {t('description.columncontent.listdoctor.title4')}
                 </Text>
                 <Text style={{ lineHeight: '15px' }}>
-                  - Các giáo sư, phó giáo sư đang trực tiếp nghiên cứu và giảng dạy tại Đại học Y
-                  khoa Hà Nội
+                {t('description.columncontent.listdoctor.title5')}
                 </Text>
                 <Text style={{ lineHeight: '15px' }}>
-                  - Các bác sĩ đã, đang công tác tại các bệnh viện hàng đầu Khoa Cơ Xương Khớp -
-                  Bệnh viện Bạch Mai, Bệnh viện Hữu nghị Việt Đức,Bệnh Viện E.
+                {t('description.columncontent.listdoctor.title6')}
                 </Text>
                 <Text style={{ lineHeight: '15px' }}>
-                  - Là thành viên hoặc lãnh đạo các tổ chức chuyên môn như: Hiệp hội Cơ Xương Khớp,
-                  Hội Thấp khớp học,...{' '}
+                {t('description.columncontent.listdoctor.title7')}{' '}
                 </Text>
                 <Text style={{ lineHeight: '15px' }}>
-                  - Được nhà nước công nhận các danh hiệu Thầy thuốc Nhân dân, Thầy thuốc Ưu tú, Bác
-                  sĩ Cao cấp,...
+                {t('description.columncontent.listdoctor.title8')}
                 </Text>
               </Space>
             </Content>

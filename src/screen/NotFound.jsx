@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Result, Spin, Button } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-
+import { useTranslation } from 'react-i18next';
 export default function NotFound() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
+  const { t } = useTranslation();
   const navigate = useNavigate();
   useEffect(() => {
     showLoader();
@@ -38,7 +38,7 @@ export default function NotFound() {
       <Result
         status="404"
         title="404"
-        subTitle="Xin lỗi, những chúng tôi không tìm thấy trang của bạn."
+        subTitle={t('description.columncontent.notfound.subTitle')}
         extra={
           <Button
             type="primary"
@@ -46,7 +46,7 @@ export default function NotFound() {
             onClick={() => navigate('/')}
             style={{ backgroundColor: '#00ADB3' }}
           >
-            Trở về trang chủ
+            {t('description.columncontent.notfound.subTitle')}
           </Button>
         }
       />

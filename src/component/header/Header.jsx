@@ -1,4 +1,4 @@
-import './style.css';
+import './Style.css';
 import React, { useState } from 'react';
 import {
   Drawer,
@@ -23,37 +23,40 @@ import LogoAdmin from '../../asset/image/LogoAdmin.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from 'features/Client/clientSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 const { Header } = Layout;
-
+ 
 const lngs = {
   vn: { nativeName: 'Vietnam', image: Vietnam },
   en: { nativeName: 'English', image: America },
 };
-
+ 
 const MenuComponent = () => {
+  const { i18n, t } = useTranslation();
+
   const [openMenu, setOpenMenu] = useState(false);
   const { Option } = Select;
   const checkUser = useSelector((state) => state.client.client);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const savedLanguage = localStorage.getItem('i18nextLng');
   const logoutAccount = () => {
     message.success('Cảm ơn bạn đã sử dụng dịch vụ!');
     dispatch(logout());
     navigate('/login');
   };
-
+ 
   const routeLogin = () => {
     navigate('/login');
   };
-
+ 
   const routeRegister = () => {
     navigate('/register');
   };
-
+ 
   // const infoUser = useSelector((state) => state.client.userinfo[0]);
-
+ 
   return (
     <div
       style={{
@@ -116,7 +119,7 @@ const MenuComponent = () => {
             <Col span={8} style={{ textAlign: 'center', paddingTop: '2px' }}>
               <Input
                 size="large"
-                placeholder="Tìm kiếm"
+                placeholder= {t('description.headercontent.search')}
                 prefix={<SearchOutlined />}
                 style={{ width: '80%' }}
               />
@@ -125,9 +128,14 @@ const MenuComponent = () => {
               <Flex gap="large" justify="end" style={{ paddingTop: '12px' }}>
                 <Select
                   defaultValue="vn"
+                  value={savedLanguage || 'vn'}
                   allowClear={false}
                   size="large"
                   style={{ width: '80px', backgroundColor: '#1E212D' }}
+                  onChange={(value) => {
+                    i18n.changeLanguage(value);
+                    localStorage.setItem('i18nextLng', value);
+                  }}
                 >
                   {Object.keys(lngs).map((lng) => (
                     <Option key={lng} value={lng}>
@@ -150,17 +158,20 @@ const MenuComponent = () => {
                             key="1"
                             onClick={() => message.warning('Chức năng đang phát triển...')}
                           >
-                            Thông tin cá nhân
+                            {t('description.headercontent.info')}
                           </Menu.Item>
                           <Menu.Item key="2" onClick={logoutAccount}>
-                            Đăng xuất
+                          {t('description.headercontent.logout')}
                           </Menu.Item>
                         </Menu>
                       }
                       placement="bottom"
                     >
                       <Button type="link" style={{ color: '#fff', height: '45px' }}>
-                        {/* Chào {infoUser.fullname} */}
+
+                      {t('description.headercontent.welcome')} 
+                      {/* {infoUser ? infoUser.fullname : ''} */}
+
                         <DownOutlined />
                         <Avatar
                           style={{
@@ -178,8 +189,9 @@ const MenuComponent = () => {
                       type="primary"
                       size="large"
                       style={{ backgroundColor: '#00ADB3', width: '120px' }}
+                      
                     >
-                      Đặt lịch
+                      {t('description.headercontent.booking')}
                     </Button>
                     <Button
                       type="primary"
@@ -187,7 +199,7 @@ const MenuComponent = () => {
                       style={{ backgroundColor: '#00ADB3', width: '120px' }}
                       onClick={routeLogin}
                     >
-                      Đăng nhập
+                      {t('description.headercontent.login')}
                     </Button>
                     <Button
                       type="default"
@@ -200,7 +212,7 @@ const MenuComponent = () => {
                       }}
                       onClick={routeRegister}
                     >
-                      Đăng ký
+                      {t('description.headercontent.register')}
                     </Button>
                   </>
                 )}
@@ -293,7 +305,7 @@ const MenuComponent = () => {
           >
             <Input
               size="large"
-              placeholder="Tìm kiếm"
+              placeholder={t('description.headercontent.search')}
               prefix={<SearchOutlined />}
               style={{ width: '100%' }}
             />
@@ -309,7 +321,7 @@ const MenuComponent = () => {
                 width: openMenu ? '100%' : '120px',
               }}
             >
-              Đặt lịch
+              {t('description.headercontent.booking')}
             </Button>
           </Menu.Item>
           {checkUser !== null ? (
@@ -325,10 +337,10 @@ const MenuComponent = () => {
                         key="1"
                         onClick={() => message.warning('Chức năng đang phát triển...')}
                       >
-                        Thông tin cá nhân
+                         {t('description.headercontent.info')}
                       </Menu.Item>
                       <Menu.Item key="2" onClick={logoutAccount}>
-                        Đăng xuất
+                      {t('description.headercontent.logout')}
                       </Menu.Item>
                     </Menu>
                   }
@@ -343,7 +355,8 @@ const MenuComponent = () => {
                       width: openMenu ? '100%' : '120px',
                     }}
                   >
-                    {/* Chào {infoUser.fullname} */}
+                    {t('description.headercontent.welcome')} 
+                    {/* {infoUser ? infoUser.fullname : ''} */}
                     <DownOutlined />
                     <Avatar
                       style={{
@@ -367,7 +380,7 @@ const MenuComponent = () => {
                   style={{ backgroundColor: '#00ADB3', width: openMenu ? '100%' : '120px' }}
                   onClick={routeLogin}
                 >
-                  Đăng nhập
+                  {t('description.headercontent.login')}
                 </Button>
               </Menu.Item>
               <Menu.Item
@@ -387,7 +400,7 @@ const MenuComponent = () => {
                   }}
                   onClick={routeRegister}
                 >
-                  Đăng ký
+                  {t('description.headercontent.register')}
                 </Button>
               </Menu.Item>
             </>
@@ -397,5 +410,5 @@ const MenuComponent = () => {
     </div>
   );
 };
-
+ 
 export default MenuComponent;

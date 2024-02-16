@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Spin, Result } from 'antd';
+import { Button, Form, Input, Spin, Result, message } from 'antd';
 import Logo from '../asset/image/logo_clinic.png';
 import bgform from '../asset/image/Background_Form.png';
 import { useForm, Controller } from 'react-hook-form';
@@ -9,7 +9,7 @@ import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { LoadingOutlined } from '@ant-design/icons';
 import { updateNewPass } from '../features/Client/clientSlice';
-
+import { useTranslation } from 'react-i18next';
 const schema = yup
   .object({
     password: yup.string().required('Mời bạn nhập mật khẩu!'),
@@ -21,7 +21,7 @@ export default function Reset() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
+  const { t } = useTranslation();
   const params = new URLSearchParams(window.location.search);
   const code = params.get('code');
   const dispatch = useDispatch();
@@ -48,7 +48,8 @@ export default function Reset() {
     dispatch(updateNewPass(dataNewPassWord)).then((item) => {
       console.log(item);
     });
-    // navigate('/login');
+    message.success('Cập nhật thành công!');
+    navigate('/login');
   };
 
   const customImageStyle = {
@@ -95,7 +96,7 @@ export default function Reset() {
         <Form
           name="basic"
           style={{
-            width: '450px',
+            width: '470px',
             height: 'auto',
             background: '#ecf3f4',
             display: 'flex',
@@ -129,13 +130,13 @@ export default function Reset() {
                 color: '#00adb3',
               }}
             >
-              Mật khẩu mới
+              {t('description.columncontent.reset.title')}
             </h2>
           </div>
           <Form.Item
             label={
               <>
-                Mật khẩu mới <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+                {t('description.columncontent.reset.newpass')} <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
               </>
             }
             hasFeedback
@@ -148,14 +149,14 @@ export default function Reset() {
               name="password"
               control={control}
               render={({ field }) => (
-                <Input.Password key="password" {...field} placeholder="Nhập mật khẩu" />
+                <Input.Password key="password" {...field} placeholder={t('description.columncontent.reset.inputnewpass')} />
               )}
             />
           </Form.Item>
           <Form.Item
             label={
               <>
-                Xác nhận mật khẩu <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+                {t('description.columncontent.reset.confirmpass')} <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
               </>
             }
             hasFeedback
@@ -168,19 +169,19 @@ export default function Reset() {
               name="repassword"
               control={control}
               render={({ field }) => (
-                <Input.Password key="repassword" {...field} placeholder="Nhập xác nhận mật khẩu" />
+                <Input.Password key="repassword" {...field} placeholder={t('description.columncontent.reset.inputconfirmpass')} />
               )}
             />
           </Form.Item>
           <Form.Item>
-            {!passwordsMatch && <span style={{ color: 'red' }}>Mật khẩu không khớp</span>}
+            {!passwordsMatch && <span style={{ color: 'red' }}>{t('description.columncontent.reset.passwordsMatch')}</span>}
             <Button
               type="primary"
               htmlType="submit"
               style={{ background: '#00adb3', width: '100%', marginTop: '30px' }}
               disabled={isSubmitDisabled}
             >
-              Tiếp tục
+              {t('description.columncontent.reset.submit')}
             </Button>
           </Form.Item>
         </Form>
@@ -206,7 +207,7 @@ export default function Reset() {
         />
         <Result
           status="warning"
-          title="không có tài khoản nào để quan thao tác"
+          title={t('description.columncontent.reset.orthertitle')}
           extra={
             <Button
               type="primary"
@@ -214,7 +215,7 @@ export default function Reset() {
               onClick={() => navigate('/')}
               style={{ backgroundColor: '#00ADB3' }}
             >
-              Trở về trang chủ
+              {t('description.columncontent.reset.buttonback')}
             </Button>
           }
         />

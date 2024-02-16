@@ -4,12 +4,13 @@ import bgfooter from '../../asset/image/Background_Footer.png';
 import LogoClinic from '../../asset/image/Logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 
 const { Footer } = Layout;
 
 const FooterLayout = () => {
   const { Text, Title } = Typography;
-
+  const { t } = useTranslation();
   const customFooterStyle = {
     backgroundImage: `url(${bgfooter})`,
     backgroundSize: 'contain',
@@ -68,7 +69,7 @@ const FooterLayout = () => {
                 icon={faEnvelope}
                 style={{ fontSize: '28px', marginRight: '10px' }}
               />
-              <Text style={{ color: '#fff' }}>Địa chỉ email: contact@website.com</Text>
+              <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.email')}: contact@website.com</Text>
             </Col>
             <Col
               xs={24}
@@ -84,7 +85,7 @@ const FooterLayout = () => {
               }}
             >
               <FontAwesomeIcon icon={faPhone} style={{ fontSize: '28px', marginRight: '10px' }} />
-              <Text style={{ color: '#fff' }}>Số điện thoại: 0123456789</Text>
+              <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.phone')}: 0123456789</Text>
             </Col>
           </Row>
           <Row style={{ marginBottom: '20px' }}>
@@ -100,12 +101,10 @@ const FooterLayout = () => {
             >
               <Space direction="vertical">
                 <Title level={3} style={{ color: '#fff' }}>
-                  Về chúng tôi
+                {t('description.columncontent.footer.about')}
                 </Title>
                 <Text style={{ color: '#fff' }}>
-                  HealthCare là một trang web hiện đại và tiện ích, cho phép người dùng dễ dàng tìm
-                  kiếm và đặt lịch hẹn với các chuyên gia y tế, bác sĩ, hoặc các cơ sở y tế khác
-                  nhau.
+                {t('description.columncontent.footer.aboutcontent')}
                 </Text>
               </Space>
             </Col>
@@ -121,11 +120,11 @@ const FooterLayout = () => {
             >
               <Space direction="vertical">
                 <Title level={3} style={{ color: '#fff' }}>
-                  Dịch vụ
+                {t('description.columncontent.footer.service')}
                 </Title>
-                <Text style={{ color: '#fff' }}>Gói sức khỏe</Text>
-                <Text style={{ color: '#fff' }}>Chuyên khoa</Text>
-                <Text style={{ color: '#fff' }}>Đa khoa</Text>
+                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.package')}</Text>
+                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.specialist')}</Text>
+                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.generalmedicine')}</Text>
               </Space>
             </Col>
             <Col
@@ -140,21 +139,21 @@ const FooterLayout = () => {
             >
               <Space direction="vertical">
                 <Title level={3} style={{ color: '#fff' }}>
-                  Liên kết hữu ích{' '}
+                {t('description.columncontent.footer.link')}{' '}
                 </Title>
-                <Text style={{ color: '#fff' }}>Trang chủ</Text>
-                <Text style={{ color: '#fff' }}>Bác sĩ</Text>
-                <Text style={{ color: '#fff' }}>Dịch vụ</Text>
-                <Text style={{ color: '#fff' }}>Liên hệ</Text>
+                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.homepage')}</Text>
+                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.doctor')}</Text>
+                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.service')}</Text>
+                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.contact')}</Text>
               </Space>
             </Col>
             <Col xs={24} sm={24} md={24} lg={6}>
               <Space direction="vertical">
                 <Title level={3} style={{ color: '#fff' }}>
-                  Đăng ký bản tin
+                {t('description.columncontent.footer.newsletter')}
                 </Title>
                 <Text style={{ color: '#fff' }}>
-                  <Input size="large" placeholder="Địa chỉ email" />
+                  <Input size="large" placeholder={t('description.columncontent.footer.email')} />
                 </Text>
                 <Text style={{ color: '#fff' }}>
                   <Button
@@ -162,11 +161,11 @@ const FooterLayout = () => {
                     size="large"
                     style={{ width: '100%', backgroundColor: '#00ADB3' }}
                   >
-                    Đăng ký
+                    {t('description.columncontent.footer.register')}
                   </Button>
                 </Text>
                 <Text style={{ color: '#fff' }}>
-                  Nhận các bản cập nhật mới nhất qua email. Bạn có thể hủy đăng ký bất cứ lúc nào.
+                {t('description.columncontent.footer.description')}
                 </Text>
               </Space>
             </Col>

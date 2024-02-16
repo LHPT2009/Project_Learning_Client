@@ -5,14 +5,16 @@ import { fetchDoctors } from '../features/Doctor/doctorSlice';
 import { fetchSpecialists } from '../features/Specialist/specialistSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchHospitals } from 'features/Hospital/hospitalsSlice';
+import { useTranslation } from 'react-i18next';
 const { Text, Title } = Typography;
+
 const { Content } = Layout;
 
 const Search = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
+  const { t } = useTranslation();
   const { Text, Title } = Typography;
   const dispatch = useDispatch();
 
@@ -69,7 +71,7 @@ const Search = () => {
       <Input
         addonBefore={<SearchOutlined />}
         size="large"
-        placeholder="Tìm kiếm"
+        placeholder={t('description.columncontent.search.input')}
         style={{
           margin: '20px 0',
           borderRadius: '6px',
@@ -83,7 +85,7 @@ const Search = () => {
           fontWeight: 'bold',
         }}
       >
-        Chuyên khoa
+        {t('description.columncontent.search.specialist')}
       </Title>
       {specialists.map((item, index) => (
         <Button
@@ -114,7 +116,7 @@ const Search = () => {
           fontWeight: 'bold',
         }}
       >
-        Bệnh viện
+        {t('description.columncontent.search.hospital')}
       </Title>
       {hospitals.map((item, index) => (
         <Button
@@ -145,7 +147,7 @@ const Search = () => {
           fontWeight: 'bold',
         }}
       >
-        Bác sĩ
+        {t('description.columncontent.search.doctor')}
       </Title>
       {doctors.map((item, index) => (
         <Button
