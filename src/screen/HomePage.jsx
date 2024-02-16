@@ -28,7 +28,7 @@ import { fetchDoctors } from '../features/Doctor/doctorSlice';
 import { fetchSpecialists } from '../features/Specialist/specialistSlice';
 import { Link } from 'react-router-dom';
 import { LoadingOutlined } from '@ant-design/icons';
-
+import { useTranslation } from 'react-i18next';
 const { Content } = Layout;
 
 const customImageStyle = {
@@ -54,7 +54,7 @@ const HomePage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
+  const { i18n, t } = useTranslation();
   const [spinning, setSpinning] = useState(true);
 
   const { Text, Title } = Typography;
@@ -115,13 +115,13 @@ const HomePage = () => {
               >
                 <Space direction="vertical">
                   <Title level={4} style={{ color: '#fff', lineHeight: '20px' }}>
-                    Chào mừng bạn đến với HealthCare
+                  {t('description.columncontent.homepage.welcome')}
                   </Title>
                   <Title level={2} style={{ color: '#fff', fontWeight: 'bold', lineHeight: '0px' }}>
-                    Dịch vụ chăm sóc{' '}
+                  {t('description.columncontent.homepage.service')}{' '}
                   </Title>
                   <Title level={2} style={{ color: '#fff', fontWeight: 'bold', lineHeight: '0px' }}>
-                    Sức khỏe toàn diện{' '}
+                  {t('description.columncontent.homepage.health')}{' '}
                   </Title>
                 </Space>
               </Col>
@@ -156,13 +156,13 @@ const HomePage = () => {
               >
                 <Space direction="vertical">
                   <Title level={4} style={{ color: '#fff', lineHeight: '20px' }}>
-                    Chào mừng bạn đến với HealthCare
+                  {t('description.columncontent.homepage.welcome')}
                   </Title>
                   <Title level={2} style={{ color: '#fff', fontWeight: 'bold', lineHeight: '0px' }}>
-                    Dịch vụ chăm sóc{' '}
+                  {t('description.columncontent.homepage.service')}{' '}
                   </Title>
                   <Title level={2} style={{ color: '#fff', fontWeight: 'bold', lineHeight: '0px' }}>
-                    Sức khỏe toàn diện{' '}
+                  {t('description.columncontent.homepage.health')}{' '}
                   </Title>
                 </Space>
               </Col>
@@ -197,13 +197,13 @@ const HomePage = () => {
               >
                 <Space direction="vertical">
                   <Title level={4} style={{ color: '#fff', lineHeight: '20px' }}>
-                    Chào mừng bạn đến với HealthCare
+                  {t('description.columncontent.homepage.welcome')}
                   </Title>
                   <Title level={2} style={{ color: '#fff', fontWeight: 'bold', lineHeight: '0px' }}>
-                    Dịch vụ chăm sóc{' '}
+                  {t('description.columncontent.homepage.service')}{' '}
                   </Title>
                   <Title level={2} style={{ color: '#fff', fontWeight: 'bold', lineHeight: '0px' }}>
-                    Sức khỏe toàn diện{' '}
+                  {t('description.columncontent.homepage.health')}{' '}
                   </Title>
                 </Space>
               </Col>
@@ -249,7 +249,7 @@ const HomePage = () => {
                   style={{ width: '71px', height: '66px' }}
                 />
                 <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Khám chuyên khoa{' '}
+                {t('description.columncontent.homepage.speciality')}{' '}
                 </Title>
               </Space>
             </Button>
@@ -273,7 +273,7 @@ const HomePage = () => {
                   style={{ width: '71px', height: '66px' }}
                 />
                 <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Gói khám chất lượng{' '}
+                {t('description.columncontent.homepage.package')}{' '}
                 </Title>
               </Space>
             </Button>
@@ -297,7 +297,7 @@ const HomePage = () => {
                   style={{ width: '71px', height: '66px' }}
                 />
                 <Title level={4} style={{ color: '#005761', lineHeight: '10px' }}>
-                  Cơ sở y tế uy tín{' '}
+                {t('description.columncontent.homepage.facility')}{' '}
                 </Title>
               </Space>
             </Button>
@@ -321,7 +321,7 @@ const HomePage = () => {
                   style={{ width: '71px', height: '66px' }}
                 />
                 <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  Sống khỏe suốt đời{' '}
+                {t('description.columncontent.homepage.life')}{' '}
                 </Title>
               </Space>
             </Button>
@@ -344,7 +344,7 @@ const HomePage = () => {
             }}
           >
             <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-              Cơ sở y tế uy tín{' '}
+            {t('description.columncontent.homepage.facility')}{' '}
             </Title>
           </Col>
           {specialists ? (
@@ -404,7 +404,7 @@ const HomePage = () => {
                     width: '120px',
                   }}
                 >
-                  Xem thêm
+                 {t('description.columncontent.homepage.seemore')}{' '}
                 </Button>
               </Col>
             </>
@@ -439,7 +439,7 @@ const HomePage = () => {
             }}
           >
             <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-              Bác sĩ nổi bật
+            {t('description.columncontent.homepage.doctor')}{' '}
             </Title>
           </Col>
           {doctors ? (
@@ -499,7 +499,7 @@ const HomePage = () => {
                     width: '120px',
                   }}
                 >
-                  Xem thêm
+                  {t('description.columncontent.homepage.seemore')}{' '}
                 </Button>
               </Col>
             </>

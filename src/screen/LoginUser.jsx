@@ -11,6 +11,7 @@ import clientApi from 'api/clientApi';
 import Cookies from 'js-cookie';
 import { loginClient, fetchGetUserById } from '../features/Client/clientSlice';
 import { LoadingOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 const schema = yup
   .object({
@@ -22,6 +23,9 @@ const schema = yup
 const key = 'updatable';
 
 export default function LoginUser() {
+  // Translation
+  const { i18n, t } = useTranslation();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -53,14 +57,14 @@ export default function LoginUser() {
 
   const onSubmit = async (data) => {
     try {
+      setSpinning(true);
       const response = await clientApi.login(data);
       const checkgoback = params.get('goBack');
-
       if (response.data.token) {
-        dispatch(loginClient(response.data));
-        dispatch(fetchGetUserById(response.data.id));
-        Cookies.set('accessToken', response.data.token, { expires: 1 });
-        Cookies.set('refreshToken', response.data.refreshToken, { expires: 1 });
+        await dispatch(loginClient(response.data));
+        await Cookies.set('accessToken', response.data.token, { expires: 1 });
+        await Cookies.set('refreshToken', response.data.refreshToken, { expires: 1 });
+        await dispatch(fetchGetUserById(response.data.id));
 
         if (response.data.roles.includes('ROLE_USER')) {
           if (checkgoback === null) {
@@ -137,13 +141,13 @@ export default function LoginUser() {
               color: '#00adb3',
             }}
           >
-            Đăng nhập
+            {t('description.headercontent.login')}
           </h2>
         </div>
         <Form.Item
           label={
             <>
-              Tên tài khoản <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+              {t('description.columncontent.login.username')} <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
             </>
           }
           name="username"
@@ -152,13 +156,18 @@ export default function LoginUser() {
           <Controller
             name="username"
             control={control}
-            render={({ field }) => <Input key="username" {...field} placeholder="Nhập tài khoản" />}
+            render={({ field }) => <Input key="username" {...field} placeholder={t('description.columncontent.login.inputusername')} />}
           />
         </Form.Item>
         <Form.Item
           label={
             <>
-              Mật khẩu <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+              {t('description.columncontent.login.password')} <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+              <div style={{ position: 'relative', left: '170px' }}>
+                <a className="login-form-forgot" href="/forgot">
+                {t('description.columncontent.login.forgotpass')}
+                </a>
+              </div>
             </>
           }
           name="password"
@@ -168,7 +177,7 @@ export default function LoginUser() {
             name="password"
             control={control}
             render={({ field }) => (
-              <Input.Password key="password" {...field} placeholder="Nhập mật khẩu" />
+              <Input.Password key="password" {...field} placeholder={t('description.columncontent.login.inputpassword')} />
             )}
           />
         </Form.Item>
@@ -178,7 +187,7 @@ export default function LoginUser() {
             htmlType="submit"
             style={{ background: '#00adb3', width: '100%', marginTop: '30px' }}
           >
-            Đăng nhập
+            {t('description.columncontent.login.submit')}
           </Button>
         </Form.Item>
       </Form>

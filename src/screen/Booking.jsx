@@ -25,7 +25,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { LoadingOutlined } from '@ant-design/icons';
-
+import { useTranslation } from 'react-i18next';
 const { Content } = Layout;
 
 const generateRandomNumbers = () => {
@@ -59,7 +59,7 @@ export default function Booking() {
   const navigate = useNavigate();
   const [spinning, setSpinning] = useState(true);
   const dispatch = useDispatch();
-
+  const { t } = useTranslation();
   const infoBooking = useSelector((state) => state.booking.infoBooking);
   const infoUser = useSelector((state) => state.client.client);
   const listPayment = useSelector((state) => state.payment.payments);
@@ -129,7 +129,7 @@ export default function Booking() {
       dispatch(fetchCreateTransaction(formatsending))
         .then((item) => {
           message.success('Đã đặt lịch thành công!');
-          navigate('/success?status=Success&payment=Cash');
+          navigate('/success/cash');
         })
         .catch((err) => {
           message.error('Đã xảy ra lỗi: ', err);
@@ -141,8 +141,7 @@ export default function Booking() {
       dispatch(fetchCreateTransaction(formatsending))
         .then((item) => {
           message.loading('Đang xử lý đặt lịch!');
-          navigate('/success?status=Processing');
-          // navigate('/success?status=Success&payment=Vnpay');
+          navigate('/success/vnpay');
           window.open(`${item.payload}`, '_blank');
         })
         .catch((err) => {
@@ -190,7 +189,7 @@ export default function Booking() {
               color: '#005761',
             }}
           >
-            Đặt lịch khám
+            {t('description.columncontent.booking.title')}
           </Title>
           <Content
             style={{
@@ -198,7 +197,7 @@ export default function Booking() {
             }}
           >
             <Title level={3} style={{ color: '#005761' }}>
-              Thông tin bác sĩ
+            {t('description.columncontent.booking.doctor')}
             </Title>
             <Row>
               <Col
@@ -208,24 +207,27 @@ export default function Booking() {
                 lg={6}
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
-                <Avatar size={150} icon={<UserOutlined />} src={infoDoctor?.image} />
+                <Avatar size={150} icon={<UserOutlined />} 
+                src={infoDoctor?.image} 
+                />
               </Col>
               <Col xs={24} sm={24} md={24} lg={18}>
                 <Space direction="vertical">
                   <Title level={3} style={{ color: '#005761' }}>
-                    Bác sĩ chuyên khoa I {infoDoctor.fullNameDoctor}
+                  {t('description.columncontent.booking.specialist')} 
+                    {infoDoctor.fullNameDoctor}
                   </Title>
                   <Text>{infoDoctor.hospitalsName}</Text>
                   <Text>{infoDoctor.hospitalsName}</Text>
                   <Text>
-                    Ngày: {infoBooking.timeScheduleDetail} - {infoBooking.bookingDay} -{' '}
+                  {t('description.columncontent.booking.day')} {infoBooking.timeScheduleDetail} - {infoBooking.bookingDay} -{' '}
                     {infoBooking.bookingDate}
                   </Text>
                 </Space>
               </Col>
             </Row>
             <Title level={3} style={{ color: '#005761' }}>
-              Thông tin khách hàng
+            {t('description.columncontent.booking.customer')}
             </Title>
             <Row>
               <Col xs={24} sm={24} md={24} lg={24}>
@@ -236,7 +238,7 @@ export default function Booking() {
                   onFinish={handleSubmit(sendBooking)}
                 >
                   <Form.Item
-                    label="Tên khách hàng"
+                    label={t('description.columncontent.booking.fullname')}
                     labelCol={{ span: 24 }}
                     help={
                       errors.fullname && (
@@ -251,7 +253,7 @@ export default function Booking() {
                     />
                   </Form.Item>
                   <Form.Item
-                    label="Số điện thoại"
+                    label={t('description.columncontent.booking.phone')}
                     labelCol={{ span: 24 }}
                     help={
                       errors.phone && <span style={{ color: 'red' }}>{errors.phone.message}</span>
@@ -264,7 +266,7 @@ export default function Booking() {
                     />
                   </Form.Item>
                   <Form.Item
-                    label="Giới tính"
+                    label={t('description.columncontent.booking.gender')}
                     labelCol={{ span: 24 }}
                     help={
                       errors.gender && <span style={{ color: 'red' }}>{errors.gender.message}</span>
@@ -277,7 +279,7 @@ export default function Booking() {
                     />
                   </Form.Item>
                   <Form.Item
-                    label="Ngày sinh"
+                    label={t('description.columncontent.booking.dateOfBirth')}
                     labelCol={{ span: 24 }}
                     help={
                       errors.dateOfBirth && (
@@ -293,7 +295,7 @@ export default function Booking() {
                   </Form.Item>
 
                   <Form.Item
-                    label="Địa chỉ"
+                    label={t('description.columncontent.booking.address')}
                     labelCol={{ span: 24 }}
                     help={
                       errors.address && (
@@ -308,7 +310,7 @@ export default function Booking() {
                     />
                   </Form.Item>
                   <Form.Item
-                    label="Lí do khám"
+                    label={t('description.columncontent.booking.description')}
                     labelCol={{ span: 24 }}
                     help={
                       errors.description && (
@@ -323,13 +325,13 @@ export default function Booking() {
                         <Input.TextArea
                           name="description"
                           {...field}
-                          placeholder="Nhập mô tả tình trạng"
+                          placeholder={t('description.columncontent.booking.inputdescription')}
                         />
                       )}
                     />
                   </Form.Item>
                   <Form.Item
-                    label="Phương thức thanh toán"
+                    label={t('description.columncontent.booking.method')}
                     labelCol={{ span: 24 }}
                     help={
                       errors.idPaymentMethod && (
@@ -351,7 +353,7 @@ export default function Booking() {
                       )}
                     />
                   </Form.Item>
-                  <Form.Item label="Chi phí khám" labelCol={{ span: 24 }}>
+                  <Form.Item label={t('description.columncontent.booking.cost')} labelCol={{ span: 24 }}>
                     <Row>
                       <Col
                         xs={24}
@@ -365,9 +367,8 @@ export default function Booking() {
                         }}
                       >
                         <Space direction="vertical">
-                          <Text>Giá khám</Text>
-                          <Text>Phí đặt lịch</Text>
-                          <Text>Tổng cộng</Text>
+                          <Text>{t('description.columncontent.booking.price')}</Text>
+                          <Text>{t('description.columncontent.booking.total')}</Text>
                         </Space>
                       </Col>
                       <Col
@@ -384,9 +385,8 @@ export default function Booking() {
                       >
                         <Space direction="vertical">
                           <Text>{formatter.format(infoBooking.pricePakage)}</Text>
-                          <Text>{formatter.format(50000)}</Text>
                           <Text style={{ color: 'red' }}>
-                            {formatter.format(infoBooking.pricePakage + 50000)}
+                            {formatter.format(infoBooking.pricePakage)}
                           </Text>
                         </Space>
                       </Col>
@@ -400,7 +400,7 @@ export default function Booking() {
                       // onClick={() => sendBooking()}
                       htmlType="submit"
                     >
-                      Xác nhận đặt lịch khám
+                      {t('description.columncontent.booking.confirm')}
                     </Button>
                   </Form.Item>
                 </Form>

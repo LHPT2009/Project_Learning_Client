@@ -12,6 +12,7 @@ import LoginUser from 'screen/LoginUser';
 import Register from 'screen/Register';
 import ForgotPassword from 'screen/ForgotPassword';
 import Reset from 'screen/Reset';
+import UserDetail from 'screen/UserDetail';
 
 function App() {
   return (
@@ -27,11 +28,12 @@ function App() {
                 <Route path="/search" element={<Search />} />
                 <Route path="/list" element={<ListDoctor />} />
                 <Route path="/history" element={<History />} />
-                <Route path="/success" element={<Success />} />
+                <Route path="/success/:statuspayment" element={<Success />} />
                 <Route path="/login" element={<LoginUser />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot" element={<ForgotPassword />} />
                 <Route path="/reset/auth/new-password" element={<Reset />} />
+                <Route path="/userdetail" element={<UserDetail />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>

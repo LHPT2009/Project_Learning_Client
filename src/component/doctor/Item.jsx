@@ -8,7 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addInfoBooking } from '../../features/Booking/bookingSlice';
 import { fetchGetDoctorById } from '../../features/Doctor/doctorSlice';
-
+import { useTranslation } from 'react-i18next';
 dayjs.extend(timezone);
 dayjs.locale('vi');
 const { Text, Title } = Typography;
@@ -16,7 +16,7 @@ const { Text, Title } = Typography;
 const DataItem = ({ dataItem }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   const imageDefault =
     'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Free-Image.png';
   const [day, setDay] = useState();
@@ -70,7 +70,11 @@ const DataItem = ({ dataItem }) => {
       setArrFilterSchedules([]);
     } else if (dataItem.schedulesDetailSet !== null) {
       dataItem.schedulesDetailSet.forEach((item) => {
-        if (dayMapping[selectDay] === item.schedulesDate && item !== null) {
+        if (
+          dayMapping[selectDay] === item.schedulesDate &&
+          item !== null &&
+          item.status == 'INACTIVE'
+        ) {
           setArrFilterSchedules((prevArr) => [...prevArr, item]);
         }
       });
@@ -131,7 +135,7 @@ const DataItem = ({ dataItem }) => {
                   level={4}
                   style={{ lineHeight: '20px', color: '#005761', fontWeight: 'bold' }}
                 >
-                  Bác sĩ {dataItem.fullName}
+                  {t('description.columncontent.item.doctor')} {dataItem.fullName}
                 </Title>
                 <Text style={{ lineHeight: '20px' }}>{dataItem.description}</Text>
                 <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
@@ -145,7 +149,7 @@ const DataItem = ({ dataItem }) => {
         <Col xs={24} sm={12} md={12} lg={12} xl={8}>
           <Space direction="vertical">
             <Select
-              placeholder="Chọn ngày"
+              placeholder={t('description.columncontent.item.choiceday')}
               style={{ width: 250 }}
               onChange={(value, option) => {
                 if (option) {
@@ -167,7 +171,7 @@ const DataItem = ({ dataItem }) => {
             </Select>
             <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
               <CalendarOutlined style={{ marginRight: '5px', color: '#005761' }} />
-              LỊCH KHÁM
+              {t('description.columncontent.item.calendar')}
             </Text>
             <Flex wrap="wrap" gap="small">
               {arrFilterSchedules.length !== 0 ? (
@@ -188,18 +192,18 @@ const DataItem = ({ dataItem }) => {
               ) : (
                 <>
                   <Button type="default" style={{ width: '200px' }} disabled>
-                    Không có khung giờ nào
+                  {t('description.columncontent.item.nocalendar')}
                   </Button>
                 </>
               )}
             </Flex>
-            <Text style={{ lineHeight: '20px' }}>Chọn và đặt lịch (chi phí 0đ)</Text>
-            <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>ĐỊA CHỈ KHÁM</Text>
+            <Text style={{ lineHeight: '20px' }}>{t('description.columncontent.item.choice')}</Text>
+            <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>{t('description.columncontent.item.address')}</Text>
             <Text style={{ lineHeight: '10px' }}>{dataItem.nameHospital}</Text>
             <Text style={{ lineHeight: '10px' }}>{dataItem.addressHospital}</Text>
-            <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>GIÁ KHÁM:</Text>
+            <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>{t('description.columncontent.item.price')}</Text>
             <Select
-              defaultValue="Chọn gói khám"
+              defaultValue={t('description.columncontent.item.choicepackage')}
               style={{ width: 250 }}
               onChange={(value, option) => {
                 if (option) {
@@ -215,13 +219,13 @@ const DataItem = ({ dataItem }) => {
               ))}
             </Select>
             <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-              LOẠI BẢO HIỂM ÁP DỤNG.{' '}
+            {t('description.columncontent.item.insurance')}{' '}
               <Link
                 href="https://ant.design"
                 target="_blank"
                 style={{ lineHeight: '20px', fontWeight: 'lighter', color: '#00ADB3' }}
               >
-                Xem chi tiết.
+                {t('description.columncontent.item.detail')}
               </Link>
             </Text>
             {checkuser !== null ? (
@@ -232,7 +236,7 @@ const DataItem = ({ dataItem }) => {
                   style={{ width: 250, backgroundColor: '#00ADB3' }}
                   onClick={() => addInfo()}
                 >
-                  Đặt phòng
+                 {t('description.columncontent.item.booking')}
                 </Button>
               </>
             ) : (
@@ -243,7 +247,7 @@ const DataItem = ({ dataItem }) => {
                     size="middle"
                     style={{ width: 250, backgroundColor: '#00ADB3' }}
                   >
-                    Hãy đăng nhập trước khi đặt phòng
+                    {t('description.columncontent.item.require')}
                   </Button>
                 </Link>
               </>

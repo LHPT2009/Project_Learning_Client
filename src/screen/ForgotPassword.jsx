@@ -9,8 +9,9 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchForgot } from 'features/Client/clientSlice';
 import { LoadingOutlined } from '@ant-design/icons';
-
+import { useTranslation } from 'react-i18next';
 export default function ForgotPassword() {
+  const { t } = useTranslation();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -102,13 +103,13 @@ export default function ForgotPassword() {
               color: '#00adb3',
             }}
           >
-            Quên mật khẩu
+            {t('description.columncontent.forgotpass.title')}
           </h2>
         </div>
         <Form.Item
           label={
             <>
-              Vui lòng nhập email <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+              {t('description.columncontent.forgotpass.email')} <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
             </>
           }
           hasFeedback
@@ -127,7 +128,7 @@ export default function ForgotPassword() {
               // , marginTop: '10px'
             }}
           >
-            Đặt lại mật khẩu của bạn
+            {t('description.columncontent.forgotpass.submit')}
           </Button>
         </Form.Item>
       </Form>
