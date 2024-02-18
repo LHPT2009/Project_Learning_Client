@@ -17,7 +17,6 @@ import {
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTempBooking } from '../features/Booking/bookingSlice';
-import { fetchPayments } from '../features/Payment/paymentSlice';
 import { fetchCreateTransaction } from '../features/Transaction/transactionSlice';
 import { UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -65,10 +64,6 @@ export default function Booking() {
   const listPayment = useSelector((state) => state.payment.payments);
   const loadFullDataUser = useSelector((state) => state.client.userinfo[0]);
   const infoDoctor = useSelector((state) => state.doctor.doctorsbyid);
-
-  useEffect(() => {
-    dispatch(fetchPayments());
-  }, []);
 
   const schema = yup
     .object({
@@ -197,7 +192,7 @@ export default function Booking() {
             }}
           >
             <Title level={3} style={{ color: '#005761' }}>
-            {t('description.columncontent.booking.doctor')}
+              {t('description.columncontent.booking.doctor')}
             </Title>
             <Row>
               <Col
@@ -207,27 +202,25 @@ export default function Booking() {
                 lg={6}
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
-                <Avatar size={150} icon={<UserOutlined />} 
-                src={infoDoctor?.image} 
-                />
+                <Avatar size={150} icon={<UserOutlined />} src={infoDoctor?.image} />
               </Col>
               <Col xs={24} sm={24} md={24} lg={18}>
                 <Space direction="vertical">
                   <Title level={3} style={{ color: '#005761' }}>
-                  {t('description.columncontent.booking.specialist')} 
+                    {t('description.columncontent.booking.specialist')}
                     {infoDoctor.fullNameDoctor}
                   </Title>
                   <Text>{infoDoctor.hospitalsName}</Text>
                   <Text>{infoDoctor.hospitalsName}</Text>
                   <Text>
-                  {t('description.columncontent.booking.day')} {infoBooking.timeScheduleDetail} - {infoBooking.bookingDay} -{' '}
-                    {infoBooking.bookingDate}
+                    {t('description.columncontent.booking.day')} {infoBooking.timeScheduleDetail} -{' '}
+                    {infoBooking.bookingDay} - {infoBooking.bookingDate}
                   </Text>
                 </Space>
               </Col>
             </Row>
             <Title level={3} style={{ color: '#005761' }}>
-            {t('description.columncontent.booking.customer')}
+              {t('description.columncontent.booking.customer')}
             </Title>
             <Row>
               <Col xs={24} sm={24} md={24} lg={24}>
@@ -353,7 +346,10 @@ export default function Booking() {
                       )}
                     />
                   </Form.Item>
-                  <Form.Item label={t('description.columncontent.booking.cost')} labelCol={{ span: 24 }}>
+                  <Form.Item
+                    label={t('description.columncontent.booking.cost')}
+                    labelCol={{ span: 24 }}
+                  >
                     <Row>
                       <Col
                         xs={24}
