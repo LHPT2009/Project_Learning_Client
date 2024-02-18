@@ -49,8 +49,8 @@ const clientSlice = createSlice({
   },
   reducers: {
     loginClient: (state, action) => {
-      const { id } = action.payload;
-      state.client = { id };
+      const { id, fullname } = action.payload;
+      state.client = { id, fullname };
       state.isClient = action.payload.roles.includes('ROLE_USER');
     },
     logout: (state) => {

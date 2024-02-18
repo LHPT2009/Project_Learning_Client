@@ -109,7 +109,8 @@ export default function ForgotPassword() {
         <Form.Item
           label={
             <>
-              {t('description.columncontent.forgotpass.email')} <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+              {t('description.columncontent.forgotpass.email')}{' '}
+              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
             </>
           }
           hasFeedback

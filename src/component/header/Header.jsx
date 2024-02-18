@@ -24,39 +24,43 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logout } from 'features/Client/clientSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { fetchGetUserById } from '../../features/Client/clientSlice';
+import { fetchGetBookingByUserId } from '../../features/Booking/bookingSlice';
 
 const { Header } = Layout;
- 
+
 const lngs = {
   vn: { nativeName: 'Vietnam', image: Vietnam },
   en: { nativeName: 'English', image: America },
 };
- 
+
 const MenuComponent = () => {
   const { i18n, t } = useTranslation();
 
   const [openMenu, setOpenMenu] = useState(false);
   const { Option } = Select;
-  const checkUser = useSelector((state) => state.client.client);
+  const User = useSelector((state) => state.client.client);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const savedLanguage = localStorage.getItem('i18nextLng');
   const logoutAccount = () => {
     message.success('Cảm ơn bạn đã sử dụng dịch vụ!');
     dispatch(logout());
     navigate('/login');
   };
- 
+
   const routeLogin = () => {
     navigate('/login');
   };
- 
+
   const routeRegister = () => {
     navigate('/register');
   };
- 
-  // const infoUser = useSelector((state) => state.client.userinfo[0]);
- 
+
+  const loaddataBeforeRoute = () => {
+    dispatch(fetchGetBookingByUserId(User.id));
+    dispatch(fetchGetUserById(User.id));
+    navigate('/userdetail');
+  };
   return (
     <div
       style={{
@@ -119,7 +123,7 @@ const MenuComponent = () => {
             <Col span={8} style={{ textAlign: 'center', paddingTop: '2px' }}>
               <Input
                 size="large"
-                placeholder= {t('description.headercontent.search')}
+                placeholder={t('description.headercontent.search')}
                 prefix={<SearchOutlined />}
                 style={{ width: '80%' }}
               />
@@ -128,7 +132,6 @@ const MenuComponent = () => {
               <Flex gap="large" justify="end" style={{ paddingTop: '12px' }}>
                 <Select
                   defaultValue="vn"
-                  value={savedLanguage || 'vn'}
                   allowClear={false}
                   size="large"
                   style={{ width: '80px', backgroundColor: '#1E212D' }}
@@ -148,29 +151,24 @@ const MenuComponent = () => {
                     </Option>
                   ))}
                 </Select>
-                {checkUser !== null ? (
+                {User !== null ? (
                   <>
                     <Dropdown
                       trigger={['click']}
                       overlay={
                         <Menu>
-                          <Menu.Item
-                            key="1"
-                            onClick={() => message.warning('Chức năng đang phát triển...')}
-                          >
+                          <Menu.Item key="1" onClick={loaddataBeforeRoute}>
                             {t('description.headercontent.info')}
                           </Menu.Item>
                           <Menu.Item key="2" onClick={logoutAccount}>
-                          {t('description.headercontent.logout')}
+                            {t('description.headercontent.logout')}
                           </Menu.Item>
                         </Menu>
                       }
                       placement="bottom"
                     >
                       <Button type="link" style={{ color: '#fff', height: '45px' }}>
-
-                      {t('description.headercontent.welcome')} 
-                      {/* {infoUser ? infoUser.fullname : ''} */}
+                        {`${t('description.headercontent.welcome')} ${User ? User.fullname : ''}`}
 
                         <DownOutlined />
                         <Avatar
@@ -189,7 +187,6 @@ const MenuComponent = () => {
                       type="primary"
                       size="large"
                       style={{ backgroundColor: '#00ADB3', width: '120px' }}
-                      
                     >
                       {t('description.headercontent.booking')}
                     </Button>
@@ -244,6 +241,10 @@ const MenuComponent = () => {
                 marginTop: '3px',
                 width: '80px',
                 backgroundColor: '#1E212D',
+              }}
+              onChange={(value) => {
+                i18n.changeLanguage(value);
+                localStorage.setItem('i18nextLng', value);
               }}
             >
               {Object.keys(lngs).map((lng) => (
@@ -324,7 +325,7 @@ const MenuComponent = () => {
               {t('description.headercontent.booking')}
             </Button>
           </Menu.Item>
-          {checkUser !== null ? (
+          {User !== null ? (
             <>
               <Menu.Item
                 style={{ marginInline: '0px', paddingInline: '0px', margin: '0px 0px 20px 0px' }}
@@ -333,14 +334,11 @@ const MenuComponent = () => {
                   trigger={['click']}
                   overlay={
                     <Menu>
-                      <Menu.Item
-                        key="1"
-                        onClick={() => message.warning('Chức năng đang phát triển...')}
-                      >
-                         {t('description.headercontent.info')}
+                      <Menu.Item key="1" onClick={loaddataBeforeRoute}>
+                        {t('description.headercontent.info')}
                       </Menu.Item>
                       <Menu.Item key="2" onClick={logoutAccount}>
-                      {t('description.headercontent.logout')}
+                        {t('description.headercontent.logout')}
                       </Menu.Item>
                     </Menu>
                   }
@@ -355,8 +353,7 @@ const MenuComponent = () => {
                       width: openMenu ? '100%' : '120px',
                     }}
                   >
-                    {t('description.headercontent.welcome')} 
-                    {/* {infoUser ? infoUser.fullname : ''} */}
+                    {`${t('description.headercontent.welcome')} ${User ? User.fullname : ''}`}
                     <DownOutlined />
                     <Avatar
                       style={{
@@ -410,5 +407,5 @@ const MenuComponent = () => {
     </div>
   );
 };
- 
+
 export default MenuComponent;
