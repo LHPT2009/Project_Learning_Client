@@ -56,9 +56,9 @@ const MenuComponent = () => {
     navigate('/register');
   };
 
-  const loaddataBeforeRoute = () => {
-    dispatch(fetchGetBookingByUserId(User.id));
-    dispatch(fetchGetUserById(User.id));
+  const loaddataBeforeRoute = async () => {
+    await dispatch(fetchGetBookingByUserId(User.id));
+    await dispatch(fetchGetUserById(User.id));
     navigate('/userdetail');
   };
   return (

@@ -1,31 +1,45 @@
 import React, { useEffect } from 'react';
 import { Form, Row, Col } from 'antd';
-
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 export default function History() {
+  const navigate = useNavigate();
+  const { id } = useParams();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (listBooking == null) {
+      navigate('/error');
+    }
+  }, []);
+
+  const listBooking = useSelector((state) => state.booking.listBooking);
+  const filteredArray = listBooking.filter((item) => item.id == id);
+
+  const data = filteredArray[0];
+
   const bookingInfo = {
-    name: 'Nguyễn Văn A',
-    phone: '09876554333',
-    gender: 'Nam',
-    dob: '12/12/2002',
-    address: 'Quận Tân Bình, Thành phố Hồ Chí Minh',
-    disease: 'Bệnh xương khớp',
-    paymentMethod: 'Tiền mặt',
-    amount: '500.000đ',
-    fee: '50.000đ',
-    total: '550.000đ',
+    name: data ? data.fullNameUser : '',
+    phone: data ? data.phoneUser : '',
+    gender: data ? data.fullNameUser : '',
+    dob: data ? data.fullNameUser : '',
+    address: data ? data.fullNameUser : '',
+    disease: data ? data.fullNameUser : '',
+    paymentMethod: data ? data.fullNameUser : '',
+    total: '550000',
   };
   const doctorInfo = {
-    name: 'Nguyễn Văn Hòn',
-    disease: 'Cơ xương khớp',
-    hospital: 'Bệnh viện Đa khoa Trung Ương',
+    name: data ? data.fullNameDoctor : '',
+    disease: data ? data.namePackage : '',
+    hospital: data ? data.nameHospital : '',
   };
   const detailBooking = {
-    time: '07:00 - 08:00',
-    date: 'Thứ 2 - 22/01/2024',
-    location: 'Quận Tân Bình, Thành phố Hồ Chí Minh',
+    time: `${data ? data.bookingTimeStart : ''} - ${data ? data.bookingTimeEnd : ''}`,
+    date: data ? data.bookingDate : '',
+    location: data ? data.addressHospital : '',
   };
   return (
     <div
@@ -100,8 +114,6 @@ export default function History() {
                   <h5 style={{ fontSize: '15px' }}>Lý do khám:</h5>
                   <h5 style={{ fontSize: '15px' }}>Phương thức thanh toán:</h5>
                   <h5 style={{ fontSize: '15px' }}>Chi phí khám:</h5>
-                  <h5 style={{ fontSize: '15px' }}>Phí đặt lịch:</h5>
-                  <h5 style={{ fontSize: '15px' }}>Tổng cộng:</h5>
                 </div>
               </Col>
               <Col span={12}>
@@ -142,7 +154,7 @@ export default function History() {
                 </div>
               </Col>
             </Row>
-            <Row gutter={[16, 16]} align="middle" style={{ marginTop: '95px' }}>
+            <Row gutter={[16, 16]} align="middle">
               <div>
                 <h2 style={{ fontSize: '22px', fontWeight: '700', color: '#005761' }}>
                   Thông tin chi tiết lịch hẹn
