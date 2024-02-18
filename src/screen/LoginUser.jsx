@@ -9,7 +9,8 @@ import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import clientApi from 'api/clientApi';
 import Cookies from 'js-cookie';
-import { loginClient, fetchGetUserById } from '../features/Client/clientSlice';
+import { loginClient, logout } from '../features/Client/clientSlice';
+// import { fetchGetUserById } from '../features/Client/clientSlice';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
@@ -60,29 +61,28 @@ export default function LoginUser() {
       setSpinning(true);
       const response = await clientApi.login(data);
       const checkgoback = params.get('goBack');
-      if (response.data.token) {
-        await dispatch(loginClient(response.data));
-        await Cookies.set('accessToken', response.data.token, { expires: 1 });
-        await Cookies.set('refreshToken', response.data.refreshToken, { expires: 1 });
-        await dispatch(fetchGetUserById(response.data.id));
 
+      if (response.data && response.data.token) {
+        await dispatch(loginClient(response.data));
         if (response.data.roles.includes('ROLE_USER')) {
           if (checkgoback === null) {
+            Cookies.set('accessToken', response.data.token, { expires: 1 });
+            Cookies.set('refreshToken', response.data.refreshToken, { expires: 1 });
             navigate('/');
-            message.success('Chào mừng bạn đã trở lại!');
           } else {
             navigate(-1);
             message.success('Mời bạn tiếp tục');
           }
         } else {
+          dispatch(logout());
           alert('Bạn không có quyền truy cập!');
-          Cookies.remove('accessToken');
-          Cookies.remove('refreshToken');
         }
       }
     } catch (error) {
       message.error('Tại khoản hoặc mật khẩu của bạn hiện đang không đúng!');
       console.error('Error calling login API:', error);
+    } finally {
+      setSpinning(false);
     }
   };
 
@@ -147,7 +147,8 @@ export default function LoginUser() {
         <Form.Item
           label={
             <>
-              {t('description.columncontent.login.username')} <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+              {t('description.columncontent.login.username')}{' '}
+              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
             </>
           }
           name="username"
@@ -156,16 +157,23 @@ export default function LoginUser() {
           <Controller
             name="username"
             control={control}
-            render={({ field }) => <Input key="username" {...field} placeholder={t('description.columncontent.login.inputusername')} />}
+            render={({ field }) => (
+              <Input
+                key="username"
+                {...field}
+                placeholder={t('description.columncontent.login.inputusername')}
+              />
+            )}
           />
         </Form.Item>
         <Form.Item
           label={
             <>
-              {t('description.columncontent.login.password')} <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+              {t('description.columncontent.login.password')}{' '}
+              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
               <div style={{ position: 'relative', left: '170px' }}>
                 <a className="login-form-forgot" href="/forgot">
-                {t('description.columncontent.login.forgotpass')}
+                  {t('description.columncontent.login.forgotpass')}
                 </a>
               </div>
             </>
@@ -177,7 +185,11 @@ export default function LoginUser() {
             name="password"
             control={control}
             render={({ field }) => (
-              <Input.Password key="password" {...field} placeholder={t('description.columncontent.login.inputpassword')} />
+              <Input.Password
+                key="password"
+                {...field}
+                placeholder={t('description.columncontent.login.inputpassword')}
+              />
             )}
           />
         </Form.Item>

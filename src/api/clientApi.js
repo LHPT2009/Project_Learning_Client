@@ -17,7 +17,7 @@ const clientApi = {
   getUserById: async (id) => {
     const url = `/api/user/${id}`;
     try {
-      const response = await axiosClient.get(url, id);
+      const response = await axiosClient.get(url);
       return response;
     } catch (error) {
       console.error('Error fetching user with role:', error.message);
