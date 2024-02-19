@@ -18,7 +18,11 @@ const translationsEN = {
         forgotpass: 'Forgot Password?',
         inputpassword: 'Enter Your Password',
         inputusername: 'Enter Your Username',
-        submit: 'Submit'
+        submit: 'Submit',
+        welcome: 'Welcome back!',
+        success: 'Please continue',
+        role: "You don't have access!",
+        error: 'Your account or password is currently incorrect!'
       },
       homepage: {
         welcome: 'Welcome to HealthCare',
@@ -61,15 +65,28 @@ const translationsEN = {
         phone: 'Phone',
         address: 'Address',
         submit: 'Submit',
-        inputusername: 'Enter username',
-        inputpassword: 'Enter password',
-        inputfullname: 'Enter fullname',
-        inputgender: 'Enter gender',
-        male: 'Male',
-        female: 'Female',
-        inputdateOfBirth: 'Enter date of birth',
-        inputphone: 'Enter phone',
-        inputaddress: 'Enter address',
+        inputusername: 'Enter username!',
+        inputpassword: 'Enter password!',
+        inputfullname: 'Enter fullname!',
+        inputgender: 'Enter gender!',
+        inputdateOfBirth: 'Enter date of birth!',
+        inputphone: 'Enter phone!',
+        inputemail: 'Enter email!',
+        inputaddress: 'Enter address!',
+        conusername: 'Username must not contain whitespace',
+        conusername1: 'Username must be at least 8 characters long',
+        conusername2: 'Username cannot exceed 20 characters',
+        condateOfBirth: 'Date of birth must be less than current date',
+        conphone: 'Phone number must be 10 digits',
+        conemail1: 'Email address is invalid',
+        conemail2: 'Email format is incorrect',
+        conpass1: 'Password must be at least 8 characters long',
+        conpass2: 'Password must contain at least one digit and one special character',
+        existusername: 'Username already exists!',
+        existemail: 'Email already exists!',
+        existphone: 'Phone number already exists!',
+        success: 'Registration successful!',
+        error: 'Please fill in all required information!'
       },
       listdoctor: {
         title1: 'Orthopedics',
@@ -98,7 +115,8 @@ const translationsEN = {
         forgotpass: {
           title: 'Forgot password',
           email: 'Please enter email',
-          submit: 'Reset your password',       
+          submit: 'Reset your password',    
+          success: 'Submitted!'   
         },
         booking: {
           title: 'Appointment Booking',
@@ -132,7 +150,8 @@ const translationsEN = {
           submit: "Continue",
           passwordsMatch: "Password incorrect",
           orthertitle: "There are no accounts to manipulate",
-          buttonback: "Return to homepage"
+          buttonback: "Return to homepage",
+          success: 'Successful update!'
         },
         success: {
           title: "You have successfully booked an appointment!",

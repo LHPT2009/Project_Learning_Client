@@ -10,12 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import { LoadingOutlined } from '@ant-design/icons';
 import { updateNewPass } from '../features/Client/clientSlice';
 import { useTranslation } from 'react-i18next';
-const schema = yup
-  .object({
-    password: yup.string().required('Mời bạn nhập mật khẩu!'),
-    repassword: yup.string().required('Mời bạn nhập xác nhận mật khẩu!'),
-  })
-  .required();
 
 export default function Reset() {
   useEffect(() => {
@@ -26,6 +20,16 @@ export default function Reset() {
   const code = params.get('code');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const schema = yup
+  .object({
+    password: yup.string().required(t('description.columncontent.reset.inputnewpass'))
+        .min(8, t('description.columncontent.register.conpass1'))
+        .matches(
+          /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
+          t('description.columncontent.register.conpass2')),
+    repassword: yup.string().required(t('description.columncontent.reset.inputconfirmpass')),
+  })
+  .required();
 
   const [spinning, setSpinning] = useState(true);
   setTimeout(() => {
@@ -48,7 +52,7 @@ export default function Reset() {
     dispatch(updateNewPass(dataNewPassWord)).then((item) => {
       console.log(item);
     });
-    message.success('Cập nhật thành công!');
+    message.success(t('description.columncontent.reset.success'));
     navigate('/login');
   };
 
@@ -68,10 +72,10 @@ export default function Reset() {
   const password = watch('password', '');
   const repassword = watch('repassword', '');
 
-  // Kiểm tra xem mật khẩu và mật khẩu xác nhận có khớp nhau hay không
+  // Kiểm tra mật khẩu 
   const passwordsMatch = password === repassword;
 
-  // Sử dụng useEffect để cập nhật trạng thái của nút "Submit" khi giá trị của password và repassword thay đổi
+  // Sử dụng useEffect để cập nhật trạng thái của nút "Submit" 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   useEffect(() => {
     if (!passwordsMatch) {

@@ -31,6 +31,24 @@ const schema = yup.object().shape({
   phone: yup.string().required('Vui lòng nhập tên bệnh viện'),
 });
 
+function formatDateString(inputDateString) {
+  const dateObject = new Date(inputDateString);
+
+  const day = dateObject.getDate();
+  const month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0, cộng thêm 1
+  const year = dateObject.getFullYear();
+
+  const formattedDate = `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}/${year}`;
+
+  return formattedDate;
+}
+
+function formatTime(timeString) {
+  const [hours, minutes] = timeString.split(':');
+  const formattedTime = `${hours}h${minutes}`;
+  return formattedTime;
+}
+
 const UserDetail = () => {
   const [mode, setMode] = useState('left');
 
@@ -81,7 +99,8 @@ const UserDetail = () => {
         fullname: infoUser.fullname || '',
         gender: infoUser.gender || '',
         address: infoUser.address || '',
-        dateOfBirth: infoUser.dateOfBirth || '',
+        dateOfBirth: formatDateString(`${infoUser.dateOfBirth || ''}`),
+        // dateOfBirth: infoUser.dateOfBirth || '',
         email: infoUser.email || '',
         phone: infoUser.phone || '',
       });
@@ -96,7 +115,7 @@ const UserDetail = () => {
     console.log('Check data UserDetail', data);
   };
   return (
-    <div style={{ height: '85vh' }}>
+    <div>
       <Spin spinning={spinning} indicator={antIcon} fullscreen style={{ background: '#ECF3F4' }} />
       <Radio.Group
         value={mode}
@@ -108,7 +127,7 @@ const UserDetail = () => {
         defaultActiveKey="1"
         tabPosition={mode}
         style={{
-          height: 220,
+          height: 'auto',
           padding: '20px',
         }}
         items={[
@@ -116,7 +135,7 @@ const UserDetail = () => {
             label: 'Thông Tin Cá Nhân',
             key: '1',
             children: (
-              <Card title="Thông Tin Cá Nhân" style={{ height: '75vh' }}>
+              <Card title="Thông Tin Cá Nhân">
                 <Row>
                   <Col flex={8}>
                     <Space
@@ -271,7 +290,7 @@ const UserDetail = () => {
             children: (
               <>
                 {listBooking ? (
-                  <Card title="Lịch Sử Khám" style={{ height: '75vh' }}>
+                  <Card title="Lịch Sử Khám" style={{ height: 'auto' }}>
                     <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
                       {listBooking.map((item) => (
                         <Card
@@ -289,18 +308,19 @@ const UserDetail = () => {
                           }
                         >
                           <Row>
-                            <Col flex={12}>
-                              <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                            <Col xs={24} sm={24} md={24} lg={12}>
+                              <Space direction="vertical" size="middle">
                                 <Text>{item.fullNameUser}</Text>
                                 <Text>{item.phoneUser}</Text>
                                 <Text>
-                                  {item.bookingTimeStart} - {item.bookingTimeEnd} -
-                                  {item.bookingDate}
+                                  {formatTime(item.bookingTimeStart)} -{' '}
+                                  {formatTime(item.bookingTimeEnd)}
                                 </Text>
+                                <Text>{formatDateString(item.bookingDate)}</Text>
                               </Space>
                             </Col>
-                            <Col flex={12}>
-                              <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                            <Col xs={24} sm={24} md={24} lg={12}>
+                              <Space direction="vertical" size="middle">
                                 <Text>{item.fullNameDoctor}</Text>
                                 <Text>{item.nameHospital}</Text>
                                 <Button
@@ -309,9 +329,12 @@ const UserDetail = () => {
                                   size="small"
                                   style={{
                                     backgroundColor:
-                                      item.statusTransaction == 'PENDING' ? '#ffcc00' : '',
+                                      item.statusTransaction == 'PENDING'
+                                        ? '#ffcc00'
+                                        : item.statusTransaction == 'SUCCESS'
+                                        ? '#007E33'
+                                        : '',
                                     color: '#fff',
-                                    // width: '120px',
                                   }}
                                 >
                                   {item.statusTransaction}
@@ -326,12 +349,6 @@ const UserDetail = () => {
                 ) : (
                   <p>Loading...</p>
                 )}
-
-                {/* </td>
-                    <td style={{ width: '50%' }}>Giới tính: {infoUser ? infoUser.gender : ''}</td>
-                  </tr>
-                </tbody>
-              </table> */}
               </>
             ),
           },

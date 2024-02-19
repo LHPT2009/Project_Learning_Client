@@ -168,7 +168,7 @@ const MenuComponent = () => {
                       placement="bottom"
                     >
                       <Button type="link" style={{ color: '#fff', height: '45px' }}>
-                        {`${t('description.headercontent.welcome')} ${User ? User.fullname : ''}`}
+                        {`${t('description.headercontent.welcome')} ${User ? User.fullName : ''}`}
 
                         <DownOutlined />
                         <Avatar
@@ -353,7 +353,7 @@ const MenuComponent = () => {
                       width: openMenu ? '100%' : '120px',
                     }}
                   >
-                    {`${t('description.headercontent.welcome')} ${User ? User.fullname : ''}`}
+                    {`${t('description.headercontent.welcome')} ${User ? User.fullName : ''}`}
                     <DownOutlined />
                     <Avatar
                       style={{
