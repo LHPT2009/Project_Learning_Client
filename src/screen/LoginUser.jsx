@@ -8,31 +8,32 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import clientApi from 'api/clientApi';
+import { updateAuthorizationHeader } from 'api/axiosClient';
 import Cookies from 'js-cookie';
-import { loginClient, logout } from '../features/Client/clientSlice';
-// import { fetchGetUserById } from '../features/Client/clientSlice';
+import { loginClient, fetchGetUserById } from '../features/Client/clientSlice';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-
-const schema = yup
-  .object({
-    username: yup.string().required('Mời bạn nhập tên tài khoản!'),
-    password: yup.string().required('Mời bạn nhập mật khẩu!'),
-  })
-  .required();
 
 const key = 'updatable';
 
 export default function LoginUser() {
   // Translation
-  const { i18n, t } = useTranslation();
-
+  const { t } = useTranslation();
+  const schema = yup
+    .object({
+      username: yup
+        .string()
+        .required(t('description.columncontent.login.inputusername'))
+        .trim()
+        .matches(/^\S*$/, t('description.columncontent.register.conusername')),
+      password: yup.string().required(t('description.columncontent.login.inputpassword')),
+    })
+    .required();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   const [spinning, setSpinning] = useState(true);
   const checkUser = useSelector((state) => state.client.client);
-
   useEffect(() => {
     checklogin();
   }, []);
@@ -61,27 +62,45 @@ export default function LoginUser() {
       setSpinning(true);
       const response = await clientApi.login(data);
       const checkgoback = params.get('goBack');
-
-      if (response.data && response.data.token) {
+      if (response.data.token) {
         await dispatch(loginClient(response.data));
+        await Cookies.set('accessToken', response.data.token, { expires: 1 });
+        await Cookies.set('refreshToken', response.data.refreshToken, { expires: 1 });
+        await dispatch(fetchGetUserById(response.data.id));
+
         if (response.data.roles.includes('ROLE_USER')) {
           if (checkgoback === null) {
-            Cookies.set('accessToken', response.data.token, { expires: 1 });
-            Cookies.set('refreshToken', response.data.refreshToken, { expires: 1 });
             navigate('/');
+            updateAuthorizationHeader();
+            message.success({
+              style: { marginTop: '7vh' },
+              content: t('description.columncontent.login.welcome'),
+            });
           } else {
             navigate(-1);
-            message.success('Mời bạn tiếp tục');
+            message.success({
+              style: { marginTop: '7vh' },
+              content: t('description.columncontent.login.success'),
+            });
           }
         } else {
-          dispatch(logout());
-          alert('Bạn không có quyền truy cập!');
+          setSpinning(false);
+          // alert(t('description.columncontent.login.role'));
+          message.error({
+            style: { marginTop: '7vh' },
+            content: t('description.columncontent.login.role'),
+          });
+          Cookies.remove('accessToken');
+          Cookies.remove('refreshToken');
+          setSpinning(false);
         }
       }
     } catch (error) {
-      message.error('Tại khoản hoặc mật khẩu của bạn hiện đang không đúng!');
+      message.error({
+        style: { marginTop: '7vh' },
+        content: t('description.columncontent.login.error'),
+      });
       console.error('Error calling login API:', error);
-    } finally {
       setSpinning(false);
     }
   };
