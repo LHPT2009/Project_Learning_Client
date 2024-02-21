@@ -26,6 +26,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { fetchGetUserById } from '../../features/Client/clientSlice';
 import { fetchGetBookingByUserId } from '../../features/Booking/bookingSlice';
+import { fetchAllSpecialists } from '../../features/Specialist/specialistSlice';
 
 const { Header } = Layout;
 
@@ -68,6 +69,13 @@ const MenuComponent = () => {
     await dispatch(fetchGetUserById(User.id));
     navigate('/userdetail/1');
   };
+
+  const loaddataListspecialists = async () => {
+    setOpenMenu(false);
+    await dispatch(fetchAllSpecialists());
+    navigate('/specialists');
+  };
+
   return (
     <div
       style={{
@@ -172,6 +180,16 @@ const MenuComponent = () => {
                 </Menu.Item>
                 {User !== null ? (
                   <>
+                    <Menu.Item>
+                      <Button
+                        type="primary"
+                        size="large"
+                        style={{ backgroundColor: '#00ADB3', width: '120px' }}
+                        onClick={() => loaddataListspecialists()}
+                      >
+                        {t('description.headercontent.booking')}
+                      </Button>
+                    </Menu.Item>
                     <Menu.Item>
                       <Dropdown
                         trigger={['click']}
@@ -325,20 +343,6 @@ const MenuComponent = () => {
           defaultSelectedKeys={[]}
           selectedKeys={[]}
         >
-          {/* <Menu.Item
-            style={{
-              marginInline: '0px',
-              paddingInline: '0px',
-              margin: '0px 0px 20px 0px',
-            }}
-          >
-            <Input
-              size="large"
-              placeholder={t('description.headercontent.search')}
-              prefix={<SearchOutlined />}
-              style={{ width: '100%' }}
-            />
-          </Menu.Item> */}
           <Menu.Item
             style={{ marginInline: '0px', paddingInline: '0px', margin: '0px 0px 20px 0px' }}
           >
@@ -349,7 +353,7 @@ const MenuComponent = () => {
                 backgroundColor: '#00ADB3',
                 width: openMenu ? '100%' : '120px',
               }}
-              onClick={() => setOpenMenu(false)}
+              onClick={() => loaddataListspecialists()}
             >
               {t('description.headercontent.booking')}
             </Button>
