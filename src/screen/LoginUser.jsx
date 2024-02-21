@@ -62,16 +62,18 @@ export default function LoginUser() {
       setSpinning(true);
       const response = await clientApi.login(data);
       const checkgoback = params.get('goBack');
+      message.destroy();
       if (response.data.token) {
         await dispatch(loginClient(response.data));
-        await Cookies.set('accessToken', response.data.token, { expires: 1 });
-        await Cookies.set('refreshToken', response.data.refreshToken, { expires: 1 });
-        await dispatch(fetchGetUserById(response.data.id));
+        Cookies.set('accessToken', response.data.token, { expires: 1 });
+        Cookies.set('refreshToken', response.data.refreshToken, { expires: 1 });
+        // await dispatch(fetchGetUserById(response.data.id));
 
         if (response.data.roles.includes('ROLE_USER')) {
           if (checkgoback === null) {
             navigate('/');
             updateAuthorizationHeader();
+            dispatch(fetchGetUserById(response.data.id));
             message.success({
               style: { marginTop: '7vh' },
               content: t('description.columncontent.login.welcome'),
@@ -85,7 +87,6 @@ export default function LoginUser() {
           }
         } else {
           setSpinning(false);
-          // alert(t('description.columncontent.login.role'));
           message.error({
             style: { marginTop: '7vh' },
             content: t('description.columncontent.login.role'),

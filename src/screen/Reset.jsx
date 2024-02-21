@@ -21,15 +21,18 @@ export default function Reset() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const schema = yup
-  .object({
-    password: yup.string().required(t('description.columncontent.reset.inputnewpass'))
+    .object({
+      password: yup
+        .string()
+        .required(t('description.columncontent.reset.inputnewpass'))
         .min(8, t('description.columncontent.register.conpass1'))
         .matches(
           /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
-          t('description.columncontent.register.conpass2')),
-    repassword: yup.string().required(t('description.columncontent.reset.inputconfirmpass')),
-  })
-  .required();
+          t('description.columncontent.register.conpass2')
+        ),
+      repassword: yup.string().required(t('description.columncontent.reset.inputconfirmpass')),
+    })
+    .required();
 
   const [spinning, setSpinning] = useState(true);
   setTimeout(() => {
@@ -52,7 +55,10 @@ export default function Reset() {
     dispatch(updateNewPass(dataNewPassWord)).then((item) => {
       console.log(item);
     });
-    message.success(t('description.columncontent.reset.success'));
+    message.success({
+      style: { marginTop: '7vh' },
+      content: t('description.columncontent.reset.success'),
+    });
     navigate('/login');
   };
 
@@ -72,10 +78,10 @@ export default function Reset() {
   const password = watch('password', '');
   const repassword = watch('repassword', '');
 
-  // Kiểm tra mật khẩu 
+  // Kiểm tra mật khẩu
   const passwordsMatch = password === repassword;
 
-  // Sử dụng useEffect để cập nhật trạng thái của nút "Submit" 
+  // Sử dụng useEffect để cập nhật trạng thái của nút "Submit"
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   useEffect(() => {
     if (!passwordsMatch) {
@@ -140,7 +146,8 @@ export default function Reset() {
           <Form.Item
             label={
               <>
-                {t('description.columncontent.reset.newpass')} <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+                {t('description.columncontent.reset.newpass')}{' '}
+                <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
               </>
             }
             hasFeedback
@@ -153,14 +160,19 @@ export default function Reset() {
               name="password"
               control={control}
               render={({ field }) => (
-                <Input.Password key="password" {...field} placeholder={t('description.columncontent.reset.inputnewpass')} />
+                <Input.Password
+                  key="password"
+                  {...field}
+                  placeholder={t('description.columncontent.reset.inputnewpass')}
+                />
               )}
             />
           </Form.Item>
           <Form.Item
             label={
               <>
-                {t('description.columncontent.reset.confirmpass')} <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+                {t('description.columncontent.reset.confirmpass')}{' '}
+                <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
               </>
             }
             hasFeedback
@@ -173,12 +185,20 @@ export default function Reset() {
               name="repassword"
               control={control}
               render={({ field }) => (
-                <Input.Password key="repassword" {...field} placeholder={t('description.columncontent.reset.inputconfirmpass')} />
+                <Input.Password
+                  key="repassword"
+                  {...field}
+                  placeholder={t('description.columncontent.reset.inputconfirmpass')}
+                />
               )}
             />
           </Form.Item>
           <Form.Item>
-            {!passwordsMatch && <span style={{ color: 'red' }}>{t('description.columncontent.reset.passwordsMatch')}</span>}
+            {!passwordsMatch && (
+              <span style={{ color: 'red' }}>
+                {t('description.columncontent.reset.passwordsMatch')}
+              </span>
+            )}
             <Button
               type="primary"
               htmlType="submit"

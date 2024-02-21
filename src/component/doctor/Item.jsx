@@ -129,11 +129,20 @@ const DataItem = ({ dataItem }) => {
 
   const addInfo = () => {
     if (idSchedules == null && timeSchedules == null) {
-      message.error('Chọn thời gian của bạn!');
+      message.error({
+        style: { marginTop: '7vh' },
+        content: 'Chọn thời gian của bạn!',
+      });
     } else if (idPackage == null && pricePakage == null) {
-      message.error('Chọn gói khám của bạn!');
+      message.error({
+        style: { marginTop: '7vh' },
+        content: 'Chọn gói khám của bạn!',
+      });
     } else if (checkuser == null) {
-      message.error('Chọn mời bạn đăng nhập!');
+      message.error({
+        style: { marginTop: '7vh' },
+        content: 'Mời bạn đăng nhập!',
+      });
       navigate('/login');
     } else {
       dispatch(fetchGetDoctorById(dataItem.id));

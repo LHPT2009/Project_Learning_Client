@@ -30,30 +30,40 @@ export default function Register() {
   const { t } = useTranslation();
   const schema = yup
     .object({
-      username: yup.string().required(t('description.columncontent.register.inputusername'))
+      username: yup
+        .string()
+        .required(t('description.columncontent.register.inputusername'))
         .trim()
         .matches(/^\S*$/, t('description.columncontent.register.conusername'))
         .min(8, t('description.columncontent.register.conusername1'))
         .max(20, t('description.columncontent.register.conusername2')),
-      password: yup.string().required(t('description.columncontent.register.inputpassword'))
+      password: yup
+        .string()
+        .required(t('description.columncontent.register.inputpassword'))
         .min(8, t('description.columncontent.register.conpass1'))
         .matches(
           /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
-          t('description.columncontent.register.conpass2')),
+          t('description.columncontent.register.conpass2')
+        ),
       fullname: yup.string().required(t('description.columncontent.register.inputfullname')),
       gender: yup.string().required(t('description.columncontent.register.inputgender')),
-      dateOfBirth: yup.date().required(t('description.columncontent.register.inputdateOfBirth'))
+      dateOfBirth: yup
+        .date()
+        .required(t('description.columncontent.register.inputdateOfBirth'))
         .max(new Date(), t('description.columncontent.register.condateOfBirth')),
-      phone: yup.string().required(t('description.columncontent.register.inputphone'))
+      phone: yup
+        .string()
+        .required(t('description.columncontent.register.inputphone'))
         .matches(/^\d{10}$/, t('description.columncontent.register.conphone')),
-      email: yup.string().required(t('description.columncontent.register.inputemail'))
+      email: yup
+        .string()
+        .required(t('description.columncontent.register.inputemail'))
         .trim()
         .email(t('description.columncontent.register.conemail1'))
         .matches(/^[^\s@]+@gmail\.com$/, t('description.columncontent.register.conemail1')),
       address: yup.string().required(t('description.columncontent.register.inputaddress')),
     })
     .required();
-
 
   const [spinning, setSpinning] = useState(true);
   setTimeout(() => {
@@ -123,17 +133,27 @@ export default function Register() {
     await dispatch(fetchregister(dataRegister)).then((item) => {
       const checkStatus = item.payload ? item.payload.status || item.payload.statusCode : '';
       if (checkStatus == 200) {
-        message.success(t('description.columncontent.register.success'));
+        message.success({
+          style: { marginTop: '7vh' },
+          content: t('description.columncontent.register.success'),
+        });
+        // message.success(t('description.columncontent.register.success'));
         navigate('/login');
       }
       if (checkStatus == 400) {
-        message.error(`${changeNameErr(item.payload.data.message)}`);
+        message.error({
+          style: { marginTop: '7vh' },
+          content: `${changeNameErr(item.payload.data.message)}`,
+        });
       }
     });
   };
 
   const handleFailed = () => {
-    message.error(t('description.columncontent.register.error'));
+    message.error({
+      style: { marginTop: '7vh' },
+      content: t('description.columncontent.register.error'),
+    });
   };
 
   const customImageStyle = {
@@ -159,7 +179,7 @@ export default function Register() {
         onFinishFailed={handleFailed}
         name="basic"
         style={{
-          width: '600px',
+          width: '900px',
           height: 'auto',
           background: '#ecf3f4',
           display: 'flex',
@@ -196,177 +216,193 @@ export default function Register() {
             {t('description.columncontent.register.title')}
           </h2>
         </div>
-        <Form.Item
-          label={
-            <>
-              {t('description.columncontent.register.username')}
-              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
-            </>
+        <Row gutter={[16, 16]}>
+          <Col xs={24}
+            sm={24}
+            md={24}
+            lg={24}
+            xl={12}>
+            <Form.Item
+              label={
+                <>
+                  {t('description.columncontent.register.username')}
+                  <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+                </>
 
 
-          }
+              }
 
-          hasFeedback
-          validateStatus={errors.username ? 'error' : ''}
-          help={errors.username && errors.username.message}
-        >
-          <Controller
-            name="username"
-            control={control}
-            //rules={{ required: 'Vui lòng nhập tên tài khoản!' }}
-            render={({ field }) => <Input {...field} />}
-          />
-        </Form.Item>
-        <Form.Item
-          label={
-            <>
-              {t('description.columncontent.register.password')}
-              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
-            </>
-          }
-          hasFeedback
-          validateStatus={errors.password ? 'error' : ''}
-          help={errors.password && errors.password.message}
-        >
-          <Controller
-            name="password"
-            control={control}
-            // rules={{ required: 'Vui lòng nhập Mật khẩu!' }}
-            render={({ field }) => <Input.Password {...field} />}
-          />
-        </Form.Item>
+              hasFeedback
+              validateStatus={errors.username ? 'error' : ''}
+              help={errors.username && errors.username.message}
+            >
+              <Controller
+                name="username"
+                control={control}
+                //rules={{ required: 'Vui lòng nhập tên tài khoản!' }}
+                render={({ field }) => <Input {...field} />}
+              />
+            </Form.Item>
+            <Form.Item
+              label={
+                <>
+                  {t('description.columncontent.register.password')}
+                  <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+                </>
+              }
+              hasFeedback
+              validateStatus={errors.password ? 'error' : ''}
+              help={errors.password && errors.password.message}
+            >
+              <Controller
+                name="password"
+                control={control}
+                // rules={{ required: 'Vui lòng nhập Mật khẩu!' }}
+                render={({ field }) => <Input.Password {...field} />}
+              />
+            </Form.Item>
 
-        <Form.Item
-          label={
-            <>
-              {t('description.columncontent.register.fullname')}
-              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
-            </>
+            <Form.Item
+              label={
+                <>
+                  {t('description.columncontent.register.fullname')}
+                  <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+                </>
 
-          }
-          hasFeedback
-          validateStatus={errors.fullname ? 'error' : ''}
-          help={errors.fullname && errors.fullname.message}
-        >
-          <Controller
-            name="fullname"
-            control={control}
-            //rules={{ required: 'Vui lòng nhập Họ và tên!' }}
-            render={({ field }) => <Input {...field} />}
-          />
-        </Form.Item>
+              }
+              hasFeedback
+              validateStatus={errors.fullname ? 'error' : ''}
+              help={errors.fullname && errors.fullname.message}
+            >
+              <Controller
+                name="fullname"
+                control={control}
+                //rules={{ required: 'Vui lòng nhập Họ và tên!' }}
+                render={({ field }) => <Input {...field} />}
+              />
+            </Form.Item>
 
-        <Form.Item
-          label={
-            <>
-              {t('description.columncontent.register.gender')}
-              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
-            </>
-          }
-          name="gender"
-          hasFeedback
-          validateStatus={errors.gender ? 'error' : ''}
-          help={errors.gender && errors.gender.message}
-        >
-          <Controller
-            render={({ field }) => (
-              <Radio.Group>
-                <Radio {...field} value="Nam">
-                  {' '}
-                  {t('description.columncontent.register.male')}{' '}
-                </Radio>
-                <Radio {...field} value="Nữ">
-                  {' '}
-                  {t('description.columncontent.register.female')}{' '}
-                </Radio>
-              </Radio.Group>
-            )}
-            control={control}
-            name="gender"
-          />
-        </Form.Item>
+            <Form.Item
+              label={
+                <>
+                  {t('description.columncontent.register.gender')}
+                  <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+                </>
+              }
+              name="gender"
+              hasFeedback
+              validateStatus={errors.gender ? 'error' : ''}
+              help={errors.gender && errors.gender.message}
+            >
+              <Controller
+                render={({ field }) => (
+                  <Radio.Group>
+                    <Radio {...field} value="Nam">
+                      {' '}
+                      {t('description.columncontent.register.male')}{' '}
+                    </Radio>
+                    <Radio {...field} value="Nữ">
+                      {' '}
+                      {t('description.columncontent.register.female')}{' '}
+                    </Radio>
+                  </Radio.Group>
+                )}
+                control={control}
+                name="gender"
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24}
+            sm={24}
+            md={24}
+            lg={24}
+            xl={12}>
 
-        <Form.Item
-          label={
-            <>
-              
-                {t('description.columncontent.register.dateOfBirth')}
-              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
-            </>
-          }
-          name="dateOfBirth"
-          hasFeedback
-          validateStatus={errors.dateOfBirth ? 'error' : ''}
-          help={errors.dateOfBirth && errors.dateOfBirth.message}
-        >
-          <Controller
-            render={({ field }) => (
-              <DatePicker {...field} placeholder="Chọn ngày sinh" style={{ width: '100%' }} />
-            )}
-            control={control}
-            name="dateOfBirth"
-          />
-        </Form.Item>
+            <Form.Item
+              label={
+                <>
 
-        <Form.Item
-          label={
-            <>
-              {t('description.columncontent.register.phone')}
-              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
-            </>
-          }
-          hasFeedback
-          validateStatus={errors.phone ? 'error' : ''}
-          help={errors.phone && errors.phone.message}
-        >
-          <Controller
-            name="phone"
-            control={control}
-            //rules={{ required: 'Vui lòng nhập số điện thoại!' }}
-            render={({ field }) => <Input {...field} />}
-          />
-        </Form.Item>
+                  {t('description.columncontent.register.dateOfBirth')}
+                  <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+                </>
+              }
+              name="dateOfBirth"
+              hasFeedback
+              validateStatus={errors.dateOfBirth ? 'error' : ''}
+              help={errors.dateOfBirth && errors.dateOfBirth.message}
+            >
+              <Controller
+                render={({ field }) => (
+                  <DatePicker {...field} placeholder="Chọn ngày sinh" style={{ width: '100%' }} />
+                )}
+                control={control}
+                name="dateOfBirth"
+              />
+            </Form.Item>
 
-        <Form.Item
-          label={
-            <>
-              Email
-              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
-            </>
+            <Form.Item
+              label={
+                <>
+                  {t('description.columncontent.register.phone')}
+                  <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+                </>
+              }
+              hasFeedback
+              validateStatus={errors.phone ? 'error' : ''}
+              help={errors.phone && errors.phone.message}
+            >
+              <Controller
+                name="phone"
+                control={control}
+                //rules={{ required: 'Vui lòng nhập số điện thoại!' }}
+                render={({ field }) => <Input {...field} />}
+              />
+            </Form.Item>
 
-          }
+            <Form.Item
+              label={
+                <>
+                  Email
+                  <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+                </>
 
-          hasFeedback
-          validateStatus={errors.email ? 'error' : ''}
-          help={errors.email && errors.email.message}
-        >
-          <Controller
-            name="email"
-            control={control}
-            // rules={{ required: 'Vui lòng nhập email!' }}
-            render={({ field }) => <Input {...field} />}
-          />
-        </Form.Item>
+              }
 
-        <Form.Item
-          label={
-            <>
-            {t('description.columncontent.register.address')}
-            <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
-            </>
-            
-          }
-          hasFeedback
-          validateStatus={errors.address ? 'error' : ''}
-          help={errors.address && errors.address.message}
-        >
-          <Controller
-            name="address"
-            control={control}
-            //rules={{ required: 'Vui lòng nhập địa chỉ!' }}
-            render={({ field }) => <Input {...field} />}
-          />
-        </Form.Item>
+              hasFeedback
+              validateStatus={errors.email ? 'error' : ''}
+              help={errors.email && errors.email.message}
+            >
+              <Controller
+                name="email"
+                control={control}
+                // rules={{ required: 'Vui lòng nhập email!' }}
+                render={({ field }) => <Input {...field} />}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label={
+                <>
+                  {t('description.columncontent.register.address')}
+                  <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+                </>
+
+              }
+              hasFeedback
+              validateStatus={errors.address ? 'error' : ''}
+              help={errors.address && errors.address.message}
+            >
+              <Controller
+                name="address"
+                control={control}
+                //rules={{ required: 'Vui lòng nhập địa chỉ!' }}
+                render={({ field }) => <Input {...field} />}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
+
 
         <Form.Item>
           <Button

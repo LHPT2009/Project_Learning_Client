@@ -159,6 +159,17 @@ const translationsVN = {
         buttonback: 'Trở về trang chủ',
         success: 'Cập nhật thành công!',
       },
+      changepass: {
+        title: "Đặt lại mật khẩu",
+        oldpass: "Mật khẩu cũ",
+        newpass: "Mật khẩu mới",
+        inputoldpass: "Nhập mật khẩu cũ",
+        inputnewpass: "Nhập mật khẩu mới",
+        submit: "Tiếp tục",
+        buttonback: 'Trở về trang chủ',
+        success: 'Cập nhật thành công!',
+        require: 'Đăng nhập trước khi đổi mật khẩu'
+      },
       success: {
         title: 'Bạn đã đặt lịch thành công!',
         buttonback: 'Trở lại trang chủ',
