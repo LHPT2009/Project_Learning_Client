@@ -44,6 +44,16 @@ const clientApi = {
       return [];
     }
   },
+  changePassword: async (dataChangePassword) => {
+    const url = '/api/user/updatePass';
+    try {
+      const response = await axiosClient.put(url, dataChangePassword);
+      return response;
+    } catch (error) {
+      // console.error('Error fetching user with role:', error.message);
+      return error.response;
+    }
+  },
 };
 
 export default clientApi;

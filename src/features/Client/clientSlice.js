@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import clientApi from '../../api/clientApi';
+import { Navigate } from 'react-router-dom';
 
 export const fetchClientLogin = createAsyncThunk('client/fetchClientLogin', async (userData) => {
   try {
@@ -33,6 +34,15 @@ export const updateNewPass = createAsyncThunk('user/updateNewPass', async (dataN
   try {
     const response = await clientApi.updateNewPass(dataNewPass);
     return response.data;
+  } catch (err) {
+    return err.response;
+  }
+});
+
+export const changePassword = createAsyncThunk('user/changePassword', async (dataChangePassword) => {
+  try {
+    const response = await clientApi.changePassword(dataChangePassword);
+    return response;
   } catch (err) {
     return err.response;
   }

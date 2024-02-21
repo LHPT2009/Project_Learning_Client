@@ -27,6 +27,36 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 const { Content } = Layout;
 
+const dayMappingvn = {
+  Monday: 'Thứ 2',
+  Tuesday: 'Thứ 3',
+  Wednesday: 'Thứ 4',
+  Thursday: 'Thứ 5',
+  Friday: 'Thứ 6',
+  Saturday: 'Thứ 7',
+  Sunday: 'Chủ nhật',
+};
+
+function formatTimeRange(inputTime) {
+  // Chia chuỗi thành mảng các phần tử
+  var times = inputTime.split(' - ');
+
+  // Chuyển đổi định dạng cho từng phần tử
+  var formattedTimes = times.map(function (time) {
+    var parts = time.split(':');
+    var hours = parts[0];
+    var minutes = parts[1];
+
+    // Thêm "h" vào giữa giờ và phút
+    return hours + 'h' + minutes;
+  });
+
+  // Kết hợp lại thành chuỗi mới
+  var formattedRange = formattedTimes.join(' - ');
+
+  return formattedRange;
+}
+
 const generateRandomNumbers = () => {
   const characters = '0123456789';
   let randomString = '';
@@ -51,6 +81,19 @@ function formatDate(inputDateString) {
   return formattedDate;
 }
 
+function formatDateShow(inputDateString) {
+  const originalDate = new Date(inputDateString);
+
+  const year = originalDate.getFullYear();
+  const month = (originalDate.getMonth() + 1).toString().padStart(2, '0');
+  const day = originalDate.getDate().toString().padStart(2, '0');
+
+  // const formattedDate = `${year}-${month}-${day}`;
+  const formattedDate = `${day}-${month}-${year}`;
+
+  return formattedDate;
+}
+
 export default function Booking() {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -59,6 +102,7 @@ export default function Booking() {
   const [spinning, setSpinning] = useState(true);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
   const infoBooking = useSelector((state) => state.booking.infoBooking);
   const infoUser = useSelector((state) => state.client.client);
   const listPayment = useSelector((state) => state.payment.payments);
@@ -109,7 +153,21 @@ export default function Booking() {
   };
   const RadioGroup = Radio.Group;
 
+  const isValidURL = (url) => {
+    var urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- ;,./?%&=]*)?$/;
+    return urlPattern.test(url);
+  };
+
+  const isURL = (str) => {
+    // Regex pattern for a simple URL validation
+    const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+
+    return urlRegex.test(str);
+  };
+
   const sendBooking = (data) => {
+    message.destroy();
+    setSpinning(true);
     const formatsending = {
       code: `${generateRandomNumbers()}`,
       idUser: infoUser.id,
@@ -123,11 +181,32 @@ export default function Booking() {
     if (formatsending.idPaymentMethod === '1') {
       dispatch(fetchCreateTransaction(formatsending))
         .then((item) => {
-          message.success('Đã đặt lịch thành công!');
-          navigate('/success/cash');
+          if (item.payload && item.payload == 'Transaction created successfully') {
+            message.success({
+              style: { marginTop: '7vh' },
+              content: 'Đã đặt lịch thành công!',
+            });
+            navigate('/success/cash');
+
+            setSpinning(false);
+          } else if (
+            item.payload &&
+            item.payload.data.message == 'ERR_SCHEDULES_DETAIL_ALREADY_EXIST'
+          ) {
+            message.error({
+              style: { marginTop: '7vh' },
+              content: 'Lịch Khám này đã được đặt bởi người khác!',
+            });
+            setSpinning(false);
+          }
         })
         .catch((err) => {
-          message.error('Đã xảy ra lỗi: ', err);
+          console.log(err);
+          message.error({
+            style: { marginTop: '7vh' },
+            content: `Đã xảy ra lỗi: ${err}`,
+          });
+          setSpinning(false);
         });
     }
 
@@ -135,12 +214,29 @@ export default function Booking() {
       dispatch(addTempBooking(formatsending));
       dispatch(fetchCreateTransaction(formatsending))
         .then((item) => {
-          message.loading('Đang xử lý đặt lịch!');
-          navigate('/success/vnpay');
-          window.open(`${item.payload}`, '_blank');
+          const checkUrl = isURL(item.payload);
+          if (checkUrl) {
+            message.loading({
+              style: { marginTop: '7vh' },
+              content: `Đang xử lý đặt lịch!`,
+            });
+            navigate('/success/vnpay');
+            window.open(`${item.payload}`, '_blank');
+            setSpinning(false);
+          } else {
+            message.error({
+              style: { marginTop: '7vh' },
+              content: 'Lịch Khám này đã được đặt bởi người khác!',
+            });
+            setSpinning(false);
+          }
         })
         .catch((err) => {
-          message.error('Đã xảy ra lỗi: ', err);
+          message.error({
+            style: { marginTop: '7vh' },
+            content: `Đã xảy ra lỗi: ${err}`,
+          });
+          setSpinning(false);
         });
     }
   };
@@ -153,9 +249,15 @@ export default function Booking() {
 
   const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
 
-  if (infoBooking !== null) {
+  if (infoBooking && infoUser && infoDoctor && listPayment && listPayment.length > 0) {
     return (
       <>
+        <Spin
+          spinning={spinning}
+          indicator={antIcon}
+          fullscreen
+          style={{ background: '#ECF3F4' }}
+        />
         <Layout
           style={{
             padding: '0 24px',
@@ -169,12 +271,6 @@ export default function Booking() {
             transform: 'translateX( -50%)',
           }}
         >
-          <Spin
-            spinning={spinning}
-            indicator={antIcon}
-            fullscreen
-            style={{ background: '#ECF3F4' }}
-          />
           <Title
             level={3}
             style={{
@@ -211,10 +307,14 @@ export default function Booking() {
                     {infoDoctor.fullNameDoctor}
                   </Title>
                   <Text>{infoDoctor.hospitalsName}</Text>
-                  <Text>{infoDoctor.hospitalsName}</Text>
                   <Text>
-                    {t('description.columncontent.booking.day')} {infoBooking.timeScheduleDetail} -{' '}
-                    {infoBooking.bookingDay} - {infoBooking.bookingDate}
+                    {t('description.columncontent.booking.day')}{' '}
+                    {formatTimeRange(infoBooking.timeScheduleDetail)}
+                  </Text>
+                  <Text>
+                    {t('description.columncontent.booking.day')}{' '}
+                    {dayMappingvn[infoBooking.bookingDay]} -{' '}
+                    {formatDateShow(infoBooking.bookingDate)}
                   </Text>
                 </Space>
               </Col>
@@ -242,7 +342,7 @@ export default function Booking() {
                     <Controller
                       name="fullname"
                       control={control}
-                      render={({ field }) => <Input {...field} />}
+                      render={({ field }) => <Input {...field} disabled />}
                     />
                   </Form.Item>
                   <Form.Item
@@ -255,7 +355,7 @@ export default function Booking() {
                     <Controller
                       name="phone"
                       control={control}
-                      render={({ field }) => <Input {...field} />}
+                      render={({ field }) => <Input {...field} disabled />}
                     />
                   </Form.Item>
                   <Form.Item
@@ -268,7 +368,7 @@ export default function Booking() {
                     <Controller
                       name="gender"
                       control={control}
-                      render={({ field }) => <Input {...field} />}
+                      render={({ field }) => <Input {...field} disabled />}
                     />
                   </Form.Item>
                   <Form.Item
@@ -283,7 +383,7 @@ export default function Booking() {
                     <Controller
                       name="dateOfBirth"
                       control={control}
-                      render={({ field }) => <Input {...field} />}
+                      render={({ field }) => <Input {...field} disabled />}
                     />
                   </Form.Item>
 
@@ -299,7 +399,7 @@ export default function Booking() {
                     <Controller
                       name="address"
                       control={control}
-                      render={({ field }) => <Input {...field} />}
+                      render={({ field }) => <Input {...field} disabled />}
                     />
                   </Form.Item>
                   <Form.Item

@@ -13,7 +13,7 @@ import Register from 'screen/Register';
 import ForgotPassword from 'screen/ForgotPassword';
 import Reset from 'screen/Reset';
 import UserDetail from 'screen/UserDetail';
-
+import ChangePassword from 'screen/ChangePassword';
 function App() {
   return (
     <div className="App" style={{ height: '100vh', background: '#111', position: 'relative' }}>
@@ -33,7 +33,8 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot" element={<ForgotPassword />} />
                 <Route path="/reset/auth/new-password" element={<Reset />} />
-                <Route path="/userdetail" element={<UserDetail />} />
+                <Route path="/changepass" element={<ChangePassword />} />
+                <Route path="/userdetail/:id" element={<UserDetail />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>

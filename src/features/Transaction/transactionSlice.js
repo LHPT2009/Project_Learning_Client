@@ -4,8 +4,12 @@ import transactionApi from 'api/transactionApi';
 export const fetchCreateTransaction = createAsyncThunk(
   'transaction/fetchCreateTransaction',
   async (data) => {
-    const response = await transactionApi.createTransaction(data);
-    return response.data;
+    try {
+      const response = await transactionApi.createTransaction(data);
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
   }
 );
 

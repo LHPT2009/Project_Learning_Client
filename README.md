@@ -1,5 +1,3 @@
-# Figma
-https://www.figma.com/file/fUocKGEAohXIqdF8ohBS8Y/HealthCare?type=design&node-id=13-68&mode=design&t=rPb6jJvhEzQUfovb-0
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

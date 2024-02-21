@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Layout, Space, Typography, Spin, Result } from 'antd';
+import { Layout, Space, Typography, Spin, Result, Pagination } from 'antd';
 import { useLocation } from 'react-router-dom';
 import ListItemArr from 'component/doctor/ListItem';
 
@@ -8,6 +8,7 @@ import bglist from '../asset/image/Background_List.png';
 import { fetchDoctorsBySpecialty } from '../features/Doctor/doctorSlice';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import { Footer } from 'antd/es/layout/layout';
 const { Content, Header } = Layout;
 const { Text, Title, Link } = Typography;
 const ListDotor = () => {
@@ -22,7 +23,9 @@ const ListDotor = () => {
   const [spinning, setSpinning] = useState(true);
 
   useEffect(() => {
-    dispatch(fetchDoctorsBySpecialty(specialists));
+    dispatch(fetchDoctorsBySpecialty(specialists)).then((item) => {
+      setSpinning(false);
+    });
   }, []);
 
   const arrdoctorsbyspecialty = useSelector((state) => state.doctor.doctorsspecialty);
@@ -38,13 +41,27 @@ const ListDotor = () => {
     lineHeight: '0px',
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      setSpinning(false);
-    }, 500);
-  }, [arrdoctorsbyspecialty]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setSpinning(false);
+  //   }, 500);
+  // }, [arrdoctorsbyspecialty]);
 
   const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
+
+  const pageSize = 2; // Number of items per page
+  const totalItems = arrdoctorsbyspecialty.length; // Total number of items in your data set
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const getCurrentPageData = () => {
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return arrdoctorsbyspecialty.slice(startIndex, endIndex);
+  };
+
+  const handleChangePage = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <Layout>
@@ -58,32 +75,50 @@ const ListDotor = () => {
                   {t('description.columncontent.listdoctor.title1')}
                 </Title>
                 <Title level={3} style={{ lineHeight: '25px' }}>
-                {t('description.columncontent.listdoctor.title2')}
+                  {t('description.columncontent.listdoctor.title2')}
                 </Title>
                 <Title level={4} style={{ lineHeight: '20px' }}>
-                {t('description.columncontent.listdoctor.title3')}
+                  {t('description.columncontent.listdoctor.title3')}
                 </Title>
                 <Text style={{ lineHeight: '15px' }}>
-                {t('description.columncontent.listdoctor.title4')}
+                  {t('description.columncontent.listdoctor.title4')}
                 </Text>
                 <Text style={{ lineHeight: '15px' }}>
-                {t('description.columncontent.listdoctor.title5')}
+                  {t('description.columncontent.listdoctor.title5')}
                 </Text>
                 <Text style={{ lineHeight: '15px' }}>
-                {t('description.columncontent.listdoctor.title6')}
+                  {t('description.columncontent.listdoctor.title6')}
                 </Text>
                 <Text style={{ lineHeight: '15px' }}>
-                {t('description.columncontent.listdoctor.title7')}{' '}
+                  {t('description.columncontent.listdoctor.title7')}{' '}
                 </Text>
                 <Text style={{ lineHeight: '15px' }}>
-                {t('description.columncontent.listdoctor.title8')}
+                  {t('description.columncontent.listdoctor.title8')}
                 </Text>
               </Space>
             </Content>
           </Header>
-          <Content style={{ padding: '0px 50px' }}>
-            <ListItemArr arrdoctors={arrdoctorsbyspecialty} />
+          <Content style={{ padding: '0px 50px', height: 'auto' }}>
+            <ListItemArr arrdoctors={getCurrentPageData()} />
           </Content>
+          <Footer
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              // backgroundColor: '#116069',
+              // padding: '5px',
+            }}
+          >
+            <Pagination
+              current={currentPage}
+              total={totalItems}
+              pageSize={pageSize}
+              onChange={handleChangePage}
+              showSizeChanger={false}
+              showQuickJumper={false}
+            />
+          </Footer>
         </>
       ) : (
         <>

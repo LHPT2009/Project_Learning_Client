@@ -1,10 +1,45 @@
 import React, { useEffect } from 'react';
-import { Form, Row, Col, Image, Space } from 'antd';
+import { Form, Row, Col, Image, Space, Button, Typography } from 'antd';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import NoImage from '../asset/image/NoImage.png';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { fetchGetBookingByUserId } from '../features/Booking/bookingSlice';
+
+const { Text } = Typography;
+
+const formatter = new Intl.NumberFormat('vi-VN', {
+  style: 'currency',
+  currency: 'VND',
+});
+
+function formatTime(timeString) {
+  const [hours, minutes] = timeString.split(':');
+  const formattedTime = `${hours}h${minutes}`;
+  return formattedTime;
+}
+
+const formatDate = (originalDate) => {
+  const [year, month, day] = originalDate.split('-');
+  const formattedDate = `${day}/${month}/${year}`;
+  return formattedDate;
+};
+
+const formatDateBOD = (originalDate) => {
+  const dateObject = new Date(originalDate);
+
+  const day = dateObject.getDate().toString().padStart(2, '0');
+  const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
+  const year = dateObject.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
+
 export default function History() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const idUser = useSelector((state) => (state.client.client ? state.client.client.id : ''));
   const { id } = useParams();
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -14,6 +49,10 @@ export default function History() {
     if (listBooking == null) {
       navigate('/error');
     }
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchGetBookingByUserId(idUser));
   }, []);
 
   const userInfo = useSelector((state) => state.client.userinfo[0]);
@@ -26,22 +65,26 @@ export default function History() {
     name: userInfo ? userInfo.fullname : '',
     phone: userInfo ? userInfo.phone : '',
     gender: userInfo ? userInfo.gender : '',
-    dob: userInfo ? userInfo.dateOfBirth : '',
+    dob: formatDateBOD(userInfo ? userInfo.dateOfBirth : ''),
     address: userInfo ? userInfo.address : '',
-    // disease: data ? data.description === '' : 'Đang cập nhật',
-    disease: 'Đang cập nhật',
-    paymentMethod: 'Đang cập nhật',
-    total: data ? data.pricePackage : '',
+    disease: data.description ? data.description : `Không đề cập`,
+    paymentMethod: data ? data.paymentMethod : '',
+    total: formatter.format(data ? data.pricePackage : ''),
+    statusTransaction: data ? data.statusTransaction : '',
   };
   const doctorInfo = {
     name: data ? data.fullNameDoctor : '',
-    disease: 'Đang cập nhật',
+    disease: data ? data.specialistName : '',
     hospital: data ? data.nameHospital : '',
   };
   const detailBooking = {
-    time: `${data ? data.bookingTimeStart : ''} - ${data ? data.bookingTimeEnd : ''}`,
-    date: data ? data.bookingDate : '',
+    code: data ? data.code : '',
+    time: `${formatTime(data ? data.bookingTimeStart : '')} - ${formatTime(
+      data ? data.bookingTimeEnd : ''
+    )}`,
+    date: formatDate(data ? data.bookingDate : ''),
     location: data ? data.addressHospital : '',
+    status: data ? data.status : '',
   };
   return (
     <div
@@ -67,20 +110,47 @@ export default function History() {
         layout="horizontal"
       >
         <Row gutter={[16, 16]}>
-          <div
-            className=""
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '10px',
-            }}
-          >
-            <h2 style={{ fontSize: '28px', fontWeight: '700', color: '#005761' }}>
-              Lịch hẹn đã đặt
-            </h2>
-          </div>
+          <Col span={8}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+              }}
+            >
+              <Button
+                type="primary"
+                size="large"
+                style={{ backgroundColor: '#00ADB3' }}
+                onClick={() => navigate('/userdetail/2')}
+                icon={<ArrowLeftOutlined />}
+              >
+                Trở lại
+              </Button>
+            </div>
+          </Col>
+          <Col span={8}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Text style={{ fontSize: '28px', fontWeight: '700', color: '#005761' }}>
+                Lịch hẹn đã đặt
+              </Text>
+            </div>
+          </Col>
+          <Col span={8}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              }}
+            ></div>
+          </Col>
         </Row>
 
         <Row gutter={[16, 16]} style={{ justifyContent: 'space-between' }}>
@@ -103,15 +173,44 @@ export default function History() {
                   <h5 style={{ fontSize: '15px' }}>Lý do khám:</h5>
                   <h5 style={{ fontSize: '15px' }}>Phương thức thanh toán:</h5>
                   <h5 style={{ fontSize: '15px' }}>Chi phí khám:</h5>
+                  <h5 style={{ fontSize: '15px' }}>Trạng thái thanh toán:</h5>
                 </div>
               </Col>
               <Col span={12}>
                 <div>
-                  {Object.values(bookingInfo).map((value, index) => (
-                    <h5 key={index} style={{ fontSize: '15px' }}>
-                      {value}
-                    </h5>
-                  ))}
+                  {Object.values(bookingInfo).map((value, index) =>
+                    value !== 'SUCCESS' && value !== 'PENDING' && value !== 'CANCELED' ? (
+                      <h5 key={index} style={{ fontSize: '15px' }}>
+                        {value}
+                      </h5>
+                    ) : (
+                      <Button
+                        key={index}
+                        type="primary"
+                        size="small"
+                        style={{
+                          backgroundColor:
+                            value === 'SUCCESS'
+                              ? '#00ADB3'
+                              : value === 'PENDING'
+                              ? '#E7DE0D'
+                              : value === 'CANCELED'
+                              ? '#E7515A'
+                              : '',
+                          color: '#fff',
+                        }}
+                        disabled
+                      >
+                        {value == 'SUCCESS'
+                          ? 'Đã thanh toán'
+                          : value == 'PENDING'
+                          ? 'Chưa thanh toán'
+                          : value == 'CANCELED'
+                          ? 'Đã hủy'
+                          : ''}
+                      </Button>
+                    )
+                  )}
                 </div>
               </Col>
             </Row>
@@ -133,7 +232,7 @@ export default function History() {
                   <h5 style={{ fontSize: '15px' }}>Bệnh viện:</h5>
                 </div>
               </Col>
-              <Col span={12}>
+              <Col span={8}>
                 {Object.values(doctorInfo).map((value, index) => (
                   <h5 key={index} style={{ fontSize: '15px' }}>
                     {value}
@@ -151,33 +250,80 @@ export default function History() {
             <Row gutter={[16, 16]}>
               <Col span={8}>
                 <div>
+                  <h5 style={{ fontSize: '15px' }}>Mã code:</h5>
                   <h5 style={{ fontSize: '15px' }}>Khung giờ khám:</h5>
                   <h5 style={{ fontSize: '15px' }}>Ngày khám:</h5>
                   <h5 style={{ fontSize: '15px' }}>Địa chỉ :</h5>
+                  <h5 style={{ fontSize: '15px', marginTop: '50px' }}>Trạng thái lịch đặt:</h5>
                 </div>
               </Col>
               <Col span={8}>
-                {Object.values(detailBooking).map((value, index) => (
-                  <h5 key={index} style={{ fontSize: '15px' }}>
-                    {value}
-                  </h5>
-                ))}
+                {Object.values(detailBooking).map((value, index) =>
+                  value !== 'BOOKED' && value !== 'FINISHED' && value !== 'CANCELED' ? (
+                    <h5 key={index} style={{ fontSize: '15px' }}>
+                      {value}
+                    </h5>
+                  ) : (
+                    <Button
+                      key={index}
+                      type="primary"
+                      size="small"
+                      style={{
+                        backgroundColor:
+                          value === 'BOOKED'
+                            ? '#B0EEA6'
+                            : value === 'FINISHED'
+                            ? '#E7DE0D'
+                            : value === 'CANCELED'
+                            ? '#E7515A'
+                            : '#000',
+                        color: '#fff',
+                      }}
+                      disabled
+                    >
+                      {value == 'BOOKED'
+                        ? 'Đã đặt lịch'
+                        : value == 'FINISHED'
+                        ? 'Đã hoàn thành'
+                        : value == 'CANCELED'
+                        ? 'Đã hủy'
+                        : ''}
+                    </Button>
+                  )
+                )}
               </Col>
               <Col span={8}>
                 <h5 style={{ fontSize: '15px', margin: '0px' }}>Hình ảnh kết quả :</h5>
-                <Image
-                  src="http://res.cloudinary.com/dw76w8yng/image/upload/v1707107210/ik6mpd13evrunzvzecwb.png"
-                  alt="đang cập nhật"
-                  width={'140px'}
-                  height={'140px'}
-                  style={{
-                    border: '5px dotted #ECF3F4',
-                    padding: '5px',
-                    backgroundColor: '#fff',
-                    padding: '0px',
-                    margin: '0px',
-                  }}
-                />
+                {data.urlNameImage ? (
+                  <Image
+                    src={`${data.urlNameImage}`}
+                    alt="đang cập nhật"
+                    width={'140px'}
+                    height={'140px'}
+                    style={{
+                      border: '5px dotted #ECF3F4',
+                      padding: '5px',
+                      backgroundColor: '#fff',
+                      padding: '0px',
+                      margin: '0px',
+                    }}
+                  />
+                ) : (
+                  <Image
+                    src={NoImage}
+                    alt="đang cập nhật"
+                    width={'120px'}
+                    height={'140px'}
+                    style={{
+                      border: '5px dotted #ECF3F4',
+                      padding: '5px',
+                      backgroundColor: '#fff',
+                      padding: '0px',
+                      margin: '0px',
+                    }}
+                    preview={false}
+                  />
+                )}
               </Col>
             </Row>
           </Col>

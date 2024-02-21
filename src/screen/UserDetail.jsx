@@ -13,14 +13,17 @@ import {
   Form,
   Input,
   message,
+  Table,
 } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { LoadingOutlined, AntDesignOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { LoadingOutlined } from '@ant-design/icons';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, Controller } from 'react-hook-form';
 import IconAvatar from '../asset/image/Icon_Avatar.png';
+import { fetchGetUserById } from '../features/Client/clientSlice';
+import { fetchGetBookingByUserId } from '../features/Booking/bookingSlice';
 
 const schema = yup.object().shape({
   fullname: yup.string().required('Vui lòng nhập tên bệnh viện'),
@@ -31,16 +34,19 @@ const schema = yup.object().shape({
   phone: yup.string().required('Vui lòng nhập tên bệnh viện'),
 });
 
-function formatDateString(inputDateString) {
-  const dateObject = new Date(inputDateString);
+function formatDateTime(dateString) {
+  const dateObject = new Date(dateString);
 
-  const day = dateObject.getDate();
-  const month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0, cộng thêm 1
+  const day = dateObject.getDate().toString().padStart(2, '0');
+  const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
   const year = dateObject.getFullYear();
+  const hours = dateObject.getHours().toString().padStart(2, '0');
+  const minutes = dateObject.getMinutes().toString().padStart(2, '0');
+  const seconds = dateObject.getSeconds().toString().padStart(2, '0');
 
-  const formattedDate = `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}/${year}`;
+  const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 
-  return formattedDate;
+  return formattedDateTime;
 }
 
 function formatTime(timeString) {
@@ -49,12 +55,28 @@ function formatTime(timeString) {
   return formattedTime;
 }
 
+const formatDate = (originalDate) => {
+  const [year, month, day] = originalDate.split('-');
+  const formattedDate = `${day}/${month}/${year}`;
+  return formattedDate;
+};
+
 const UserDetail = () => {
   const [mode, setMode] = useState('left');
+  const dispatch = useDispatch();
+
+  const idUser = useSelector((state) => (state.client.client ? state.client.client.id : ''));
+
+  useEffect(() => {
+    dispatch(fetchGetUserById(idUser));
+    dispatch(fetchGetBookingByUserId(idUser));
+  }, []);
 
   const navigate = useNavigate();
   const infoUser = useSelector((state) => (state.client.userinfo ? state.client.userinfo[0] : {}));
   const listBooking = useSelector((state) => state.booking.listBooking);
+
+  const { id } = useParams();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -78,7 +100,6 @@ const UserDetail = () => {
   const {
     control,
     handleSubmit,
-    setValue,
     formState: { errors },
     reset,
   } = useForm({
@@ -99,8 +120,7 @@ const UserDetail = () => {
         fullname: infoUser.fullname || '',
         gender: infoUser.gender || '',
         address: infoUser.address || '',
-        dateOfBirth: formatDateString(`${infoUser.dateOfBirth || ''}`),
-        // dateOfBirth: infoUser.dateOfBirth || '',
+        dateOfBirth: formatTime(`${infoUser.dateOfBirth || ''}`),
         email: infoUser.email || '',
         phone: infoUser.phone || '',
       });
@@ -109,11 +129,145 @@ const UserDetail = () => {
 
   const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
   const { Text } = Typography;
-
-  const handleOk = (data) => {
-    message.warning('Đang trong quá trình cập nhật!');
-    console.log('Check data UserDetail', data);
+  const routeChangePass = () => {
+    navigate('/changepass');
   };
+  const handleOk = (data) => {
+    message.warning({
+      style: { marginTop: '7vh' },
+      content: 'Đang trong quá trình cập nhật!',
+    });
+  };
+
+  const columns = [
+    {
+      title: 'Mã hóa đơn',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Mã code',
+      dataIndex: 'code',
+      key: 'code',
+    },
+    {
+      title: 'Ngày đặt',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (text, record) => <Text>{formatDateTime(text)}</Text>,
+    },
+    {
+      title: 'Bác sĩ',
+      dataIndex: 'fullNameDoctor',
+      key: 'fullNameDoctor',
+    },
+    {
+      title: 'Bắt đầu',
+      dataIndex: 'bookingTimeStart',
+      key: 'bookingTimeStart',
+      render: (text, record) => <Text>{formatTime(text)}</Text>,
+    },
+    {
+      title: 'Kết thúc',
+      dataIndex: 'bookingTimeEnd',
+      key: 'bookingTimeEnd',
+      render: (text, record) => <Text>{formatTime(text)}</Text>,
+    },
+    {
+      title: 'Ngày Khám',
+      dataIndex: 'bookingDate',
+      key: 'bookingDate',
+      render: (text, record) => <Text>{formatDate(text)}</Text>,
+    },
+    {
+      title: 'Trạng thái giao dịch',
+      dataIndex: 'statusTransaction',
+      key: 'statusTransaction',
+      render: (text, record) => {
+        let buttonStyle = {};
+
+        switch (text) {
+          case 'SUCCESS':
+            buttonStyle = { backgroundColor: '#B0EEA6', color: 'black' };
+            text = 'Đã thanh toán';
+            break;
+          case 'PENDING':
+            buttonStyle = { backgroundColor: '#E7DE0D', color: 'black' };
+            text = 'Chưa thanh toán';
+            break;
+          case 'CANCELED':
+            buttonStyle = { backgroundColor: '#E7515A', color: 'black' };
+            text = 'Đã hủy';
+            break;
+          default:
+            break;
+        }
+
+        return text ? (
+          <Button size="small" style={buttonStyle} disabled>
+            {text}
+          </Button>
+        ) : (
+          <Button size="small" style={buttonStyle} disabled>
+            Chưa cập nhật
+          </Button>
+        );
+      },
+    },
+    {
+      title: 'Trạng thái đặt lịch',
+      dataIndex: 'status',
+      key: 'status',
+      render: (text, record) => {
+        let buttonStyle = {};
+
+        switch (text) {
+          case 'FINISHED':
+            buttonStyle = { backgroundColor: '#b3efa9', color: 'black' };
+            text = 'Hoàn thành';
+            break;
+          case 'BOOKED':
+            buttonStyle = { backgroundColor: '#f9f69f', color: 'black' };
+            text = 'Đã đặt';
+            break;
+          case 'CANCELED':
+            buttonStyle = { backgroundColor: '#f3a5aa', color: 'black' };
+            text = 'Đã hủy';
+            break;
+          default:
+            break;
+        }
+
+        return text ? (
+          <Button size="small" style={buttonStyle} disabled>
+            {text}
+          </Button>
+        ) : (
+          <Button size="small" style={buttonStyle} disabled>
+            Chưa cập nhật
+          </Button>
+        );
+      },
+    },
+    {
+      title: '',
+      dataIndex: 'id',
+      key: 'id',
+      render: (id) => {
+        return (
+          <Button
+            type="primary"
+            size="middle"
+            style={{ backgroundColor: '#00ADB3' }}
+            onClick={() => navigate(`/history/${id}`)}
+          >
+            Chi tiết
+          </Button>
+        );
+      },
+    },
+  ];
+
   return (
     <div>
       <Spin spinning={spinning} indicator={antIcon} fullscreen style={{ background: '#ECF3F4' }} />
@@ -124,7 +278,7 @@ const UserDetail = () => {
         }}
       ></Radio.Group>
       <Tabs
-        defaultActiveKey="1"
+        defaultActiveKey={id}
         tabPosition={mode}
         style={{
           height: 'auto',
@@ -267,7 +421,9 @@ const UserDetail = () => {
                             name="address"
                           />
                         </Form.Item>
-                        <Form.Item>
+                        <Row gutter={16}>
+                          {/* <Col>
+                          <Form.Item>
                           <Button
                             type="primary"
                             size="large"
@@ -277,6 +433,21 @@ const UserDetail = () => {
                             Lưu
                           </Button>
                         </Form.Item>
+                          </Col> */}
+                          <Col>
+                            <Form.Item>
+                              <Button
+                                type="primary"
+                                size="large"
+                                style={{ backgroundColor: '#00adb3', width: '160px' }}
+                                htmlType="submit"
+                                onClick={routeChangePass}
+                              >
+                                Thay đổi mật khẩu
+                              </Button>
+                            </Form.Item>
+                          </Col>
+                        </Row>
                       </Form>
                     </Space>
                   </Col>
@@ -289,66 +460,12 @@ const UserDetail = () => {
             key: '2',
             children: (
               <>
-                {listBooking ? (
-                  <Card title="Lịch Sử Khám" style={{ height: 'auto' }}>
-                    <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                      {listBooking.map((item) => (
-                        <Card
-                          type="inner"
-                          title={`Hóa đơn đặt (#${item.id})`}
-                          extra={
-                            <Button
-                              type="primary"
-                              size="large"
-                              style={{ backgroundColor: '#00ADB3', width: '100%' }}
-                              onClick={() => navigate(`/history/${item.id}`)}
-                            >
-                              Chi tiết
-                            </Button>
-                          }
-                        >
-                          <Row>
-                            <Col xs={24} sm={24} md={24} lg={12}>
-                              <Space direction="vertical" size="middle">
-                                <Text>{item.fullNameUser}</Text>
-                                <Text>{item.phoneUser}</Text>
-                                <Text>
-                                  {formatTime(item.bookingTimeStart)} -{' '}
-                                  {formatTime(item.bookingTimeEnd)}
-                                </Text>
-                                <Text>{formatDateString(item.bookingDate)}</Text>
-                              </Space>
-                            </Col>
-                            <Col xs={24} sm={24} md={24} lg={12}>
-                              <Space direction="vertical" size="middle">
-                                <Text>{item.fullNameDoctor}</Text>
-                                <Text>{item.nameHospital}</Text>
-                                <Button
-                                  disabled
-                                  type="primary"
-                                  size="small"
-                                  style={{
-                                    backgroundColor:
-                                      item.statusTransaction == 'PENDING'
-                                        ? '#ffcc00'
-                                        : item.statusTransaction == 'SUCCESS'
-                                        ? '#007E33'
-                                        : '',
-                                    color: '#fff',
-                                  }}
-                                >
-                                  {item.statusTransaction}
-                                </Button>
-                              </Space>
-                            </Col>
-                          </Row>
-                        </Card>
-                      ))}
-                    </Space>
-                  </Card>
-                ) : (
-                  <p>Loading...</p>
-                )}
+                <Table
+                  dataSource={listBooking}
+                  columns={columns}
+                  title={() => <Text style={{ fontSize: '24px' }}>Lịch sử khám</Text>}
+                  bordered
+                />
               </>
             ),
           },

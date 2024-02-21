@@ -153,6 +153,16 @@ const translationsEN = {
           buttonback: "Return to homepage",
           success: 'Successful update!'
         },
+        changepass: {
+          title: "Reset password",
+          oldpass: "Old Password",
+          newpass: "New Password",
+          inputoldpass: "Enter old password",
+          inputnewpass: "Enter new password",
+          submit: "Submit",
+          buttonback: "Back to homepage",
+          success: "Update successful!"
+        },
         success: {
           title: "You have successfully booked an appointment!",
           buttonback: "Return to homepage",
