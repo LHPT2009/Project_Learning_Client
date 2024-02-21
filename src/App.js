@@ -14,6 +14,7 @@ import ForgotPassword from 'screen/ForgotPassword';
 import Reset from 'screen/Reset';
 import UserDetail from 'screen/UserDetail';
 import ChangePassword from 'screen/ChangePassword';
+import ListSpecialists from 'screen/ListSpecialists';
 function App() {
   return (
     <div className="App" style={{ height: '100vh', background: '#111', position: 'relative' }}>
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/booking" element={<Booking />} />
                 <Route path="/search" element={<Search />} />
                 <Route path="/list" element={<ListDoctor />} />
+                <Route path="/specialists" element={<ListSpecialists />} />
                 <Route path="/history/:id" element={<History />} />
                 <Route path="/success/:statuspayment" element={<Success />} />
                 <Route path="/login" element={<LoginUser />} />
