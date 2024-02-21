@@ -9,7 +9,7 @@ const translationsVN = {
       welcome: 'Chào',
       info: 'Thông tin cá nhân',
       logout: 'Đăng xuất',
-      search: 'Tìm kiếm'
+      search: 'Tìm kiếm',
     },
     columncontent: {
       login: {
@@ -18,7 +18,11 @@ const translationsVN = {
         forgotpass: 'Quên mật khẩu?',
         inputpassword: 'Nhập mật khẩu',
         inputusername: 'Nhâp tên tài khoản',
-        submit: 'Đăng nhập'
+        submit: 'Đăng nhập',
+        welcome: 'Chào mừng bạn đã trở lại!',
+        success: 'Mời bạn tiếp tục',
+        role: 'Bạn không có quyền truy cập!',
+        error: 'Tài khoản hoặc mật khẩu của bạn hiện đang không đúng!',
       },
       homepage: {
         welcome: 'Chào mừng bạn đến với HealthCare',
@@ -30,13 +34,13 @@ const translationsVN = {
         life: 'Sống khỏe suốt đời',
         doctor: 'Bác sĩ nổi bật',
         seemore: 'Xem thêm',
-
       },
       footer: {
         email: 'Địa chỉ email',
         phone: 'Số điện thoại',
         about: ' Về chúng tôi',
-        aboutcontent: 'HealthCare là một trang web hiện đại và tiện ích, cho phép người dùng dễ dàng tìm kiếm và đặt lịch hẹn với các chuyên gia y tế, bác sĩ, hoặc các cơ sở y tế khác nhau.',
+        aboutcontent:
+          'HealthCare là một trang web hiện đại và tiện ích, cho phép người dùng dễ dàng tìm kiếm và đặt lịch hẹn với các chuyên gia y tế, bác sĩ, hoặc các cơ sở y tế khác nhau.',
         service: 'Dịch vụ',
         package: 'Gói sức khỏe',
         specialist: 'Chuyên khoa',
@@ -48,7 +52,8 @@ const translationsVN = {
         contact: 'Liên hệ',
         newsletter: 'Đăng ký bản tin',
         register: 'Đăng ký',
-        description: 'Nhận các bản cập nhật mới nhất qua email. Bạn có thể hủy đăng ký bất cứ lúc nào.'
+        description:
+          'Nhận các bản cập nhật mới nhất qua email. Bạn có thể hủy đăng ký bất cứ lúc nào.',
       },
       register: {
         title: 'Đăng ký',
@@ -61,16 +66,43 @@ const translationsVN = {
         dateOfBirth: 'Ngày sinh',
         phone: 'Số điện thoại',
         address: 'Địa chỉ',
+        submit: 'Đăng ký',
+        inputusername: 'Vui lòng nhập tên tài khoản!',
+        inputpassword: 'Vui lòng nhập mật khẩu!',
+        inputfullname: 'Vui lòng nhập họ và tên!',
+        inputgender: 'Vui lòng chọn giới tính!',
+        inputdateOfBirth: 'Vui lòng chọn ngày sinh!',
+        inputphone: 'Vui lòng nhập số điện thoại!',
+        inputemail: 'Vui lòng nhập email!',
+        inputaddress: 'Vui lòng nhập địa chỉ!',
+        conusername: 'Tên tài khoản không chứa khoảng trắng',
+        conusername1: 'Tên tài khoản ít nhất 8 ký tự',
+        conusername2: 'Tên tài khoản không quá 20 ký tự',
+        condateOfBirth: 'Ngày sinh phải nhỏ hơn ngày hiện tại',
+        conphone: 'Số điện thoại phải đúng 10 số',
+        conemail1: 'Địa chỉ email không hợp lệ',
+        conemail2: 'Định dạng email không đúng',
+        conpass1: 'Mật khẩu phải có ít nhất 8 ký tự',
+        conpass2: 'Mật khẩu phải chứa ít nhất một chữ số và một ký tự đặc biệt',
+        existusername: 'Tên tài khoản đã tồn tại!',
+        existemail: 'Email đã tồn tại!',
+        existphone: 'Số điện thoại đã tồn tại!',
+        success: 'Đăng ký thành công!',
+        error: 'Vui lòng điền đầy đủ thông tin!',
       },
       listdoctor: {
         title1: 'Cơ Xương Khớp',
         title2: 'Bác sĩ xương khớp giỏi',
         title3: ' Danh sách các bác sĩ uy tín đầu ngành Cơ Xương Khớp tại Việt Nam:',
         title4: ' - Các chuyên gia có quá trình đào tạo bài bản, nhiều kinh nghiệm',
-        title5: '- Các giáo sư, phó giáo sư đang trực tiếp nghiên cứu và giảng dạy tại Đại học Y khoa Hà Nội',
-        title6: ' - Các bác sĩ đã, đang công tác tại các bệnh viện hàng đầu Khoa Cơ Xương Khớp - Bệnh viện Bạch Mai, Bệnh viện Hữu nghị Việt Đức,Bệnh Viện E.',
-        title7: '- Là thành viên hoặc lãnh đạo các tổ chức chuyên môn như: Hiệp hội Cơ Xương Khớp, Hội Thấp khớp học,...',
-        title8: '- Được nhà nước công nhận các danh hiệu Thầy thuốc Nhân dân, Thầy thuốc Ưu tú, Bác sĩ Cao cấp,...',
+        title5:
+          '- Các giáo sư, phó giáo sư đang trực tiếp nghiên cứu và giảng dạy tại Đại học Y khoa Hà Nội',
+        title6:
+          ' - Các bác sĩ đã, đang công tác tại các bệnh viện hàng đầu Khoa Cơ Xương Khớp - Bệnh viện Bạch Mai, Bệnh viện Hữu nghị Việt Đức,Bệnh Viện E.',
+        title7:
+          '- Là thành viên hoặc lãnh đạo các tổ chức chuyên môn như: Hiệp hội Cơ Xương Khớp, Hội Thấp khớp học,...',
+        title8:
+          '- Được nhà nước công nhận các danh hiệu Thầy thuốc Nhân dân, Thầy thuốc Ưu tú, Bác sĩ Cao cấp,...',
       },
       item: {
         doctor: 'Bác sĩ',
@@ -81,7 +113,7 @@ const translationsVN = {
         price: 'GIÁ KHÁM:',
         insurance: 'LOẠI BẢO HIỂM ÁP DỤNG.',
         detail: 'Xem chi tiết.',
-        booking: 'Đặt phòng',
+        booking: 'Đặt lịch',
         require: 'Hãy đăng nhập trước khi đặt phòng',
         choiceday: 'Chọn ngày',
         choicepackage: 'Chọn gói khám',
@@ -89,7 +121,8 @@ const translationsVN = {
       forgotpass: {
         title: 'Quên mật khẩu',
         email: 'Vui lòng nhập email',
-        submit: 'Đặt lại mật khẩu của bạn',       
+        submit: 'Đặt lại mật khẩu của bạn',
+        success: 'Đã gửi!',
       },
       booking: {
         title: 'Đặt lịch khám',
@@ -98,7 +131,7 @@ const translationsVN = {
         day: 'Ngày:',
         customer: 'Thông tin khách hàng',
         fullname: 'Họ và tên',
-        phone: 'Số điện thoại',        
+        phone: 'Số điện thoại',
         gender: 'Giới tính',
         dateOfBirth: 'Ngày sinh',
         address: 'Địa chỉ',
@@ -108,35 +141,35 @@ const translationsVN = {
         cost: 'Chi phí khám',
         price: 'Giá khám',
         total: 'Tổng cộng',
-        confirm: 'Xác nhận đặt lịch khám'
+        confirm: 'Xác nhận đặt lịch khám',
       },
-      notfound:{
+      notfound: {
         subTitle: 'Xin lỗi, những chúng tôi không tìm thấy trang của bạn.',
-        button: 'Trở về trang chủ'
+        button: 'Trở về trang chủ',
       },
       reset: {
-        title: "Mật khẩu mới",
-        newpass: "Mật khẩu mới",
-        confirmpass: "Xác nhận mật khẩu",
-        inputnewpass: "Nhập mật khẩu",
-        inputconfirmpass: "Nhập xác nhận mật khẩu",
-        submit: "Tiếp tục",
+        title: 'Mật khẩu mới',
+        newpass: 'Mật khẩu mới',
+        confirmpass: 'Xác nhận mật khẩu',
+        inputnewpass: 'Nhập mật khẩu',
+        inputconfirmpass: 'Nhập xác nhận mật khẩu',
+        submit: 'Tiếp tục',
         passwordsMatch: 'Mật khẩu không khớp',
         orthertitle: 'Không có tài khoản nào để quan thao tác',
-        buttonback: 'Trở về trang chủ'
-
+        buttonback: 'Trở về trang chủ',
+        success: 'Cập nhật thành công!',
       },
       success: {
         title: 'Bạn đã đặt lịch thành công!',
         buttonback: 'Trở lại trang chủ',
-        buttonbackbooking: 'Trở về trang đặt lịch'
+        buttonbackbooking: 'Trở về trang đặt lịch',
       },
       search: {
         specialist: 'Chuyên khoa',
         hospital: 'Bệnh viện',
         doctor: 'Bác sĩ',
-        input: 'Tìm kiếm'
-      }
+        input: 'Tìm kiếm',
+      },
     },
     filtercontent: {
       usermanagement: {},

@@ -21,7 +21,10 @@ export default function ForgotPassword() {
   }, 500);
   const schema = yup
     .object({
-      email: yup.string().required('Hãy điền thông tin mail!'),
+      email: yup.string().required(t('description.columncontent.forgotpass.email'))
+        .trim()
+        .email(t('description.columncontent.register.conemail1'))
+        .matches(/^[^\s@]+@gmail\.com$/, t('description.columncontent.register.conemail1')),
     })
     .required();
 
@@ -41,7 +44,7 @@ export default function ForgotPassword() {
     };
     try {
       dispatch(fetchForgot(dataForgot));
-      message.success('Đã gửi!');
+      message.success(t('description.columncontent.forgotpass.success'));
       navigate('/forgot');
     } catch (error) {
       console.error('Error while submitting form:', error);

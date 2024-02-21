@@ -1,20 +1,122 @@
 import React, { useEffect, useState } from 'react';
-import { Radio, Tabs } from 'antd';
+import {
+  Radio,
+  Tabs,
+  Spin,
+  Card,
+  Button,
+  Row,
+  Col,
+  Typography,
+  Space,
+  Avatar,
+  Form,
+  Input,
+  message,
+} from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchGetBookingByUserId } from 'features/Booking/bookingSlice';
+import { useNavigate } from 'react-router-dom';
+import { LoadingOutlined, AntDesignOutlined } from '@ant-design/icons';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm, Controller } from 'react-hook-form';
+import IconAvatar from '../asset/image/Icon_Avatar.png';
+
+const schema = yup.object().shape({
+  fullname: yup.string().required('Vui lòng nhập tên bệnh viện'),
+  gender: yup.string().required('Vui lòng nhập tên bệnh viện'),
+  address: yup.string().required('Vui lòng nhập tên bệnh viện'),
+  dateOfBirth: yup.string().required('Vui lòng nhập tên bệnh viện'),
+  email: yup.string().required('Vui lòng nhập tên bệnh viện'),
+  phone: yup.string().required('Vui lòng nhập tên bệnh viện'),
+});
+
+function formatDateString(inputDateString) {
+  const dateObject = new Date(inputDateString);
+
+  const day = dateObject.getDate();
+  const month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0, cộng thêm 1
+  const year = dateObject.getFullYear();
+
+  const formattedDate = `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}/${year}`;
+
+  return formattedDate;
+}
+
+function formatTime(timeString) {
+  const [hours, minutes] = timeString.split(':');
+  const formattedTime = `${hours}h${minutes}`;
+  return formattedTime;
+}
 
 const UserDetail = () => {
   const [mode, setMode] = useState('left');
-  const dispatch = useDispatch();
-  const infoUser = useSelector((state) => state.client.client);
 
-  // useEffect(() => {
-    dispatch(fetchGetBookingByUserId(infoUser.id));
-  // }, []);
-
+  const navigate = useNavigate();
+  const infoUser = useSelector((state) => (state.client.userinfo ? state.client.userinfo[0] : {}));
   const listBooking = useSelector((state) => state.booking.listBooking);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const [spinning, setSpinning] = useState(true);
+
+  useEffect(() => {
+    if (infoUser === undefined || listBooking === undefined) {
+      setTimeout(() => {
+        setSpinning(false);
+      }, 500);
+      navigate('/error');
+    } else {
+      setTimeout(() => {
+        setSpinning(false);
+      }, 500);
+    }
+  }, [infoUser, listBooking, navigate]);
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      fullname: '',
+      gender: '',
+      address: '',
+      dateOfBirth: '',
+      email: '',
+      phone: '',
+    },
+  });
+
+  useEffect(() => {
+    if (infoUser) {
+      reset({
+        fullname: infoUser.fullname || '',
+        gender: infoUser.gender || '',
+        address: infoUser.address || '',
+        dateOfBirth: formatDateString(`${infoUser.dateOfBirth || ''}`),
+        // dateOfBirth: infoUser.dateOfBirth || '',
+        email: infoUser.email || '',
+        phone: infoUser.phone || '',
+      });
+    }
+  }, [infoUser, reset]);
+
+  const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
+  const { Text } = Typography;
+
+  const handleOk = (data) => {
+    message.warning('Đang trong quá trình cập nhật!');
+    console.log('Check data UserDetail', data);
+  };
   return (
     <div>
+      <Spin spinning={spinning} indicator={antIcon} fullscreen style={{ background: '#ECF3F4' }} />
       <Radio.Group
         value={mode}
         style={{
@@ -25,61 +127,231 @@ const UserDetail = () => {
         defaultActiveKey="1"
         tabPosition={mode}
         style={{
-          height: 220,
+          height: 'auto',
+          padding: '20px',
         }}
         items={[
           {
             label: 'Thông Tin Cá Nhân',
             key: '1',
             children: (
-              <table>
-                <tbody>
-                  <tr>
-                    {/* <td style={{ width: '65%' }}>Họ và tên: {infoUser ? infoUser.fullname : ''}</td> */}
-                    {/* <td style={{ width: '50%' }}>Giới tính: {infoUser.gender}</td> */}
-                  </tr>
-                  <tr>
-                    {/* <td style={{ width: '65%' }}>Địa chỉ: {infoUser.address}</td> */}
-                    {/* <td style={{ width: '50%' }}>Số điện thoại: {infoUser.phone}</td> */}
-                  </tr>
-                  <tr>
-                    {/* <td style={{ width: '65%' }}>Ngày sinh: {infoUser.dateOfBirth}</td> */}
-                    {/* <td style={{ width: '50%' }}>Email: {infoUser.email}</td> */}
-                  </tr>
-                </tbody>
-              </table>
+              <Card title="Thông Tin Cá Nhân">
+                <Row>
+                  <Col flex={8}>
+                    <Space
+                      direction="vertical"
+                      size="middle"
+                      align="center"
+                      style={{ display: 'flex' }}
+                    >
+                      <Avatar
+                        style={{ marginTop: '50px' }}
+                        size={{
+                          xs: 24,
+                          sm: 32,
+                          md: 40,
+                          lg: 64,
+                          xl: 80,
+                          xxl: 250,
+                        }}
+                        src={IconAvatar}
+                      />
+                      <Button disabled type="primary" size="large">
+                        Cập nhật ảnh mới
+                      </Button>
+                    </Space>
+                  </Col>
+                  <Col flex={16}>
+                    <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                      <Form
+                        onFinish={handleSubmit(handleOk)}
+                        // onFinishFailed={handleFailed}
+                        layout="vertical"
+                        // requiredMark={customizeRequiredMark}
+                      >
+                        <Form.Item
+                          label="Họ và Tên"
+                          name="fullname"
+                          help={<span style={{ color: 'red' }}>{errors.fullname?.message}</span>}
+                        >
+                          <Controller
+                            render={({ field }) => (
+                              <Input
+                                {...field}
+                                placeholder="Nhập tên bệnh viện"
+                                disabled
+                                size="large"
+                              />
+                            )}
+                            control={control}
+                            name="fullname"
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          label="Giới Tính"
+                          name="gender"
+                          help={<span style={{ color: 'red' }}>{errors.gender?.message}</span>}
+                        >
+                          <Controller
+                            render={({ field }) => (
+                              <Input
+                                {...field}
+                                placeholder="Chọn giới tính"
+                                disabled
+                                size="large"
+                              />
+                            )}
+                            control={control}
+                            name="gender"
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          label="Ngày sinh"
+                          name="dateOfBirth"
+                          help={<span style={{ color: 'red' }}>{errors.dateOfBirth?.message}</span>}
+                        >
+                          <Controller
+                            render={({ field }) => (
+                              <Input
+                                {...field}
+                                placeholder="Nhập tên bệnh viện"
+                                disabled
+                                size="large"
+                              />
+                            )}
+                            control={control}
+                            name="dateOfBirth"
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          label="Số điện thoại"
+                          name="phone"
+                          help={<span style={{ color: 'red' }}>{errors.phone?.message}</span>}
+                        >
+                          <Controller
+                            render={({ field }) => (
+                              <Input
+                                {...field}
+                                placeholder="Nhập số điện thoại"
+                                disabled
+                                size="large"
+                              />
+                            )}
+                            control={control}
+                            name="phone"
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          label="Email"
+                          name="email"
+                          help={<span style={{ color: 'red' }}>{errors.email?.message}</span>}
+                        >
+                          <Controller
+                            render={({ field }) => (
+                              <Input {...field} placeholder="Nhập Email" disabled size="large" />
+                            )}
+                            control={control}
+                            name="email"
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          label="Địa chỉ"
+                          name="address"
+                          help={<span style={{ color: 'red' }}>{errors.address?.message}</span>}
+                        >
+                          <Controller
+                            render={({ field }) => (
+                              <Input {...field} placeholder="Nhập Địa chỉ" disabled size="large" />
+                            )}
+                            control={control}
+                            name="address"
+                          />
+                        </Form.Item>
+                        <Form.Item>
+                          <Button
+                            type="primary"
+                            size="large"
+                            style={{ backgroundColor: '#00adb3', width: '100px' }}
+                            htmlType="submit"
+                          >
+                            Lưu
+                          </Button>
+                        </Form.Item>
+                      </Form>
+                    </Space>
+                  </Col>
+                </Row>
+              </Card>
             ),
           },
           {
             label: 'Lịch Sử Khám',
             key: '2',
             children: (
-              <table>
-                <tbody>
-                  <tr>
-                    <td style={{ width: '65%' }}>
-                      {listBooking ? (
-                        <>
-                          {listBooking.map((item) => (
-                            <div key={item.infoUser.id}>
-                              <p>Họ và tên: {item.fullNameUser}</p>
-                              <p>Số điện thoại: {item.phoneUser}</p>
-                              {/* <p>Bác sĩ: {item.fullNameDoctor}</p> */}
-                              {/* Thêm các thông tin khác cần hiển thị */}
-                            </div>
-                          ))}
-                        </>
-                      ) : (
-                        <p>Loading...</p> // Hiển thị thông báo khi đang tải danh sách
-                      )}
-                    </td>
-                    {/* <td style={{ width: '50%' }}>Giới tính: {infoUser.gender}</td> */}
-                  </tr>
-                </tbody>
-              </table>
+              <>
+                {listBooking ? (
+                  <Card title="Lịch Sử Khám" style={{ height: 'auto' }}>
+                    <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                      {listBooking.map((item) => (
+                        <Card
+                          type="inner"
+                          title={`Hóa đơn đặt (#${item.id})`}
+                          extra={
+                            <Button
+                              type="primary"
+                              size="large"
+                              style={{ backgroundColor: '#00ADB3', width: '100%' }}
+                              onClick={() => navigate(`/history/${item.id}`)}
+                            >
+                              Chi tiết
+                            </Button>
+                          }
+                        >
+                          <Row>
+                            <Col xs={24} sm={24} md={24} lg={12}>
+                              <Space direction="vertical" size="middle">
+                                <Text>{item.fullNameUser}</Text>
+                                <Text>{item.phoneUser}</Text>
+                                <Text>
+                                  {formatTime(item.bookingTimeStart)} -{' '}
+                                  {formatTime(item.bookingTimeEnd)}
+                                </Text>
+                                <Text>{formatDateString(item.bookingDate)}</Text>
+                              </Space>
+                            </Col>
+                            <Col xs={24} sm={24} md={24} lg={12}>
+                              <Space direction="vertical" size="middle">
+                                <Text>{item.fullNameDoctor}</Text>
+                                <Text>{item.nameHospital}</Text>
+                                <Button
+                                  disabled
+                                  type="primary"
+                                  size="small"
+                                  style={{
+                                    backgroundColor:
+                                      item.statusTransaction == 'PENDING'
+                                        ? '#ffcc00'
+                                        : item.statusTransaction == 'SUCCESS'
+                                        ? '#007E33'
+                                        : '',
+                                    color: '#fff',
+                                  }}
+                                >
+                                  {item.statusTransaction}
+                                </Button>
+                              </Space>
+                            </Col>
+                          </Row>
+                        </Card>
+                      ))}
+                    </Space>
+                  </Card>
+                ) : (
+                  <p>Loading...</p>
+                )}
+              </>
             ),
           },
-          // Add more tabs here if needed
         ]}
       />
     </div>

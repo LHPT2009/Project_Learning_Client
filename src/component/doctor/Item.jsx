@@ -6,11 +6,14 @@ import timezone from 'dayjs/plugin/timezone';
 import 'dayjs/locale/vi';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { fetchGetUserById } from '../../features/Client/clientSlice';
 import { addInfoBooking } from '../../features/Booking/bookingSlice';
 import { fetchGetDoctorById } from '../../features/Doctor/doctorSlice';
+import { fetchPayments } from '../../features/Payment/paymentSlice';
 import { useTranslation } from 'react-i18next';
 dayjs.extend(timezone);
-dayjs.locale('vi');
+dayjs.locale('en');
+
 const { Text, Title } = Typography;
 
 const DataItem = ({ dataItem }) => {
@@ -27,21 +30,53 @@ const DataItem = ({ dataItem }) => {
 
   const [idSchedules, setIdSchedules] = useState();
   const [timeSchedules, setTimeSchedules] = useState();
+  const [isActive, setIsActive] = useState({});
 
   const [idPackage, setIdPackage] = useState();
   const [pricePakage, setPricePakage] = useState();
 
   const [arrFilterSchedules, setArrFilterSchedules] = useState([]);
 
-  const dayMapping = {
-    'thứ hai': 'Monday',
-    'thứ ba': 'Tuesday',
-    'thứ tư': 'Wednesday',
-    'thứ năm': 'Thursday',
-    'thứ sáu': 'Friday',
-    'thứ bảy': 'Saturday',
-    'chủ nhật': 'Sunday',
+  const dayMappingen = {
+    'Thứ 2': 'Monday',
+    'Thứ 3': 'Tuesday',
+    'Thứ 4': 'Wednesday',
+    'Thứ 5': 'Thursday',
+    'Thứ 6': 'Friday',
+    'Thứ 7': 'Saturday',
+    'Chủ nhật': 'Sunday',
   };
+
+  const dayMappingvn = {
+    Monday: 'Thứ 2',
+    Tuesday: 'Thứ 3',
+    Wednesday: 'Thứ 4',
+    Thursday: 'Thứ 5',
+    Friday: 'Thứ 6',
+    Saturday: 'Thứ 7',
+    Sunday: 'Chủ nhật',
+  };
+
+  function formatTime(timeString) {
+    const [hours, minutes] = timeString.split(':');
+    const formattedTime = `${hours}h${minutes}`;
+    return formattedTime;
+  }
+
+  function filterUniqueDates(data) {
+    const uniqueDates = {};
+    const result = [];
+
+    for (const item of data) {
+      const { schedulesDate } = item;
+      if (!uniqueDates[schedulesDate]) {
+        result.push(item);
+        uniqueDates[schedulesDate] = true;
+      }
+    }
+
+    return result;
+  }
 
   const CalDate = () => {
     dayjs.tz.setDefault('Asia/Ho_Chi_Minh');
@@ -57,7 +92,12 @@ const DataItem = ({ dataItem }) => {
       newDates.push({ date: formattedDate, day: dayOfWeek, showformatDate: showformatDate });
     }
 
-    setArrDate(newDates);
+    const filterDulicate = filterUniqueDates(dataItem.schedulesDetailSet);
+    const filteredDates = newDates.filter((dateObj) =>
+      filterDulicate.some((item) => item.schedulesDate === dateObj.day)
+    );
+
+    setArrDate(filteredDates);
   };
 
   useEffect(() => {
@@ -70,11 +110,7 @@ const DataItem = ({ dataItem }) => {
       setArrFilterSchedules([]);
     } else if (dataItem.schedulesDetailSet !== null) {
       dataItem.schedulesDetailSet.forEach((item) => {
-        if (
-          dayMapping[selectDay] === item.schedulesDate &&
-          item !== null &&
-          item.status == 'INACTIVE'
-        ) {
+        if (selectDay === item.schedulesDate && item !== null && item.status == 'INACTIVE') {
           setArrFilterSchedules((prevArr) => [...prevArr, item]);
         }
       });
@@ -102,11 +138,19 @@ const DataItem = ({ dataItem }) => {
     } else {
       dispatch(fetchGetDoctorById(dataItem.id));
       dispatch(addInfoBooking(formatInfo));
+      dispatch(fetchPayments());
+      dispatch(fetchGetUserById(checkuser.id));
       navigate('/booking');
     }
   };
 
   const listPackage = dataItem.packagePrices;
+
+  const sortArrFilterSchedules = arrFilterSchedules.sort((a, b) => {
+    const timeA = new Date(`1970-01-01T${a.startTime}`);
+    const timeB = new Date(`1970-01-01T${b.startTime}`);
+    return timeA - timeB;
+  });
 
   return (
     <>
@@ -164,7 +208,7 @@ const DataItem = ({ dataItem }) => {
               {arrDate.map((dataItem) => {
                 return (
                   <Select.Option key={dataItem.id} value={`${dataItem.day} - ${dataItem.date}`}>
-                    {dataItem.day} - {dataItem.showformatDate}
+                    {dayMappingvn[dataItem.day]} - {dataItem.showformatDate}
                   </Select.Option>
                 );
               })}
@@ -174,34 +218,44 @@ const DataItem = ({ dataItem }) => {
               {t('description.columncontent.item.calendar')}
             </Text>
             <Flex wrap="wrap" gap="small">
-              {arrFilterSchedules.length !== 0 ? (
+              {sortArrFilterSchedules.length !== 0 ? (
                 <>
-                  {arrFilterSchedules.map((item) => (
+                  {sortArrFilterSchedules.map((item) => (
                     <Button
-                      style={{ width: '150px' }}
+                      type={item.id == isActive.id ? 'primary' : 'default'}
+                      style={
+                        item.id == isActive.id
+                          ? { width: '150px', backgroundColor: '#00ADB3' }
+                          : { width: '150px' }
+                      }
                       key={item.id}
                       onClick={() => {
                         setIdSchedules(item.id);
                         setTimeSchedules(`${item.startTime} - ${item.endTime}`);
+                        setIsActive(item);
                       }}
                     >
-                      {item.startTime} - {item.endTime}
+                      {formatTime(item.startTime)} - {formatTime(item.endTime)}
                     </Button>
                   ))}
                 </>
               ) : (
                 <>
                   <Button type="default" style={{ width: '200px' }} disabled>
-                  {t('description.columncontent.item.nocalendar')}
+                    {t('description.columncontent.item.nocalendar')}
                   </Button>
                 </>
               )}
             </Flex>
             <Text style={{ lineHeight: '20px' }}>{t('description.columncontent.item.choice')}</Text>
-            <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>{t('description.columncontent.item.address')}</Text>
+            <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
+              {t('description.columncontent.item.address')}
+            </Text>
             <Text style={{ lineHeight: '10px' }}>{dataItem.nameHospital}</Text>
             <Text style={{ lineHeight: '10px' }}>{dataItem.addressHospital}</Text>
-            <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>{t('description.columncontent.item.price')}</Text>
+            <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
+              {t('description.columncontent.item.price')}
+            </Text>
             <Select
               defaultValue={t('description.columncontent.item.choicepackage')}
               style={{ width: 250 }}
@@ -219,7 +273,7 @@ const DataItem = ({ dataItem }) => {
               ))}
             </Select>
             <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-            {t('description.columncontent.item.insurance')}{' '}
+              {t('description.columncontent.item.insurance')}{' '}
               <Link
                 href="https://ant.design"
                 target="_blank"
@@ -236,7 +290,7 @@ const DataItem = ({ dataItem }) => {
                   style={{ width: 250, backgroundColor: '#00ADB3' }}
                   onClick={() => addInfo()}
                 >
-                 {t('description.columncontent.item.booking')}
+                  {t('description.columncontent.item.booking')}
                 </Button>
               </>
             ) : (

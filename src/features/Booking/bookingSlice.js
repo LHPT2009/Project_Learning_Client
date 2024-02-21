@@ -1,10 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import bookingApi from 'api/bookingApi';
 
-export const fetchGetBookingByUserId = createAsyncThunk('booking/fetchGetBookingByUserId', async (id) => {
-  const response = await bookingApi.getBookingByUserId(id);
-  return response.data;
-});
+export const fetchGetBookingByUserId = createAsyncThunk(
+  'booking/fetchGetBookingByUserId',
+  async (id) => {
+    const response = await bookingApi.getBookingByUserId(id);
+    return response.data;
+  }
+);
 
 const bookingSlice = createSlice({
   name: 'booking',
@@ -12,6 +15,8 @@ const bookingSlice = createSlice({
     infoBooking: null,
     tempBooking: null,
     listBooking: [],
+    loading: false,
+    error: null,
   },
   reducers: {
     addInfoBooking: (state, action) => {
@@ -41,7 +46,6 @@ const bookingSlice = createSlice({
       state.loading = false;
       state.error = action.error.message;
     });
-
   },
 });
 

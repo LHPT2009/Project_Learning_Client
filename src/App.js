@@ -27,7 +27,7 @@ function App() {
                 <Route path="/booking" element={<Booking />} />
                 <Route path="/search" element={<Search />} />
                 <Route path="/list" element={<ListDoctor />} />
-                <Route path="/history" element={<History />} />
+                <Route path="/history/:id" element={<History />} />
                 <Route path="/success/:statuspayment" element={<Success />} />
                 <Route path="/login" element={<LoginUser />} />
                 <Route path="/register" element={<Register />} />

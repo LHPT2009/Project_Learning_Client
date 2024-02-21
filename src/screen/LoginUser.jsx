@@ -8,30 +8,32 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import clientApi from 'api/clientApi';
+import { updateAuthorizationHeader } from 'api/axiosClient';
 import Cookies from 'js-cookie';
 import { loginClient, fetchGetUserById } from '../features/Client/clientSlice';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
-const schema = yup
-  .object({
-    username: yup.string().required('Mời bạn nhập tên tài khoản!'),
-    password: yup.string().required('Mời bạn nhập mật khẩu!'),
-  })
-  .required();
-
 const key = 'updatable';
 
 export default function LoginUser() {
   // Translation
-  const { i18n, t } = useTranslation();
-
+  const { t } = useTranslation();
+  const schema = yup
+    .object({
+      username: yup
+        .string()
+        .required(t('description.columncontent.login.inputusername'))
+        .trim()
+        .matches(/^\S*$/, t('description.columncontent.register.conusername')),
+      password: yup.string().required(t('description.columncontent.login.inputpassword')),
+    })
+    .required();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   const [spinning, setSpinning] = useState(true);
   const checkUser = useSelector((state) => state.client.client);
-
   useEffect(() => {
     checklogin();
   }, []);
@@ -69,20 +71,37 @@ export default function LoginUser() {
         if (response.data.roles.includes('ROLE_USER')) {
           if (checkgoback === null) {
             navigate('/');
-            message.success('Chào mừng bạn đã trở lại!');
+            updateAuthorizationHeader();
+            message.success({
+              style: { marginTop: '7vh' },
+              content: t('description.columncontent.login.welcome'),
+            });
           } else {
             navigate(-1);
-            message.success('Mời bạn tiếp tục');
+            message.success({
+              style: { marginTop: '7vh' },
+              content: t('description.columncontent.login.success'),
+            });
           }
         } else {
-          alert('Bạn không có quyền truy cập!');
+          setSpinning(false);
+          // alert(t('description.columncontent.login.role'));
+          message.error({
+            style: { marginTop: '7vh' },
+            content: t('description.columncontent.login.role'),
+          });
           Cookies.remove('accessToken');
           Cookies.remove('refreshToken');
+          setSpinning(false);
         }
       }
     } catch (error) {
-      message.error('Tại khoản hoặc mật khẩu của bạn hiện đang không đúng!');
+      message.error({
+        style: { marginTop: '7vh' },
+        content: t('description.columncontent.login.error'),
+      });
       console.error('Error calling login API:', error);
+      setSpinning(false);
     }
   };
 
@@ -147,7 +166,8 @@ export default function LoginUser() {
         <Form.Item
           label={
             <>
-              {t('description.columncontent.login.username')} <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+              {t('description.columncontent.login.username')}{' '}
+              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
             </>
           }
           name="username"
@@ -156,16 +176,23 @@ export default function LoginUser() {
           <Controller
             name="username"
             control={control}
-            render={({ field }) => <Input key="username" {...field} placeholder={t('description.columncontent.login.inputusername')} />}
+            render={({ field }) => (
+              <Input
+                key="username"
+                {...field}
+                placeholder={t('description.columncontent.login.inputusername')}
+              />
+            )}
           />
         </Form.Item>
         <Form.Item
           label={
             <>
-              {t('description.columncontent.login.password')} <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+              {t('description.columncontent.login.password')}{' '}
+              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
               <div style={{ position: 'relative', left: '170px' }}>
                 <a className="login-form-forgot" href="/forgot">
-                {t('description.columncontent.login.forgotpass')}
+                  {t('description.columncontent.login.forgotpass')}
                 </a>
               </div>
             </>
@@ -177,7 +204,11 @@ export default function LoginUser() {
             name="password"
             control={control}
             render={({ field }) => (
-              <Input.Password key="password" {...field} placeholder={t('description.columncontent.login.inputpassword')} />
+              <Input.Password
+                key="password"
+                {...field}
+                placeholder={t('description.columncontent.login.inputpassword')}
+              />
             )}
           />
         </Form.Item>

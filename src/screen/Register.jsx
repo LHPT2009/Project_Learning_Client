@@ -10,18 +10,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-const schema = yup
-  .object({
-    username: yup.string().required('Mời bạn nhập tên tài khoản!'),
-    password: yup.string().required('Mời bạn nhập mật khẩu!'),
-    fullname: yup.string().required('Mời bạn nhập họ và tên!'),
-    gender: yup.string().required('Mời bạn chọn giới tính!'),
-    dateOfBirth: yup.string().required('Mời bạn chọn ngày sinh!'),
-    phone: yup.string().required('Mời bạn nhập số điện thoại!'),
-    email: yup.string().required('Mời bạn nhập mail!'),
-    address: yup.string().required('Mời bạn nhập địa chỉ!'),
-  })
-  .required();
 
 function formatDate(inputDateString) {
   const originalDate = new Date(inputDateString);
@@ -39,8 +27,33 @@ export default function Register() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
   const { t } = useTranslation();
+  const schema = yup
+    .object({
+      username: yup.string().required(t('description.columncontent.register.inputusername'))
+        .trim()
+        .matches(/^\S*$/, t('description.columncontent.register.conusername'))
+        .min(8, t('description.columncontent.register.conusername1'))
+        .max(20, t('description.columncontent.register.conusername2')),
+      password: yup.string().required(t('description.columncontent.register.inputpassword'))
+        .min(8, t('description.columncontent.register.conpass1'))
+        .matches(
+          /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
+          t('description.columncontent.register.conpass2')),
+      fullname: yup.string().required(t('description.columncontent.register.inputfullname')),
+      gender: yup.string().required(t('description.columncontent.register.inputgender')),
+      dateOfBirth: yup.date().required(t('description.columncontent.register.inputdateOfBirth'))
+        .max(new Date(), t('description.columncontent.register.condateOfBirth')),
+      phone: yup.string().required(t('description.columncontent.register.inputphone'))
+        .matches(/^\d{10}$/, t('description.columncontent.register.conphone')),
+      email: yup.string().required(t('description.columncontent.register.inputemail'))
+        .trim()
+        .email(t('description.columncontent.register.conemail1'))
+        .matches(/^[^\s@]+@gmail\.com$/, t('description.columncontent.register.conemail1')),
+      address: yup.string().required(t('description.columncontent.register.inputaddress')),
+    })
+    .required();
+
 
   const [spinning, setSpinning] = useState(true);
   setTimeout(() => {
@@ -55,14 +68,14 @@ export default function Register() {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      username: 'user2',
-      password: 'user2',
-      fullname: 'tung le',
-      // gender: 'Nam',
-      // dateOfBirth: '2001-12-15',
-      phone: '12345675',
-      email: 'user2@gmail.com',
-      address: 'Q8 HCM',
+      // username: 'user2',
+      // password: 'user2',
+      // fullname: 'tung le',
+      // // gender: 'Nam',
+      // // dateOfBirth: '2001-12-15',
+      // phone: '12345675',
+      // email: 'user2@gmail.com',
+      // address: 'Q8 HCM',
     },
   });
 
@@ -74,23 +87,23 @@ export default function Register() {
     if (item == 'ERR_USERNAME_EXISTED') {
       setError('username', {
         type: 'manual',
-        message: 'Tên tài khoản đã tồn tại!',
+        message: t('description.columncontent.register.existusername'),
       });
-      return 'Tên tài khoản đã tồn tại!';
+      return t('description.columncontent.register.existusername');
     }
     if (item == 'ERR_EMAIL_EXISTED') {
       setError('email', {
         type: 'manual',
-        message: 'Email đã tồn tại!',
+        message: t('description.columncontent.register.existemail'),
       });
-      return 'Email đẵ tồn tại!';
+      return t('description.columncontent.register.existemail');
     }
     if (item == 'ERR_PHONE_EXISTED') {
       setError('phone', {
         type: 'manual',
-        message: 'Số điện thoại đã tồn tại!',
+        message: t('description.columncontent.register.existphone'),
       });
-      return 'Số điện thoại đã tồn tại!';
+      return t('description.columncontent.register.existphone');
     }
   };
 
@@ -110,7 +123,7 @@ export default function Register() {
     await dispatch(fetchregister(dataRegister)).then((item) => {
       const checkStatus = item.payload ? item.payload.status || item.payload.statusCode : '';
       if (checkStatus == 200) {
-        message.success('Đăng ký thành công!');
+        message.success(t('description.columncontent.register.success'));
         navigate('/login');
       }
       if (checkStatus == 400) {
@@ -120,7 +133,7 @@ export default function Register() {
   };
 
   const handleFailed = () => {
-    message.error('Vui lòng điền đầy đủ thông tin!');
+    message.error(t('description.columncontent.register.error'));
   };
 
   const customImageStyle = {
@@ -184,7 +197,15 @@ export default function Register() {
           </h2>
         </div>
         <Form.Item
-          label= {t('description.columncontent.register.username')}
+          label={
+            <>
+              {t('description.columncontent.register.username')}
+              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+            </>
+
+
+          }
+
           hasFeedback
           validateStatus={errors.username ? 'error' : ''}
           help={errors.username && errors.username.message}
@@ -192,12 +213,17 @@ export default function Register() {
           <Controller
             name="username"
             control={control}
-            rules={{ required: 'Vui lòng nhập tên tài khoản!' }}
+            //rules={{ required: 'Vui lòng nhập tên tài khoản!' }}
             render={({ field }) => <Input {...field} />}
           />
         </Form.Item>
         <Form.Item
-          label={t('description.columncontent.register.password')}
+          label={
+            <>
+              {t('description.columncontent.register.password')}
+              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+            </>
+          }
           hasFeedback
           validateStatus={errors.password ? 'error' : ''}
           help={errors.password && errors.password.message}
@@ -205,13 +231,19 @@ export default function Register() {
           <Controller
             name="password"
             control={control}
-            rules={{ required: 'Vui lòng nhập Mật khẩu!' }}
+            // rules={{ required: 'Vui lòng nhập Mật khẩu!' }}
             render={({ field }) => <Input.Password {...field} />}
           />
         </Form.Item>
 
         <Form.Item
-          label={t('description.columncontent.register.fullname')}
+          label={
+            <>
+              {t('description.columncontent.register.fullname')}
+              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+            </>
+
+          }
           hasFeedback
           validateStatus={errors.fullname ? 'error' : ''}
           help={errors.fullname && errors.fullname.message}
@@ -219,13 +251,18 @@ export default function Register() {
           <Controller
             name="fullname"
             control={control}
-            rules={{ required: 'Vui lòng nhập Họ và tên!' }}
+            //rules={{ required: 'Vui lòng nhập Họ và tên!' }}
             render={({ field }) => <Input {...field} />}
           />
         </Form.Item>
 
         <Form.Item
-          label={t('description.columncontent.register.gender')}
+          label={
+            <>
+              {t('description.columncontent.register.gender')}
+              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+            </>
+          }
           name="gender"
           hasFeedback
           validateStatus={errors.gender ? 'error' : ''}
@@ -250,7 +287,13 @@ export default function Register() {
         </Form.Item>
 
         <Form.Item
-          label={t('description.columncontent.register.dateOfBirth')}
+          label={
+            <>
+              
+                {t('description.columncontent.register.dateOfBirth')}
+              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+            </>
+          }
           name="dateOfBirth"
           hasFeedback
           validateStatus={errors.dateOfBirth ? 'error' : ''}
@@ -266,7 +309,12 @@ export default function Register() {
         </Form.Item>
 
         <Form.Item
-          label={t('description.columncontent.register.phone')}
+          label={
+            <>
+              {t('description.columncontent.register.phone')}
+              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+            </>
+          }
           hasFeedback
           validateStatus={errors.phone ? 'error' : ''}
           help={errors.phone && errors.phone.message}
@@ -274,13 +322,20 @@ export default function Register() {
           <Controller
             name="phone"
             control={control}
-            rules={{ required: 'Vui lòng nhập số điện thoại!' }}
+            //rules={{ required: 'Vui lòng nhập số điện thoại!' }}
             render={({ field }) => <Input {...field} />}
           />
         </Form.Item>
 
         <Form.Item
-          label="Email"
+          label={
+            <>
+              Email
+              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+            </>
+
+          }
+
           hasFeedback
           validateStatus={errors.email ? 'error' : ''}
           help={errors.email && errors.email.message}
@@ -288,13 +343,19 @@ export default function Register() {
           <Controller
             name="email"
             control={control}
-            rules={{ required: 'Vui lòng nhập email!' }}
+            // rules={{ required: 'Vui lòng nhập email!' }}
             render={({ field }) => <Input {...field} />}
           />
         </Form.Item>
 
         <Form.Item
-          label={t('description.columncontent.register.address')}
+          label={
+            <>
+            {t('description.columncontent.register.address')}
+            <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+            </>
+            
+          }
           hasFeedback
           validateStatus={errors.address ? 'error' : ''}
           help={errors.address && errors.address.message}
@@ -302,7 +363,7 @@ export default function Register() {
           <Controller
             name="address"
             control={control}
-            rules={{ required: 'Vui lòng nhập địa chỉ!' }}
+            //rules={{ required: 'Vui lòng nhập địa chỉ!' }}
             render={({ field }) => <Input {...field} />}
           />
         </Form.Item>
