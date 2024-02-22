@@ -11,6 +11,10 @@ const bookingApi = {
       return [];
     }
   },
+  sendMailBooking(data) {
+    const url = `/api/booking/sendEmail`;
+    return axiosClient.post(url, data);
+  },
 };
 
 export default bookingApi;

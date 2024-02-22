@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Select, Col, Row, Image, Button, Flex, Space, Typography, message } from 'antd';
+import { Select, Col, Row, Image, Button, Flex, Space, Typography, message, Tooltip } from 'antd';
 import { EnvironmentOutlined, CalendarOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
@@ -33,19 +33,10 @@ const DataItem = ({ dataItem }) => {
   const [isActive, setIsActive] = useState({});
 
   const [idPackage, setIdPackage] = useState();
+  const [namePackage, setNamePackage] = useState();
   const [pricePakage, setPricePakage] = useState();
 
   const [arrFilterSchedules, setArrFilterSchedules] = useState([]);
-
-  const dayMappingen = {
-    'Thứ 2': 'Monday',
-    'Thứ 3': 'Tuesday',
-    'Thứ 4': 'Wednesday',
-    'Thứ 5': 'Thursday',
-    'Thứ 6': 'Friday',
-    'Thứ 7': 'Saturday',
-    'Chủ nhật': 'Sunday',
-  };
 
   const dayMappingvn = {
     Monday: 'Thứ 2',
@@ -100,6 +91,11 @@ const DataItem = ({ dataItem }) => {
     setArrDate(filteredDates);
   };
 
+  const formatter = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  });
+
   useEffect(() => {
     CalDate();
   }, []);
@@ -124,6 +120,7 @@ const DataItem = ({ dataItem }) => {
     idScheduleDetail: idSchedules,
     timeScheduleDetail: timeSchedules,
     idPackage: idPackage,
+    namePackage: namePackage,
     pricePakage: pricePakage,
   };
 
@@ -160,6 +157,21 @@ const DataItem = ({ dataItem }) => {
     const timeB = new Date(`1970-01-01T${b.startTime}`);
     return timeA - timeB;
   });
+
+  const getInfoPackage = (packageId) => {
+    const selectedPackage = listPackage.find((item) => item.packageId === packageId);
+    setIdPackage(selectedPackage.packageId);
+    setNamePackage(selectedPackage.packageName);
+    setPricePakage(selectedPackage.price);
+  };
+
+  const CustomDropdownContent = ({ item }) => (
+    <div>
+      <p>{item.packageName}</p>
+      <p>{item.price}</p>
+      {/* Thêm các phần tử khác tùy ý */}
+    </div>
+  );
 
   return (
     <>
@@ -268,16 +280,19 @@ const DataItem = ({ dataItem }) => {
             <Select
               defaultValue={t('description.columncontent.item.choicepackage')}
               style={{ width: 250 }}
-              onChange={(value, option) => {
-                if (option) {
-                  setIdPackage(option.key);
-                  setPricePakage(option.value);
-                }
+              onChange={(packageId) => {
+                getInfoPackage(packageId);
               }}
             >
               {listPackage.map((item) => (
-                <Select.Option key={item.packageId} value={item.price}>
-                  {item.packageName} - {item.price}
+                <Select.Option key={item.packageId} value={item.packageId}>
+                  <Tooltip
+                    placement="bottom"
+                    title={`${item.packageName} - ${formatter.format(item.price)}`}
+                    style={{ width: '100%' }}
+                  >
+                    {item.packageName} - {formatter.format(item.price)}
+                  </Tooltip>
                 </Select.Option>
               ))}
             </Select>

@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { fetchGetUserById } from '../../features/Client/clientSlice';
 import { fetchGetBookingByUserId } from '../../features/Booking/bookingSlice';
 import { fetchAllSpecialists } from '../../features/Specialist/specialistSlice';
+import Cookies from 'js-cookie';
 
 const { Header } = Layout;
 
@@ -50,6 +51,8 @@ const MenuComponent = () => {
     });
     setOpenMenu(false);
     dispatch(logout());
+    Cookies.remove('accessToken');
+    Cookies.remove('refreshToken');
     navigate('/login');
   };
 

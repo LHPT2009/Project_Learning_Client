@@ -29,6 +29,7 @@ export default function ChangePassword() {
     .object({
       oldPass: yup
         .string()
+        .trim()
         .required(t('description.columncontent.changepass.inputoldpass'))
         .min(8, t('description.columncontent.register.conpass1'))
         .matches(
@@ -37,7 +38,17 @@ export default function ChangePassword() {
         ),
       password: yup
         .string()
+        .trim()
         .required(t('description.columncontent.changepass.inputnewpass'))
+        .min(8, t('description.columncontent.register.conpass1'))
+        .matches(
+          /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
+          t('description.columncontent.register.conpass2')
+        ),
+      repassword: yup
+        .string()
+        .trim()
+        .required(t('description.columncontent.reset.inputconfirmpass'))
         .min(8, t('description.columncontent.register.conpass1'))
         .matches(
           /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
@@ -54,6 +65,7 @@ export default function ChangePassword() {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
@@ -62,30 +74,48 @@ export default function ChangePassword() {
       oldPass: data.oldPass,
       password: data.password,
     };
+    try {
+      dispatch(changePassword(dataChangePass)).then((response) => {
+        console.log(response);
+        if (response.payload.statusCode === 200 && response.payload.data !== null) {
+          message.success({
+            style: { marginTop: '7vh' },
+            content: t('description.columncontent.changepass.success'),
+          });
+          // console.log('ĐỔI MẬT KHẨU THÀNH CÔNG');
+          navigate('/userdetail/:id');
+        } else if (
+          response.payload &&
+          response.payload.data.message == 'ERR_INVALID_CURRENT_PASSWORD'
+        )
+          message.error({
+            style: { marginTop: '7vh' },
+            content: t('description.columncontent.changepass.error'),
+          });
+        // message.error('Mật khẩu cũ của bạn chưa đúng');
+        //console.log('check pass thong tin', response.payload.statusCode);
+      });
+    } catch (error) {
+      console.error('Error while submitting form:', error);
+    }
 
-    dispatch(changePassword(dataChangePass)).then((response) => {
-      console.log(response);
-      if (response.payload.statusCode === 200 && response.payload.data !== null) {
-        // message.success(t('description.columncontent.changepass.success'));
-        message.success({
-          style: { marginTop: '7vh' },
-          content: t('description.columncontent.changepass.success'),
-        });
-        // console.log('ĐỔI MẬT KHẨU THÀNH CÔNG');
-        navigate('/userdetail');
-      } else if (
-        response.payload &&
-        response.payload.data.message == 'ERR_INVALID_CURRENT_PASSWORD'
-      )
-        message.error({
-          style: { marginTop: '7vh' },
-          content: 'Mật khẩu cũ của bạn chưa đúng',
-        });
-      // message.error('Mật khẩu cũ của bạn chưa đúng');
-      console.log('check pass thong tin', response.payload.statusCode);
-    });
   };
+  // Theo dõi giá trị của trường password và repassword
+  const password = watch('password', '');
+  const repassword = watch('repassword', '');
 
+  // Kiểm tra mật khẩu
+  const passwordsMatch = password === repassword;
+
+  // Sử dụng useEffect để cập nhật trạng thái của nút "Submit"
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+  useEffect(() => {
+    if (!passwordsMatch) {
+      setIsSubmitDisabled(true);
+    } else {
+      setIsSubmitDisabled(false);
+    }
+  }, [password, repassword, passwordsMatch]);
   const customImageStyle = {
     backgroundImage: `url(${bgform})`,
     backgroundSize: 'cover',
@@ -191,13 +221,43 @@ export default function ChangePassword() {
             )}
           />
         </Form.Item>
+        <Form.Item
+          label={
+            <>
+              {t('description.columncontent.reset.confirmpass')}{' '}
+              <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+            </>
+          }
+          hasFeedback
+          validateStatus={errors.repassword ? 'error' : ''}
+          help={
+            errors.repassword && <span style={{ color: 'red' }}>{errors.repassword.message}</span>
+          }
+        >
+          <Controller
+            name="repassword"
+            control={control}
+            render={({ field }) => (
+              <Input.Password
+                key="repassword"
+                {...field}
+                placeholder={t('description.columncontent.reset.inputconfirmpass')}
+              />
+            )}
+          />
+        </Form.Item>
         <Form.Item>
-          {/* {checkuser !== null ? ( */}
+          {!passwordsMatch && (
+            <span style={{ color: 'red' }}>
+              {t('description.columncontent.reset.passwordsMatch')}
+            </span>
+          )}
           <>
             <Button
               type="primary"
               htmlType="submit"
               style={{ background: '#00adb3', width: '100%', marginTop: '30px' }}
+              disabled={isSubmitDisabled}
             >
               {t('description.columncontent.changepass.submit')}
             </Button>

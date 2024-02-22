@@ -27,7 +27,7 @@ export default function ForgotPassword() {
         .required(t('description.columncontent.forgotpass.email'))
         .trim()
         .email(t('description.columncontent.register.conemail1'))
-        .matches(/^[^\s@]+@gmail\.com$/, t('description.columncontent.register.conemail1')),
+        .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, t('description.columncontent.register.conemail1')),
     })
     .required();
 
@@ -49,12 +49,20 @@ export default function ForgotPassword() {
       email: data.email,
     };
     try {
-      dispatch(fetchForgot(dataForgot));
-      message.success({
-        style: { marginTop: '7vh' },
-        content: t('description.columncontent.forgotpass.success'),
+      dispatch(fetchForgot(dataForgot)).then((response) => {
+        console.log(response);
+        if (response.payload && response.payload.email == "SUCCESS") {
+          message.success({
+            style: { marginTop: '7vh' },
+            content: t('description.columncontent.forgotpass.success'),
+          });
+          navigate('/forgot');
+        } else if (response.payload && response.payload.data == 'ERR_EMAIL_NOT_EXISTED')
+          message.error({
+            style: { marginTop: '7vh' },
+            content: t('description.columncontent.forgotpass.error'),
+          });
       });
-      navigate('/forgot');
     } catch (error) {
       console.error('Error while submitting form:', error);
     }
@@ -194,13 +202,13 @@ export default function ForgotPassword() {
           </div>
           <Form.Item>
             <Space direction="vertical" size="middle" align="center">
-              <Text>Hãy chở trong giây lát...</Text>
+              <Text>{t('description.columncontent.forgotpass.text1')}</Text>
               <Text>
-                Nếu không tìm thấy, mới bạn{' '}
+                {t('description.columncontent.forgotpass.text2')}{' '}
                 <Text strong style={{ color: 'red' }}>
-                  trở lại
+                  {t('description.columncontent.forgotpass.back')}
                 </Text>{' '}
-                để kiểm tra mail của mình!
+                {t('description.columncontent.forgotpass.text3')}
               </Text>
             </Space>
           </Form.Item>
@@ -213,7 +221,7 @@ export default function ForgotPassword() {
               }}
               onClick={handleSubmit(backpage)}
             >
-              Trở lại
+              {t('description.columncontent.forgotpass.back')}
             </Button>
           </Form.Item>
         </Form>

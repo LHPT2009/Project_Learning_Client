@@ -24,13 +24,22 @@ export default function Reset() {
     .object({
       password: yup
         .string()
+        .trim()
         .required(t('description.columncontent.reset.inputnewpass'))
         .min(8, t('description.columncontent.register.conpass1'))
         .matches(
           /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
           t('description.columncontent.register.conpass2')
         ),
-      repassword: yup.string().required(t('description.columncontent.reset.inputconfirmpass')),
+      repassword: yup
+        .string()
+        .trim()
+        .required(t('description.columncontent.reset.inputconfirmpass'))
+        .min(8, t('description.columncontent.register.conpass1'))
+        .matches(
+          /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
+          t('description.columncontent.register.conpass2')
+        ),
     })
     .required();
 
@@ -51,15 +60,19 @@ export default function Reset() {
       code: code,
       password: data.password,
     };
+    try {
+      dispatch(updateNewPass(dataNewPassWord)).then((item) => {
+        console.log(item);
+      });
+      message.success({
+        style: { marginTop: '7vh' },
+        content: t('description.columncontent.reset.success'),
+      });
+      navigate('/login');
+    } catch (error) {
+      console.error('Error while submitting form:', error);
+    }
 
-    dispatch(updateNewPass(dataNewPassWord)).then((item) => {
-      console.log(item);
-    });
-    message.success({
-      style: { marginTop: '7vh' },
-      content: t('description.columncontent.reset.success'),
-    });
-    navigate('/login');
   };
 
   const customImageStyle = {

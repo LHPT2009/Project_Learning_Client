@@ -33,6 +33,10 @@ const customStyle = {
 };
 
 const ListSpecialists = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [keyword, setKeyword] = useState('');
@@ -64,7 +68,7 @@ const ListSpecialists = () => {
     <div
     // style={{ height: '100vh' }}
     >
-      {/* <Header style={customStyle}>
+      <Header style={customStyle}>
         <Content style={{ padding: '0px 50px' }}>
           <Space direction="vertical" size="middle">
             <Title level={2} style={{ lineHeight: '15px' }}>
@@ -93,8 +97,8 @@ const ListSpecialists = () => {
             </Text>
           </Space>
         </Content>
-      </Header> */}
-      <Content style={{ padding: '20px 100px', height: '100vh' }}>
+      </Header>
+      <Content style={{ padding: '20px 100px', height: 'auto' }}>
         <Row style={{ marginBottom: '20px' }}>
           <Breadcrumb
             items={[
@@ -115,7 +119,7 @@ const ListSpecialists = () => {
             size="large"
           />
         </Row>
-        <Row gutter={[16, 16]}>
+        <Row gutter={[16, 16]} style={{ height: 'auto' }}>
           {getCurrentPageData().map((item) => (
             <Col xs={24} sm={12} md={8} lg={6} xl={4} key={item.id}>
               <Card
@@ -125,7 +129,18 @@ const ListSpecialists = () => {
                 }}
                 hoverable
                 bordered={true}
-                cover={<Image preview={false} alt="example" src={IconFive} />}
+                cover={
+                  <Image
+                    preview={false}
+                    alt="example"
+                    src={IconFive}
+                    style={{
+                      height: '200px',
+                      width: '100%',
+                      padding: '30px',
+                    }}
+                  />
+                }
                 onClick={() => navigate(`/list?specialists=${item.id}`)}
               >
                 <Text
