@@ -16,7 +16,7 @@ import {
   Spin,
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTempBooking } from '../features/Booking/bookingSlice';
+import { addTempBooking, fetchSendMail } from '../features/Booking/bookingSlice';
 import { fetchCreateTransaction } from '../features/Transaction/transactionSlice';
 import { UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -56,18 +56,6 @@ function formatTimeRange(inputTime) {
 
   return formattedRange;
 }
-
-const generateRandomNumbers = () => {
-  const characters = '0123456789';
-  let randomString = '';
-
-  for (let i = 0; i < 5; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    randomString += characters.charAt(randomIndex);
-  }
-
-  return randomString;
-};
 
 function formatDate(inputDateString) {
   const originalDate = new Date(inputDateString);
@@ -111,11 +99,6 @@ export default function Booking() {
 
   const schema = yup
     .object({
-      // fullname: yup.string().required('Hãy ghi họ và tên!'),
-      // phone: yup.string().required('Hãy ghi số điện thoại!'),
-      // gender: yup.string().required('chọn giới!'),
-      // dateOfBirth: yup.string().required('chọn ngày sinh!'),
-      // address: yup.string().required('Hãy ghi địa chỉ!'),
       // description: yup.string().required('Hãy ghi lý do đến khám!'),
       idPaymentMethod: yup.string().required('Chọn phương thức thanh toán!'),
     })
@@ -169,13 +152,13 @@ export default function Booking() {
     message.destroy();
     setSpinning(true);
     const formatsending = {
-      code: `${generateRandomNumbers()}`,
       idUser: infoUser.id,
       bookingDate: infoBooking.bookingDate,
       idPackage: infoBooking.idPackage,
       idDoctor: infoBooking.idDoctor,
       idScheduleDetail: infoBooking.idScheduleDetail,
-      ...data,
+      idPaymentMethod: data.idPaymentMethod,
+      description: data.description,
     };
 
     if (formatsending.idPaymentMethod === '1') {
@@ -187,8 +170,9 @@ export default function Booking() {
               content: 'Đã đặt lịch thành công!',
             });
             navigate('/success/cash');
-
             setSpinning(false);
+            // fetch ra
+            dispatch(fetchSendMail(formatsending));
           } else if (
             item.payload &&
             item.payload.data.message == 'ERR_SCHEDULES_DETAIL_ALREADY_EXIST'
@@ -303,13 +287,16 @@ export default function Booking() {
               <Col xs={24} sm={24} md={24} lg={18}>
                 <Space direction="vertical">
                   <Title level={3} style={{ color: '#005761' }}>
-                    {t('description.columncontent.booking.specialist')}
-                    {infoDoctor.fullNameDoctor}
+                    {t('description.columncontent.booking.specialist')} {infoDoctor.fullNameDoctor}
                   </Title>
-                  <Text>{infoDoctor.hospitalsName}</Text>
+                  <Text>Tên bệnh viện: {infoDoctor.hospitalsName}</Text>
                   <Text>
-                    {t('description.columncontent.booking.day')}{' '}
-                    {formatTimeRange(infoBooking.timeScheduleDetail)}
+                    {/* {t('description.columncontent.booking.day')}{' '} */}
+                    Gói khám: {infoBooking.namePackage}
+                  </Text>
+                  <Text>
+                    {/* {t('description.columncontent.booking.day')}{' '} */}
+                    Khung giờ: {formatTimeRange(infoBooking.timeScheduleDetail)}
                   </Text>
                   <Text>
                     {t('description.columncontent.booking.day')}{' '}
@@ -493,7 +480,6 @@ export default function Booking() {
                       type="primary"
                       size="large"
                       style={{ backgroundColor: '#00ADB3', width: '100%' }}
-                      // onClick={() => sendBooking()}
                       htmlType="submit"
                     >
                       {t('description.columncontent.booking.confirm')}

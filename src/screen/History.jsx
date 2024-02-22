@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
-import { Form, Row, Col, Image, Space, Button, Typography } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Form, Row, Col, Image, Space, Button, Typography, Spin } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import NoImage from '../asset/image/NoImage.png';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { fetchGetBookingByUserId } from '../features/Booking/bookingSlice';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -39,6 +40,7 @@ const formatDateBOD = (originalDate) => {
 export default function History() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [spinning, setSpinning] = useState(true);
   const idUser = useSelector((state) => (state.client.client ? state.client.client.id : ''));
   const { id } = useParams();
   useEffect(() => {
@@ -52,7 +54,11 @@ export default function History() {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchGetBookingByUserId(idUser));
+    dispatch(fetchGetBookingByUserId(idUser)).then((item) => {
+      setTimeout(() => {
+        setSpinning(false);
+      }, 500);
+    });
   }, []);
 
   const userInfo = useSelector((state) => state.client.userinfo[0]);
@@ -86,6 +92,9 @@ export default function History() {
     location: data ? data.addressHospital : '',
     status: data ? data.status : '',
   };
+
+  const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
+
   return (
     <div
       className="login-container"
@@ -96,6 +105,7 @@ export default function History() {
         alignItems: 'center',
       }}
     >
+      <Spin spinning={spinning} indicator={antIcon} fullscreen style={{ background: '#ECF3F4' }} />
       <Form
         name="basic"
         style={{

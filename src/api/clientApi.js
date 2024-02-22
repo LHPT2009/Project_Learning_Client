@@ -2,11 +2,11 @@ import axiosClient from './axiosClient';
 
 const clientApi = {
   login(data) {
-    const url = '/api/user/login';
+    const url = '/api/user/auth/login';
     return axiosClient.post(url, data);
   },
   register: async (dataRegister) => {
-    const url = '/api/user/register';
+    const url = '/api/user/auth/register';
     try {
       const response = await axiosClient.post(url, dataRegister);
       return response;
@@ -15,7 +15,7 @@ const clientApi = {
     }
   },
   getUserById: async (id) => {
-    const url = `/api/user/${id}`;
+    const url = `/api/user/auth/getInfo`;
     try {
       const response = await axiosClient.get(url);
       return response;
@@ -25,17 +25,17 @@ const clientApi = {
     }
   },
   forgot: async (dataForgot) => {
-    const url = '/api/user/forgotPassword';
+    const url = '/api/user/auth/forgotPassword';
     try {
       const response = await axiosClient.post(url, dataForgot);
       return response;
     } catch (error) {
-      console.error('Error fetching user with role:', error.message);
-      return [];
+      // console.error('Error fetching user with role:', error.message);
+      return error.response;
     }
   },
   updateNewPass: async (dataNewPassword) => {
-    const url = '/api/user/newPassword';
+    const url = '/api/user/auth/newPassword';
     try {
       const response = await axiosClient.put(url, dataNewPassword);
       return response;
@@ -45,7 +45,7 @@ const clientApi = {
     }
   },
   changePassword: async (dataChangePassword) => {
-    const url = '/api/user/updatePass';
+    const url = '/api/user/auth/updatePass';
     try {
       const response = await axiosClient.put(url, dataChangePassword);
       return response;

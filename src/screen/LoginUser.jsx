@@ -26,7 +26,15 @@ export default function LoginUser() {
         .required(t('description.columncontent.login.inputusername'))
         .trim()
         .matches(/^\S*$/, t('description.columncontent.register.conusername')),
-      password: yup.string().required(t('description.columncontent.login.inputpassword')),
+      password: yup
+        .string()
+        .trim()
+        .required(t('description.columncontent.login.inputpassword'))
+        .min(8, t('description.columncontent.register.conpass1'))
+        .matches(
+          /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
+          t('description.columncontent.register.conpass2')
+        ),
     })
     .required();
   useEffect(() => {
@@ -58,51 +66,49 @@ export default function LoginUser() {
   } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = async (data) => {
+    message.destroy();
     try {
-      setSpinning(true);
       const response = await clientApi.login(data);
       const checkgoback = params.get('goBack');
-      message.destroy();
-      if (response.data.token) {
-        await dispatch(loginClient(response.data));
-        Cookies.set('accessToken', response.data.token, { expires: 1 });
-        Cookies.set('refreshToken', response.data.refreshToken, { expires: 1 });
-        // await dispatch(fetchGetUserById(response.data.id));
-
+      if (response && response.data.token) {
         if (response.data.roles.includes('ROLE_USER')) {
+          await dispatch(loginClient(response.data));
+          Cookies.set('accessToken', response.data.token, { expires: 1 });
+          Cookies.set('refreshToken', response.data.refreshToken, { expires: 1 });
+          updateAuthorizationHeader();
+          dispatch(fetchGetUserById(response.data.id));
           if (checkgoback === null) {
-            navigate('/');
-            updateAuthorizationHeader();
-            dispatch(fetchGetUserById(response.data.id));
             message.success({
               style: { marginTop: '7vh' },
               content: t('description.columncontent.login.welcome'),
             });
+            navigate('/');
           } else {
-            navigate(-1);
             message.success({
               style: { marginTop: '7vh' },
               content: t('description.columncontent.login.success'),
             });
+            navigate(-1);
           }
         } else {
-          setSpinning(false);
           message.error({
             style: { marginTop: '7vh' },
             content: t('description.columncontent.login.role'),
           });
-          Cookies.remove('accessToken');
-          Cookies.remove('refreshToken');
-          setSpinning(false);
         }
       }
     } catch (error) {
-      message.error({
-        style: { marginTop: '7vh' },
-        content: t('description.columncontent.login.error'),
-      });
-      console.error('Error calling login API:', error);
-      setSpinning(false);
+      if (error.response.data.message === 'ERR_INVALID_USERNAME_OR_PASSWORD') {
+        message.error({
+          style: { marginTop: '7vh' },
+          content: t('description.columncontent.login.error'),
+        });
+      } else {
+        message.error({
+          style: { marginTop: '7vh' },
+          content: 'Lỗi Server',
+        });
+      }
     }
   };
 

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, DatePicker, Radio, Row, Col, Spin, message } from 'antd';
 import Logo from '../asset/image/logo_clinic.png';
 import bgform from '../asset/image/Background_Form.png';
-import { fetchregister, clearMessageError } from 'features/Client/clientSlice';
+import { fetchregister } from 'features/Client/clientSlice';
 import { useForm, Controller } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -39,13 +39,16 @@ export default function Register() {
         .max(20, t('description.columncontent.register.conusername2')),
       password: yup
         .string()
+        .trim()
         .required(t('description.columncontent.register.inputpassword'))
         .min(8, t('description.columncontent.register.conpass1'))
         .matches(
           /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
           t('description.columncontent.register.conpass2')
         ),
-      fullname: yup.string().required(t('description.columncontent.register.inputfullname')),
+      fullname: yup.string()
+        .trim()
+        .required(t('description.columncontent.register.inputfullname')),
       gender: yup.string().required(t('description.columncontent.register.inputgender')),
       dateOfBirth: yup
         .date()
@@ -53,6 +56,7 @@ export default function Register() {
         .max(new Date(), t('description.columncontent.register.condateOfBirth')),
       phone: yup
         .string()
+        .trim()
         .required(t('description.columncontent.register.inputphone'))
         .matches(/^\d{10}$/, t('description.columncontent.register.conphone')),
       email: yup
@@ -60,7 +64,7 @@ export default function Register() {
         .required(t('description.columncontent.register.inputemail'))
         .trim()
         .email(t('description.columncontent.register.conemail1'))
-        .matches(/^[^\s@]+@gmail\.com$/, t('description.columncontent.register.conemail1')),
+        .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, t('description.columncontent.register.conemail1')),
       address: yup.string().required(t('description.columncontent.register.inputaddress')),
     })
     .required();
@@ -129,24 +133,27 @@ export default function Register() {
       address: data.address,
       roles: ['ROLE_USER'],
     };
+    try {
+      await dispatch(fetchregister(dataRegister)).then((item) => {
+        const checkStatus = item.payload ? item.payload.status || item.payload.statusCode : '';
+        if (checkStatus == 200) {
+          message.success({
+            style: { marginTop: '7vh' },
+            content: t('description.columncontent.register.success'),
+          });
+          navigate('/login');
+        }
+        if (checkStatus == 400) {
+          message.error({
+            style: { marginTop: '7vh' },
+            content: `${changeNameErr(item.payload.data.message)}`,
+          });
+        }
+      });
+    } catch(error) {
+      console.error('Error while submitting form:', error);
+    }
 
-    await dispatch(fetchregister(dataRegister)).then((item) => {
-      const checkStatus = item.payload ? item.payload.status || item.payload.statusCode : '';
-      if (checkStatus == 200) {
-        message.success({
-          style: { marginTop: '7vh' },
-          content: t('description.columncontent.register.success'),
-        });
-        // message.success(t('description.columncontent.register.success'));
-        navigate('/login');
-      }
-      if (checkStatus == 400) {
-        message.error({
-          style: { marginTop: '7vh' },
-          content: `${changeNameErr(item.payload.data.message)}`,
-        });
-      }
-    });
   };
 
   const handleFailed = () => {
@@ -179,7 +186,7 @@ export default function Register() {
         onFinishFailed={handleFailed}
         name="basic"
         style={{
-          width: '900px',
+          width: '800px',
           height: 'auto',
           background: '#ecf3f4',
           display: 'flex',
