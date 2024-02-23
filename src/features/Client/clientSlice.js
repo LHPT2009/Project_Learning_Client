@@ -26,11 +26,20 @@ export const updateNewPass = createAsyncThunk('user/updateNewPass', async (dataN
   return response.data;
 });
 
+export const fetchClientLogout = createAsyncThunk('user/fetchLogout', async () => {
+  const response = await clientApi.logout();
+  return response.data;
+});
+
 export const changePassword = createAsyncThunk(
   'user/changePassword',
   async (dataChangePassword) => {
-    const response = await clientApi.changePassword(dataChangePassword);
-    return response;
+    try {
+      const response = await clientApi.changePassword(dataChangePassword);
+      return response;
+    } catch (err) {
+      return err.response;
+    }
   }
 );
 

@@ -5,6 +5,10 @@ const clientApi = {
     const url = '/user/auth/login';
     return await axiosClient.post(url, data);
   },
+  logout: async () => {
+    const url = '/user/logOut';
+    return await axiosClient.delete(url);
+  },
   register: async (dataRegister) => {
     const url = '/user/auth/register';
     return await axiosClient.post(url, dataRegister);

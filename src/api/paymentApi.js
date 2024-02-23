@@ -2,7 +2,7 @@ import axiosClient from './axiosClient';
 
 const paymentApi = {
   getAllPaymentMethod: async () => {
-    const url = `/paymentmethod`;
+    const url = `/paymentMethod`;
     return await axiosClient.get(url);
   },
 };

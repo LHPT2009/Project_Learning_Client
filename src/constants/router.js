@@ -1,0 +1,15 @@
+export const ROUTER = {
+  HOMEPAGE: '/',
+  BOOKING: '/booking',
+  LIST: '/list',
+  SPECIALISTS: '/specialists',
+  HISTORY: '/history/:id',
+  SUCCESS: '/success/:statusPayment',
+  LOGIN: '/login',
+  REGISTER: '/register',
+  FORGOT: '/forgot',
+  RESET: '/reset/auth/new-password',
+  CHANGEPASS: '/changepass',
+  USERDETAIL: '/userdetail/:id',
+  NOTFOUND: '*',
+};

@@ -23,6 +23,7 @@ const translationsVN = {
         success: 'Mời bạn tiếp tục',
         role: 'Bạn không có quyền truy cập!',
         error: 'Tài khoản hoặc mật khẩu của bạn hiện đang không đúng!',
+        errorsever: 'Lỗi server!'
       },
       homepage: {
         welcome: 'Chào mừng bạn đến với HealthCare',
@@ -89,6 +90,7 @@ const translationsVN = {
         existphone: 'Số điện thoại đã tồn tại!',
         success: 'Đăng ký thành công!',
         error: 'Vui lòng điền đầy đủ thông tin!',
+        choiceday: 'Chọn ngày sinh'
       },
       listdoctor: {
         title1: 'Cơ Xương Khớp',

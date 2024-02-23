@@ -10,14 +10,28 @@ import { TRANSLATIONS } from '../../constants';
 const { Footer } = Layout;
 
 const FooterLayout = () => {
+  // Constants
   const { Text, Title } = Typography;
   const { t } = useTranslation();
+
+  // Redux State
+
+  // Local State
+
+  // useEffect for loading data
+
+  // useEffect for user-related operations
+
+  // Event Handlers
+
+  //Style CSS
   const customFooterStyle = {
     backgroundImage: `url(${bgfooter})`,
     backgroundSize: 'contain',
     backgroundPosition: 'top right',
     backgroundRepeat: 'no-repeat',
   };
+
   return (
     <Footer style={{ backgroundColor: '#005761', color: '#fff', padding: '0' }}>
       <div style={customFooterStyle}>

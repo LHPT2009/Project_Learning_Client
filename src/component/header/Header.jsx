@@ -22,27 +22,38 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logout } from 'features/Client/clientSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { fetchGetUserById } from '../../features/Client/clientSlice';
+import { fetchGetUserById, fetchClientLogout } from '../../features/Client/clientSlice';
 import { fetchGetBookingByUserId } from '../../features/Booking/bookingSlice';
 import { fetchAllSpecialists } from '../../features/Specialist/specialistSlice';
 import Cookies from 'js-cookie';
 import { TRANSLATIONS } from '../../constants';
+import { fetchCheckAccessToken, fetchRefreshToken } from 'features/Jwt/jwtSlice';
 
 const { Header } = Layout;
 
-const lngs = {
+const listLanguage = {
   vn: { nativeName: 'Vietnam', image: Vietnam },
   en: { nativeName: 'English', image: America },
 };
 
 const MenuComponent = () => {
+  // Constants
   const { t, i18n } = useTranslation();
-
-  const [openMenu, setOpenMenu] = useState(false);
   const { Option } = Select;
-  const User = useSelector((state) => state.client.client);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Redux State
+  const User = useSelector((state) => state.client.client);
+
+  // Local State
+  const [openMenu, setOpenMenu] = useState(false);
+
+  // useEffect for loading data
+
+  // useEffect for user-related operations
+
+  // Event Handlers
   const logoutAccount = () => {
     message.success({
       style: { marginTop: '7vh' },
@@ -50,6 +61,7 @@ const MenuComponent = () => {
     });
     setOpenMenu(false);
     dispatch(logout());
+    dispatch(fetchClientLogout());
     Cookies.remove('accessToken');
     Cookies.remove('refreshToken');
     navigate('/login');
@@ -65,14 +77,28 @@ const MenuComponent = () => {
     navigate('/register');
   };
 
-  const loaddataBeforeRoute = async () => {
-    setOpenMenu(false);
-    await dispatch(fetchGetBookingByUserId(User.id));
-    await dispatch(fetchGetUserById(User.id));
-    navigate('/userdetail/1');
+  const loadDataBeforeRoute = async () => {
+    try {
+      dispatch(fetchRefreshToken()).then((item) => {
+        console.log(item);
+      });
+      // await dispatch(fetchCheckAccessToken()).then((item) => {
+      //   console.log(item.payload.message);
+      //   if (item.payload && item.payload.message === 'INVALID_JWT_TOKEN') {
+      //   }
+      // });
+      // console.log(checkAuth.message);
+      // if()
+      // setOpenMenu(false);
+      // await dispatch(fetchGetBookingByUserId(User.id));
+      // await dispatch(fetchGetUserById(User.id));
+      // navigate('/userdetail/1');
+    } catch (error) {
+      console.log('Catch err: ', error.response);
+    }
   };
 
-  const loaddataListspecialists = async () => {
+  const loadDataListSpecialists = async () => {
     setOpenMenu(false);
     await dispatch(fetchAllSpecialists());
     navigate('/specialists');
@@ -167,12 +193,12 @@ const MenuComponent = () => {
                       i18n.changeLanguage(value);
                     }}
                   >
-                    {Object.keys(lngs).map((lng) => (
+                    {Object.keys(listLanguage).map((lng) => (
                       <Option key={lng} value={lng}>
                         <Avatar
                           shape="square"
                           style={{ marginRight: '35px', width: '38px', height: '30px' }}
-                          src={lngs[lng].image}
+                          src={listLanguage[lng].image}
                           alt="avatar"
                         />
                       </Option>
@@ -186,7 +212,7 @@ const MenuComponent = () => {
                         type="primary"
                         size="large"
                         style={{ backgroundColor: '#00ADB3', width: '120px' }}
-                        onClick={() => loaddataListspecialists()}
+                        onClick={() => loadDataListSpecialists()}
                       >
                         {t(`${TRANSLATIONS.HEADERPAGE.BUTTONBOOKING}`)}
                       </Button>
@@ -196,7 +222,7 @@ const MenuComponent = () => {
                         trigger={['click']}
                         overlay={
                           <Menu>
-                            <Menu.Item key="1" onClick={loaddataBeforeRoute}>
+                            <Menu.Item key="1" onClick={loadDataBeforeRoute}>
                               {t(`${TRANSLATIONS.HEADERPAGE.BUTTONINFO}`)}
                             </Menu.Item>
                             <Menu.Item key="2" onClick={logoutAccount}>
@@ -229,7 +255,7 @@ const MenuComponent = () => {
                         type="primary"
                         size="large"
                         style={{ backgroundColor: '#00ADB3', width: '120px' }}
-                        onClick={() => loaddataListspecialists()}
+                        onClick={() => loadDataListSpecialists()}
                       >
                         {t(`${TRANSLATIONS.HEADERPAGE.BUTTONBOOKING}`)}
                       </Button>
@@ -295,12 +321,12 @@ const MenuComponent = () => {
                 localStorage.setItem('i18nextLng', value);
               }}
             >
-              {Object.keys(lngs).map((lng) => (
+              {Object.keys(listLanguage).map((lng) => (
                 <Option key={lng} value={lng}>
                   <Avatar
                     shape="square"
                     style={{ marginRight: '35px', width: '38px', height: '30px' }}
-                    src={lngs[lng].image}
+                    src={listLanguage[lng].image}
                     alt="avatar"
                   />
                 </Option>
@@ -355,10 +381,9 @@ const MenuComponent = () => {
                 backgroundColor: '#00ADB3',
                 width: openMenu ? '100%' : '120px',
               }}
-              onClick={() => loaddataListspecialists()}
+              onClick={() => loadDataListSpecialists()}
             >
-              {/* {t('description.headercontent.booking')} */}
-              {TRANSLATIONS.HEADERPAGE.BUTTONBOOKING}
+              {`${t(TRANSLATIONS.HEADERPAGE.BUTTONBOOKING)}`}
             </Button>
           </Menu.Item>
           {User !== null ? (
@@ -370,13 +395,11 @@ const MenuComponent = () => {
                   trigger={['click']}
                   overlay={
                     <Menu>
-                      <Menu.Item key="1" onClick={loaddataBeforeRoute}>
-                        {/* {t('description.headercontent.info')} */}
-                        {TRANSLATIONS.HEADERPAGE.BUTTONINFO}
+                      <Menu.Item key="1" onClick={loadDataBeforeRoute}>
+                        {`${t(TRANSLATIONS.HEADERPAGE.BUTTONINFO)}`}
                       </Menu.Item>
                       <Menu.Item key="2" onClick={logoutAccount}>
-                        {/* {t('description.headercontent.logout')} */}
-                        {TRANSLATIONS.HEADERPAGE.BUTTONLOGOUT}
+                        {`${t(TRANSLATIONS.HEADERPAGE.BUTTONLOGOUT)}`}
                       </Menu.Item>
                     </Menu>
                   }
@@ -391,8 +414,7 @@ const MenuComponent = () => {
                       width: openMenu ? '100%' : '120px',
                     }}
                   >
-                    {/* {`${t('description.headercontent.welcome')} ${User ? User.fullName : ''}`} */}
-                    {`${TRANSLATIONS.HOMEPAGE.WELCOME} ${User ? User.fullName : ''}`}
+                    {`t(${TRANSLATIONS.HOMEPAGE.WELCOME} ${User ? User.fullName : ''})`}
                     <DownOutlined />
                     <Avatar
                       style={{
@@ -416,8 +438,7 @@ const MenuComponent = () => {
                   style={{ backgroundColor: '#00ADB3', width: openMenu ? '100%' : '120px' }}
                   onClick={routeLogin}
                 >
-                  {/* {t('description.headercontent.login')} */}
-                  {TRANSLATIONS.HEADERPAGE.BUTTONLOGIN}
+                  {`${t(TRANSLATIONS.HEADERPAGE.BUTTONLOGIN)}`}
                 </Button>
               </Menu.Item>
               <Menu.Item
@@ -437,8 +458,7 @@ const MenuComponent = () => {
                   }}
                   onClick={routeRegister}
                 >
-                  {/* {t('description.headercontent.register')} */}
-                  {TRANSLATIONS.HEADERPAGE.BUTTONREGISTER}
+                  {`${t(TRANSLATIONS.HEADERPAGE.BUTTONREGISTER)}`}
                 </Button>
               </Menu.Item>
             </>

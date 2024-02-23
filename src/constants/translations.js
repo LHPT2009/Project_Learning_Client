@@ -4,7 +4,7 @@ export const TRANSLATIONS = {
     BUTTONINFO: 'description.headercontent.info',
     BUTTONLOGOUT: 'description.headercontent.logout',
     BUTTONLOGIN: 'description.headercontent.login',
-    BUTTONREGISTER: 'description.headercontent.login',
+    BUTTONREGISTER: 'description.headercontent.register',
   },
   FOOTERPAGE: {
     EMAIL: 'description.columncontent.footer.email',
