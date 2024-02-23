@@ -17,16 +17,35 @@ dayjs.locale('en');
 const { Text, Title } = Typography;
 
 const DataItem = ({ dataItem }) => {
+  // Constants
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const listPackage = dataItem.packagePrices;
   const imageDefault =
     'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Free-Image.png';
+  const formatter = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  });
+
+  const dayMappingVn = {
+    Monday: 'Thứ 2',
+    Tuesday: 'Thứ 3',
+    Wednesday: 'Thứ 4',
+    Thursday: 'Thứ 5',
+    Friday: 'Thứ 6',
+    Saturday: 'Thứ 7',
+    Sunday: 'Chủ nhật',
+  };
+
+  // Redux State
+  const checkUser = useSelector((state) => state.client.client);
+
+  // Local State
   const [day, setDay] = useState();
   const [date, setDate] = useState();
   const [arrDate, setArrDate] = useState([]);
-
-  const checkuser = useSelector((state) => state.client.client);
 
   const [idSchedules, setIdSchedules] = useState();
   const [timeSchedules, setTimeSchedules] = useState();
@@ -38,15 +57,20 @@ const DataItem = ({ dataItem }) => {
 
   const [arrFilterSchedules, setArrFilterSchedules] = useState([]);
 
-  const dayMappingvn = {
-    Monday: 'Thứ 2',
-    Tuesday: 'Thứ 3',
-    Wednesday: 'Thứ 4',
-    Thursday: 'Thứ 5',
-    Friday: 'Thứ 6',
-    Saturday: 'Thứ 7',
-    Sunday: 'Chủ nhật',
-  };
+  const sortArrFilterSchedules = arrFilterSchedules.sort((a, b) => {
+    const timeA = new Date(`1970-01-01T${a.startTime}`);
+    const timeB = new Date(`1970-01-01T${b.startTime}`);
+    return timeA - timeB;
+  });
+
+  // useEffect for loading data
+  useEffect(() => {
+    CalDate();
+  }, []);
+
+  // useEffect for user-related operations
+
+  // Event Handlers
 
   function formatTime(timeString) {
     const [hours, minutes] = timeString.split(':');
@@ -91,22 +115,13 @@ const DataItem = ({ dataItem }) => {
     setArrDate(filteredDates);
   };
 
-  const formatter = new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-  });
-
-  useEffect(() => {
-    CalDate();
-  }, []);
-
   const FilterSchedules = (selectDay) => {
     setArrFilterSchedules([]);
     if (dataItem.schedulesDetailSet === null) {
       setArrFilterSchedules([]);
     } else if (dataItem.schedulesDetailSet !== null) {
       dataItem.schedulesDetailSet.forEach((item) => {
-        if (selectDay === item.schedulesDate && item !== null && item.status == 'INACTIVE') {
+        if (selectDay === item.schedulesDate && item !== null && item.status === 'INACTIVE') {
           setArrFilterSchedules((prevArr) => [...prevArr, item]);
         }
       });
@@ -125,17 +140,17 @@ const DataItem = ({ dataItem }) => {
   };
 
   const addInfo = () => {
-    if (idSchedules == null && timeSchedules == null) {
+    if (idSchedules === null && timeSchedules === null) {
       message.error({
         style: { marginTop: '7vh' },
         content: 'Chọn thời gian của bạn!',
       });
-    } else if (idPackage == null && pricePakage == null) {
+    } else if (idPackage === null && pricePakage === null) {
       message.error({
         style: { marginTop: '7vh' },
         content: 'Chọn gói khám của bạn!',
       });
-    } else if (checkuser == null) {
+    } else if (checkUser === null) {
       message.error({
         style: { marginTop: '7vh' },
         content: 'Mời bạn đăng nhập!',
@@ -145,18 +160,10 @@ const DataItem = ({ dataItem }) => {
       dispatch(fetchGetDoctorById(dataItem.id));
       dispatch(addInfoBooking(formatInfo));
       dispatch(fetchPayments());
-      dispatch(fetchGetUserById(checkuser.id));
+      dispatch(fetchGetUserById(checkUser.id));
       navigate('/booking');
     }
   };
-
-  const listPackage = dataItem.packagePrices;
-
-  const sortArrFilterSchedules = arrFilterSchedules.sort((a, b) => {
-    const timeA = new Date(`1970-01-01T${a.startTime}`);
-    const timeB = new Date(`1970-01-01T${b.startTime}`);
-    return timeA - timeB;
-  });
 
   const getInfoPackage = (packageId) => {
     const selectedPackage = listPackage.find((item) => item.packageId === packageId);
@@ -164,14 +171,6 @@ const DataItem = ({ dataItem }) => {
     setNamePackage(selectedPackage.packageName);
     setPricePakage(selectedPackage.price);
   };
-
-  const CustomDropdownContent = ({ item }) => (
-    <div>
-      <p>{item.packageName}</p>
-      <p>{item.price}</p>
-      {/* Thêm các phần tử khác tùy ý */}
-    </div>
-  );
 
   return (
     <>
@@ -229,7 +228,7 @@ const DataItem = ({ dataItem }) => {
               {arrDate.map((dataItem) => {
                 return (
                   <Select.Option key={dataItem.id} value={`${dataItem.day} - ${dataItem.date}`}>
-                    {dayMappingvn[dataItem.day]} - {dataItem.showformatDate}
+                    {dayMappingVn[dataItem.day]} - {dataItem.showformatDate}
                   </Select.Option>
                 );
               })}
@@ -243,9 +242,9 @@ const DataItem = ({ dataItem }) => {
                 <>
                   {sortArrFilterSchedules.map((item) => (
                     <Button
-                      type={item.id == isActive.id ? 'primary' : 'default'}
+                      type={item.id === isActive.id ? 'primary' : 'default'}
                       style={
-                        item.id == isActive.id
+                        item.id === isActive.id
                           ? { width: '150px', backgroundColor: '#00ADB3' }
                           : { width: '150px' }
                       }
@@ -306,7 +305,7 @@ const DataItem = ({ dataItem }) => {
                 {t('description.columncontent.item.detail')}
               </Link>
             </Text>
-            {checkuser !== null ? (
+            {checkUser !== null ? (
               <>
                 <Button
                   type="primary"

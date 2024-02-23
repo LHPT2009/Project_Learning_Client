@@ -23,6 +23,7 @@ const translationsEN = {
         success: 'Please continue',
         role: "You don't have access!",
         error: 'Your account or password is currently incorrect!',
+        errorsever: 'Server error!'
       },
       homepage: {
         welcome: 'Welcome to HealthCare',
@@ -88,6 +89,7 @@ const translationsEN = {
         existphone: 'Phone number already exists!',
         success: 'Registration successful!',
         error: 'Please fill in all required information!',
+        choiceday: 'Choose your date of birth'
       },
       listdoctor: {
         title1: 'Orthopedics',

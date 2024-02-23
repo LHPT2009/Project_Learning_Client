@@ -1,10 +1,10 @@
 import React from 'react';
 import Item from './Item';
 
-const ListItemArr = ({ arrdoctors }) => {
+const ListItemArr = ({ arrDoctors }) => {
   return (
     <>
-      {arrdoctors?.map((item) => (
+      {arrDoctors?.map((item) => (
         <Item dataItem={item} />
       ))}
     </>

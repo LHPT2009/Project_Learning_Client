@@ -1,20 +1,20 @@
-import NotFound from 'screen/NotFound';
+import NotFound from 'features/Client/NotFound';
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
-import Booking from './screen/Booking';
-import HomePage from './screen/HomePage';
-import Search from './screen/Search';
-import History from './screen/History';
-import ListDoctor from './screen/ListDoctor';
-import Success from './screen/Success';
+import Booking from './features/Booking/Booking';
+import HomePage from './features/Client/HomePage';
+import History from './features/Client/History';
+import ListDoctor from './features/Doctor/ListDoctor';
+import Success from './features/Client/Success';
 import Layout from './component/layout/Layout';
-import LoginUser from 'screen/LoginUser';
-import Register from 'screen/Register';
-import ForgotPassword from 'screen/ForgotPassword';
-import Reset from 'screen/Reset';
-import UserDetail from 'screen/UserDetail';
-import ChangePassword from 'screen/ChangePassword';
-import ListSpecialists from 'screen/ListSpecialists';
+import LoginUser from 'features/Client/LoginUser';
+import Register from 'features/Client/Register';
+import ForgotPassword from 'features/Client/ForgotPassword';
+import Reset from 'features/Client/Reset';
+import UserDetail from 'features/Client/UserDetail';
+import ChangePassword from 'features/Client/ChangePassword';
+import ListSpecialists from 'features/Specialist/ListSpecialists';
+import { ROUTER } from './constants';
 function App() {
   return (
     <div className="App" style={{ height: '100vh', background: '#111', position: 'relative' }}>
@@ -24,20 +24,19 @@ function App() {
           element={
             <Layout>
               <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/booking" element={<Booking />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/list" element={<ListDoctor />} />
-                <Route path="/specialists" element={<ListSpecialists />} />
-                <Route path="/history/:id" element={<History />} />
-                <Route path="/success/:statuspayment" element={<Success />} />
-                <Route path="/login" element={<LoginUser />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/forgot" element={<ForgotPassword />} />
-                <Route path="/reset/auth/new-password" element={<Reset />} />
-                <Route path="/changepass" element={<ChangePassword />} />
-                <Route path="/userdetail/:id" element={<UserDetail />} />
-                <Route path="*" element={<NotFound />} />
+                <Route path={`${ROUTER.HOMEPAGE}`} element={<HomePage />} />
+                <Route path={`${ROUTER.BOOKING}`} element={<Booking />} />
+                <Route path={`${ROUTER.LIST}`} element={<ListDoctor />} />
+                <Route path={`${ROUTER.SPECIALISTS}`} element={<ListSpecialists />} />
+                <Route path={`${ROUTER.HISTORY}`} element={<History />} />
+                <Route path={`${ROUTER.SUCCESS}`} element={<Success />} />
+                <Route path={`${ROUTER.LOGIN}`} element={<LoginUser />} />
+                <Route path={`${ROUTER.REGISTER}`} element={<Register />} />
+                <Route path={`${ROUTER.FORGOT}`} element={<ForgotPassword />} />
+                <Route path={`${ROUTER.RESET}`} element={<Reset />} />
+                <Route path={`${ROUTER.CHANGEPASS}`} element={<ChangePassword />} />
+                <Route path={`${ROUTER.USERDETAIL}`} element={<UserDetail />} />
+                <Route path={`${ROUTER.NOTFOUND}`} element={<NotFound />} />
               </Routes>
             </Layout>
           }

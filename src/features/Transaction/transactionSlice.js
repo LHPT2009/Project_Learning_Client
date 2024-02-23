@@ -16,3 +16,10 @@ export const fetchTransactionCallback = createAsyncThunk(
     return response.data;
   }
 );
+export const fetchUpdateScheduleStatus = createAsyncThunk(
+  'transaction/fetchUpdateScheduleStatus',
+  async (data) => {
+    const response = await transactionApi.updateScheduleStatus(data);
+    return response.data;
+  }
+);
