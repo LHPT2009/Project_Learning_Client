@@ -5,6 +5,7 @@ import LogoClinic from '../../asset/image/Logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
+import { TRANSLATIONS } from '../../constants';
 
 const { Footer } = Layout;
 
@@ -69,7 +70,9 @@ const FooterLayout = () => {
                 icon={faEnvelope}
                 style={{ fontSize: '28px', marginRight: '10px' }}
               />
-              <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.email')}: contact@website.com</Text>
+              <Text style={{ color: '#fff' }}>
+                {t(`${TRANSLATIONS.FOOTERPAGE.EMAIL}`)}: contact@website.com
+              </Text>
             </Col>
             <Col
               xs={24}
@@ -85,7 +88,9 @@ const FooterLayout = () => {
               }}
             >
               <FontAwesomeIcon icon={faPhone} style={{ fontSize: '28px', marginRight: '10px' }} />
-              <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.phone')}: 0123456789</Text>
+              <Text style={{ color: '#fff' }}>
+                {t(`${TRANSLATIONS.FOOTERPAGE.PHONE}`)}: 0123456789
+              </Text>
             </Col>
           </Row>
           <Row style={{ marginBottom: '20px' }}>
@@ -101,10 +106,12 @@ const FooterLayout = () => {
             >
               <Space direction="vertical">
                 <Title level={3} style={{ color: '#fff' }}>
-                {t('description.columncontent.footer.about')}
+                  {/* {t('description.columncontent.footer.about')} */}
+                  {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.ABOUT.TITLE}`)}
                 </Title>
                 <Text style={{ color: '#fff' }}>
-                {t('description.columncontent.footer.aboutcontent')}
+                  {/* {t('description.columncontent.footer.aboutcontent')} */}
+                  {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.ABOUT.CONTENT}`)}
                 </Text>
               </Space>
             </Col>
@@ -120,11 +127,21 @@ const FooterLayout = () => {
             >
               <Space direction="vertical">
                 <Title level={3} style={{ color: '#fff' }}>
-                {t('description.columncontent.footer.service')}
+                  {/* {t('description.columncontent.footer.service')} */}
+                  {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.SERVICE.TITLE}`)}
                 </Title>
-                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.package')}</Text>
-                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.specialist')}</Text>
-                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.generalmedicine')}</Text>
+                <Text style={{ color: '#fff' }}>
+                  {/* {t('description.columncontent.footer.package')} */}
+                  {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.SERVICE.CONTENT.PACKAGE}`)}
+                </Text>
+                <Text style={{ color: '#fff' }}>
+                  {/* {t('description.columncontent.footer.specialist')} */}
+                  {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.SERVICE.CONTENT.SPECIALIST}`)}
+                </Text>
+                <Text style={{ color: '#fff' }}>
+                  {/* {t('description.columncontent.footer.generalmedicine')} */}
+                  {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.SERVICE.CONTENT.GENERALMEDICINE}`)}v
+                </Text>
               </Space>
             </Col>
             <Col
@@ -139,21 +156,39 @@ const FooterLayout = () => {
             >
               <Space direction="vertical">
                 <Title level={3} style={{ color: '#fff' }}>
-                {t('description.columncontent.footer.link')}{' '}
+                  {/* {t('description.columncontent.footer.link')}{' '} */}
+                  {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.LINKS.TITLE}`)}
                 </Title>
-                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.homepage')}</Text>
-                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.doctor')}</Text>
-                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.service')}</Text>
-                <Text style={{ color: '#fff' }}>{t('description.columncontent.footer.contact')}</Text>
+                <Text style={{ color: '#fff' }}>
+                  {/* {t('description.columncontent.footer.homepage')} */}
+                  {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.LINKS.CONTENT.HOMEPAGE}`)}
+                </Text>
+                <Text style={{ color: '#fff' }}>
+                  {/* {t('description.columncontent.footer.doctor')} */}
+                  {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.LINKS.CONTENT.DOCTOR}`)}
+                </Text>
+                <Text style={{ color: '#fff' }}>
+                  {/* {t('description.columncontent.footer.service')} */}
+                  {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.LINKS.CONTENT.SERVICE}`)}
+                </Text>
+                <Text style={{ color: '#fff' }}>
+                  {/* {t('description.columncontent.footer.contact')} */}
+                  {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.LINKS.CONTENT.CONTACT}`)}
+                </Text>
               </Space>
             </Col>
             <Col xs={24} sm={24} md={24} lg={6}>
               <Space direction="vertical">
                 <Title level={3} style={{ color: '#fff' }}>
-                {t('description.columncontent.footer.newsletter')}
+                  {/* {t('description.columncontent.footer.newsletter')} */}
+                  {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.NEWSLETTER.TITLE}`)}
                 </Title>
                 <Text style={{ color: '#fff' }}>
-                  <Input size="large" placeholder={t('description.columncontent.footer.email')} />
+                  {/* <Input size="large" placeholder={t('description.columncontent.footer.email')} /> */}
+                  <Input
+                    size="large"
+                    placeholder={t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.NEWSLETTER.CONTENT.EMAIL}`)}
+                  />
                 </Text>
                 <Text style={{ color: '#fff' }}>
                   <Button
@@ -161,11 +196,13 @@ const FooterLayout = () => {
                     size="large"
                     style={{ width: '100%', backgroundColor: '#00ADB3' }}
                   >
-                    {t('description.columncontent.footer.register')}
+                    {/* {t('description.columncontent.footer.register')} */}
+                    {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.NEWSLETTER.CONTENT.REGISTER}`)}
                   </Button>
                 </Text>
                 <Text style={{ color: '#fff' }}>
-                {t('description.columncontent.footer.description')}
+                  {/* {t('description.columncontent.footer.description')} */}
+                  {t(`${TRANSLATIONS.FOOTERPAGE.COLUMN.NEWSLETTER.CONTENT.DESCRIPTION}`)}
                 </Text>
               </Space>
             </Col>

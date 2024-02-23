@@ -38,33 +38,18 @@ const formatDateBOD = (originalDate) => {
 };
 
 export default function History() {
+  // Constants
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [spinning, setSpinning] = useState(true);
-  const idUser = useSelector((state) => (state.client.client ? state.client.client.id : ''));
   const { id } = useParams();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
 
-  useEffect(() => {
-    if (listBooking == null) {
-      navigate('/error');
-    }
-  }, []);
-
-  useEffect(() => {
-    dispatch(fetchGetBookingByUserId(idUser)).then((item) => {
-      setTimeout(() => {
-        setSpinning(false);
-      }, 500);
-    });
-  }, []);
-
+  // Redux State
+  const idUser = useSelector((state) => (state.client.client ? state.client.client.id : ''));
   const userInfo = useSelector((state) => state.client.userinfo[0]);
   const listBooking = useSelector((state) => state.booking.listBooking);
-  const filteredArray = listBooking.filter((item) => item.id == id);
 
+  const filteredArray = listBooking.filter((item) => item.id == id);
   const data = filteredArray[0];
 
   const bookingInfo = {
@@ -93,7 +78,29 @@ export default function History() {
     status: data ? data.status : '',
   };
 
-  const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
+  // Local State
+  const [spinning, setSpinning] = useState(true);
+
+  // useEffect for loading data
+
+  // useEffect for user-related operations
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    if (listBooking == null) {
+      navigate('/error');
+    }
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchGetBookingByUserId(idUser)).then((item) => {
+      setTimeout(() => {
+        setSpinning(false);
+      }, 500);
+    });
+  }, []);
 
   return (
     <div

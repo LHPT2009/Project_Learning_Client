@@ -21,20 +21,20 @@ export default function LoginUser() {
   const { t } = useTranslation();
   const schema = yup
     .object({
-      username: yup
-        .string()
-        .required(t('description.columncontent.login.inputusername'))
-        .trim()
-        .matches(/^\S*$/, t('description.columncontent.register.conusername')),
-      password: yup
-        .string()
-        .trim()
-        .required(t('description.columncontent.login.inputpassword'))
-        .min(8, t('description.columncontent.register.conpass1'))
-        .matches(
-          /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
-          t('description.columncontent.register.conpass2')
-        ),
+      // username: yup
+      //   .string()
+      //   .required(t('description.columncontent.login.inputusername'))
+      //   .trim()
+      //   .matches(/^\S*$/, t('description.columncontent.register.conusername')),
+      // password: yup
+      //   .string()
+      //   .trim()
+      //   .required(t('description.columncontent.login.inputpassword'))
+      //   .min(8, t('description.columncontent.register.conpass1'))
+      //   .matches(
+      //     /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
+      //     t('description.columncontent.register.conpass2')
+      //   ),
     })
     .required();
   useEffect(() => {

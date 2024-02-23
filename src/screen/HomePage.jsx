@@ -29,6 +29,8 @@ import { fetchSpecialists } from '../features/Specialist/specialistSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import { TRANSLATIONS } from '../constants';
+
 const { Content } = Layout;
 
 const customImageStyle = {
@@ -55,7 +57,7 @@ const HomePage = () => {
     window.scrollTo(0, 0);
   }, []);
   const navigate = useNavigate();
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
   const [spinning, setSpinning] = useState(true);
 
   const { Text, Title } = Typography;
@@ -116,13 +118,16 @@ const HomePage = () => {
               >
                 <Space direction="vertical">
                   <Title level={4} style={{ color: '#fff', lineHeight: '20px' }}>
-                    {t('description.columncontent.homepage.welcome')}
+                    {/* {t('description.columncontent.homepage.welcome')} */}
+                    {t(`${TRANSLATIONS.HOMEPAGE.PANNER.WELCOME}`)}
                   </Title>
                   <Title level={2} style={{ color: '#fff', fontWeight: 'bold', lineHeight: '0px' }}>
-                    {t('description.columncontent.homepage.service')}{' '}
+                    {/* {t('description.columncontent.homepage.service')}{' '} */}
+                    {t(`${TRANSLATIONS.HOMEPAGE.PANNER.SERVICE}`)}
                   </Title>
                   <Title level={2} style={{ color: '#fff', fontWeight: 'bold', lineHeight: '0px' }}>
-                    {t('description.columncontent.homepage.health')}{' '}
+                    {/* {t('description.columncontent.homepage.health')}{' '} */}
+                    {t(`${TRANSLATIONS.HOMEPAGE.PANNER.HEALTH}`)}
                   </Title>
                 </Space>
               </Col>
@@ -157,13 +162,16 @@ const HomePage = () => {
               >
                 <Space direction="vertical">
                   <Title level={4} style={{ color: '#fff', lineHeight: '20px' }}>
-                    {t('description.columncontent.homepage.welcome')}
+                    {/* {t('description.columncontent.homepage.welcome')} */}
+                    {t(`${TRANSLATIONS.HOMEPAGE.PANNER.WELCOME}`)}
                   </Title>
                   <Title level={2} style={{ color: '#fff', fontWeight: 'bold', lineHeight: '0px' }}>
-                    {t('description.columncontent.homepage.service')}{' '}
+                    {/* {t('description.columncontent.homepage.service')}{' '} */}
+                    {t(`${TRANSLATIONS.HOMEPAGE.PANNER.SERVICE}`)}
                   </Title>
                   <Title level={2} style={{ color: '#fff', fontWeight: 'bold', lineHeight: '0px' }}>
-                    {t('description.columncontent.homepage.health')}{' '}
+                    {/* {t('description.columncontent.homepage.health')}{' '} */}
+                    {t(`${TRANSLATIONS.HOMEPAGE.PANNER.HEALTH}`)}
                   </Title>
                 </Space>
               </Col>
@@ -198,13 +206,16 @@ const HomePage = () => {
               >
                 <Space direction="vertical">
                   <Title level={4} style={{ color: '#fff', lineHeight: '20px' }}>
-                    {t('description.columncontent.homepage.welcome')}
+                    {/* {t('description.columncontent.homepage.welcome')} */}
+                    {t(`${TRANSLATIONS.HOMEPAGE.PANNER.WELCOME}`)}
                   </Title>
                   <Title level={2} style={{ color: '#fff', fontWeight: 'bold', lineHeight: '0px' }}>
-                    {t('description.columncontent.homepage.service')}{' '}
+                    {/* {t('description.columncontent.homepage.service')}{' '} */}
+                    {t(`${TRANSLATIONS.HOMEPAGE.PANNER.SERVICE}`)}
                   </Title>
                   <Title level={2} style={{ color: '#fff', fontWeight: 'bold', lineHeight: '0px' }}>
-                    {t('description.columncontent.homepage.health')}{' '}
+                    {/* {t('description.columncontent.homepage.health')}{' '} */}
+                    {t(`${TRANSLATIONS.HOMEPAGE.PANNER.HEALTH}`)}
                   </Title>
                 </Space>
               </Col>
@@ -250,7 +261,8 @@ const HomePage = () => {
                   style={{ width: '71px', height: '66px' }}
                 />
                 <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  {t('description.columncontent.homepage.speciality')}{' '}
+                  {/* {t('description.columncontent.homepage.speciality')}{' '} */}
+                  {`${t(TRANSLATIONS.HOMEPAGE.BODY.COLUMN.SPECIALITY)}`}
                 </Title>
               </Space>
             </Button>
@@ -274,7 +286,8 @@ const HomePage = () => {
                   style={{ width: '71px', height: '66px' }}
                 />
                 <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  {t('description.columncontent.homepage.package')}{' '}
+                  {/* {t('description.columncontent.homepage.package')}{' '} */}
+                  {`${t(TRANSLATIONS.HOMEPAGE.BODY.COLUMN.PACKAGE)}`}
                 </Title>
               </Space>
             </Button>
@@ -298,7 +311,8 @@ const HomePage = () => {
                   style={{ width: '71px', height: '66px' }}
                 />
                 <Title level={4} style={{ color: '#005761', lineHeight: '10px' }}>
-                  {t('description.columncontent.homepage.facility')}{' '}
+                  {/* {t('description.columncontent.homepage.facility')}{' '} */}
+                  {`${t(TRANSLATIONS.HOMEPAGE.BODY.COLUMN.FACILITY)}`}
                 </Title>
               </Space>
             </Button>
@@ -322,7 +336,8 @@ const HomePage = () => {
                   style={{ width: '71px', height: '66px' }}
                 />
                 <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-                  {t('description.columncontent.homepage.life')}{' '}
+                  {/* {t('description.columncontent.homepage.life')}{' '} */}
+                  {`${t(TRANSLATIONS.HOMEPAGE.BODY.COLUMN.LIFE)}`}
                 </Title>
               </Space>
             </Button>
@@ -345,7 +360,8 @@ const HomePage = () => {
             }}
           >
             <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-              {t('description.columncontent.homepage.facility')}{' '}
+              {/* {t('description.columncontent.homepage.facility')}{' '} */}
+              {`${t(TRANSLATIONS.HOMEPAGE.BODY.TITLE.SPECIALITY)}`}
             </Title>
           </Col>
           {specialists ? (
@@ -406,7 +422,8 @@ const HomePage = () => {
                   }}
                   onClick={() => navigate('/specialists')}
                 >
-                  {t('description.columncontent.homepage.seemore')}{' '}
+                  {/* {t('description.columncontent.homepage.seemore')}{' '} */}
+                  {`${t(TRANSLATIONS.HOMEPAGE.BODY.BUTTON)}`}
                 </Button>
               </Col>
             </>
@@ -441,7 +458,8 @@ const HomePage = () => {
             }}
           >
             <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
-              {t('description.columncontent.homepage.doctor')}{' '}
+              {/* {t('description.columncontent.homepage.doctor')}{' '} */}
+              {`${t(TRANSLATIONS.HOMEPAGE.BODY.TITLE.DOCTOR)}`}
             </Title>
           </Col>
           {doctors ? (
@@ -473,7 +491,7 @@ const HomePage = () => {
                       <Title level={4} style={{ color: '#005761', lineHeight: '20px' }}>
                         {item.fullNameDoctor}
                       </Title>
-                      <Text>{item.specialityId[0].name}</Text>
+                      <Text>{item.speciality[0].name}</Text>
                       <Rate disabled defaultValue={5} />
                     </Space>
                   </Button>
