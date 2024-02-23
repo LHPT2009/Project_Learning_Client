@@ -2,18 +2,12 @@ import axiosClient from './axiosClient';
 
 const bookingApi = {
   getBookingByUserId: async (id) => {
-    const url = `/api/booking/findBookingByUserId/${id}`;
-    try {
-      const response = await axiosClient.get(url);
-      return response;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
+    const url = `/booking/findBookingByUserId/${id}`;
+    return await axiosClient.get(url);
   },
-  sendMailBooking(data) {
-    const url = `/api/booking/sendEmail`;
-    return axiosClient.post(url, data);
+  sendMailBooking: async (data) => {
+    const url = `/booking/sendEmail`;
+    return await axiosClient.post(url, data);
   },
 };
 

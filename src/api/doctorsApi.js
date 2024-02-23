@@ -2,34 +2,16 @@ import axiosClient from './axiosClient';
 
 const doctorApi = {
   getDoctorsOutstanding: async (quantity) => {
-    const url = `/api/doctors/random?limit=${quantity}`;
-    try {
-      const response = await axiosClient.get(url);
-      return response;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
+    const url = `/doctors/random?limit=${quantity}`;
+    return await axiosClient.get(url);
   },
   getDoctorsBySpecialty: async (specialists) => {
-    const url = `/api/doctors/speciality/${specialists}`;
-    try {
-      const response = await axiosClient.get(url);
-      return response;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
+    const url = `/doctors/speciality/${specialists}`;
+    return await axiosClient.get(url);
   },
   getDoctorById: async (id) => {
-    const url = `/api/doctors/${id}`;
-    try {
-      const response = await axiosClient.get(url);
-      return response;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
+    const url = `/doctors/${id}`;
+    return await axiosClient.get(url);
   },
 };
 

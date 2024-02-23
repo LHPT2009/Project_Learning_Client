@@ -2,21 +2,13 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import clientApi from '../../api/clientApi';
 
 export const fetchClientLogin = createAsyncThunk('client/fetchClientLogin', async (userData) => {
-  try {
-    const response = await clientApi.login(userData);
-    return response.data;
-  } catch (err) {
-    return err.response;
-  }
+  const response = await clientApi.login(userData);
+  return response.data;
 });
 
 export const fetchregister = createAsyncThunk('user/fetchRegister', async (dataRegister) => {
-  try {
-    const response = await clientApi.register(dataRegister);
-    return response;
-  } catch (err) {
-    return err.response;
-  }
+  const response = await clientApi.register(dataRegister);
+  return response;
 });
 
 export const fetchGetUserById = createAsyncThunk('user/fetchGetUserById', async (id) => {
@@ -30,23 +22,15 @@ export const fetchForgot = createAsyncThunk('user/fetchForgot', async (dataForgo
 });
 
 export const updateNewPass = createAsyncThunk('user/updateNewPass', async (dataNewPass) => {
-  try {
-    const response = await clientApi.updateNewPass(dataNewPass);
-    return response.data;
-  } catch (err) {
-    return err.response;
-  }
+  const response = await clientApi.updateNewPass(dataNewPass);
+  return response.data;
 });
 
 export const changePassword = createAsyncThunk(
   'user/changePassword',
   async (dataChangePassword) => {
-    try {
-      const response = await clientApi.changePassword(dataChangePassword);
-      return response;
-    } catch (err) {
-      return err.response;
-    }
+    const response = await clientApi.changePassword(dataChangePassword);
+    return response;
   }
 );
 

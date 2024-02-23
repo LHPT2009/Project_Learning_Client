@@ -12,19 +12,22 @@ import { changePassword } from '../features/Client/clientSlice';
 import { useTranslation } from 'react-i18next';
 
 export default function ChangePassword() {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-  useEffect(() => {
-    if (checkuser == null) {
-      navigate('/error');
-    }
-  }, []);
+  // Constants
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const checkuser = useSelector((state) => state.client.client);
-
+  const customImageStyle = {
+    backgroundImage: `url(${bgform})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundColor: '#005761',
+    height: '100vh',
+    padding: '50px 0px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  };
   const schema = yup
     .object({
       oldPass: yup
@@ -56,19 +59,47 @@ export default function ChangePassword() {
         ),
     })
     .required();
-
-  const [spinning, setSpinning] = useState(true);
-  setTimeout(() => {
-    setSpinning(false);
-  }, 500);
-
   const {
     control,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
+  const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
+  const password = watch('password', '');
+  const repassword = watch('repassword', '');
+  const passwordsMatch = password === repassword;
 
+  // Redux State
+  const checkuser = useSelector((state) => state.client.client);
+
+  // Local State
+  const [spinning, setSpinning] = useState(true);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+
+  // useEffect for loading data
+
+  // useEffect for user-related operations
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
+    if (checkuser == null) {
+      navigate('/error');
+    }
+  }, []);
+  setTimeout(() => {
+    setSpinning(false);
+  }, 500);
+  useEffect(() => {
+    if (!passwordsMatch) {
+      setIsSubmitDisabled(true);
+    } else {
+      setIsSubmitDisabled(false);
+    }
+  }, [password, repassword, passwordsMatch]);
+
+  // Event Handlers
   const onSubmit = async (data) => {
     const dataChangePass = {
       oldPass: data.oldPass,
@@ -82,7 +113,6 @@ export default function ChangePassword() {
             style: { marginTop: '7vh' },
             content: t('description.columncontent.changepass.success'),
           });
-          // console.log('ĐỔI MẬT KHẨU THÀNH CÔNG');
           navigate('/userdetail/:id');
         } else if (
           response.payload &&
@@ -92,44 +122,11 @@ export default function ChangePassword() {
             style: { marginTop: '7vh' },
             content: t('description.columncontent.changepass.error'),
           });
-        // message.error('Mật khẩu cũ của bạn chưa đúng');
-        //console.log('check pass thong tin', response.payload.statusCode);
       });
     } catch (error) {
       console.error('Error while submitting form:', error);
     }
-
   };
-  // Theo dõi giá trị của trường password và repassword
-  const password = watch('password', '');
-  const repassword = watch('repassword', '');
-
-  // Kiểm tra mật khẩu
-  const passwordsMatch = password === repassword;
-
-  // Sử dụng useEffect để cập nhật trạng thái của nút "Submit"
-  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
-  useEffect(() => {
-    if (!passwordsMatch) {
-      setIsSubmitDisabled(true);
-    } else {
-      setIsSubmitDisabled(false);
-    }
-  }, [password, repassword, passwordsMatch]);
-  const customImageStyle = {
-    backgroundImage: `url(${bgform})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundColor: '#005761',
-    height: '100vh',
-    padding: '50px 0px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  };
-
-  const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
 
   return (
     <div style={customImageStyle}>

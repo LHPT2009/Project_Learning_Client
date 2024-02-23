@@ -1,13 +1,13 @@
 import axiosClient from './axiosClient';
 
 const transactionApi = {
-  createTransaction(data) {
-    const url = `/api/transaction/createTransaction`;
-    return axiosClient.post(url, data);
+  createTransaction: async (data) => {
+    const url = `/transaction/createTransaction`;
+    return await axiosClient.post(url, data);
   },
-  transactionCallback(vnp_Response, datarequest) {
-    const url = `/api/transaction/callback?vnp_Response=${vnp_Response}`;
-    return axiosClient.post(url, datarequest);
+  transactionCallback: async (vnp_Response, datarequest) => {
+    const url = `/transaction/callback?vnp_Response=${vnp_Response}`;
+    return await axiosClient.post(url, datarequest);
   },
 };
 

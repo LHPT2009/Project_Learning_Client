@@ -8,14 +8,12 @@ export const fetchGetBookingByUserId = createAsyncThunk(
     return response.data;
   }
 );
+
 export const fetchSendMail = createAsyncThunk('booking/fetchSendMail', async (data) => {
-  try {
-    const response = await bookingApi.sendMailBooking(data);
-    return response.data;
-  } catch (error) {
-    return error.response;
-  }
+  const response = await bookingApi.sendMailBooking(data);
+  return response.data;
 });
+
 const bookingSlice = createSlice({
   name: 'booking',
   initialState: {

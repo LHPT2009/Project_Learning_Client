@@ -10,12 +10,10 @@ import {
   Avatar,
   Row,
   Col,
-  Flex,
-  Input,
   Dropdown,
   message,
 } from 'antd';
-import { MenuOutlined, SearchOutlined, DownOutlined } from '@ant-design/icons';
+import { MenuOutlined, DownOutlined } from '@ant-design/icons';
 import LogoClinic from '../../asset/image/Logo.png';
 import America from '../../asset/image/America.png';
 import Vietnam from '../../asset/image/Vietnam.png';
@@ -28,6 +26,7 @@ import { fetchGetUserById } from '../../features/Client/clientSlice';
 import { fetchGetBookingByUserId } from '../../features/Booking/bookingSlice';
 import { fetchAllSpecialists } from '../../features/Specialist/specialistSlice';
 import Cookies from 'js-cookie';
+import { TRANSLATIONS } from '../../constants';
 
 const { Header } = Layout;
 
@@ -37,7 +36,7 @@ const lngs = {
 };
 
 const MenuComponent = () => {
-  const { i18n, t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [openMenu, setOpenMenu] = useState(false);
   const { Option } = Select;
@@ -166,7 +165,6 @@ const MenuComponent = () => {
                     style={{ width: '80px', backgroundColor: '#1E212D' }}
                     onChange={(value) => {
                       i18n.changeLanguage(value);
-                      localStorage.setItem('i18nextLng', value);
                     }}
                   >
                     {Object.keys(lngs).map((lng) => (
@@ -190,7 +188,7 @@ const MenuComponent = () => {
                         style={{ backgroundColor: '#00ADB3', width: '120px' }}
                         onClick={() => loaddataListspecialists()}
                       >
-                        {t('description.headercontent.booking')}
+                        {t(`${TRANSLATIONS.HEADERPAGE.BUTTONBOOKING}`)}
                       </Button>
                     </Menu.Item>
                     <Menu.Item>
@@ -199,18 +197,19 @@ const MenuComponent = () => {
                         overlay={
                           <Menu>
                             <Menu.Item key="1" onClick={loaddataBeforeRoute}>
-                              {t('description.headercontent.info')}
+                              {t(`${TRANSLATIONS.HEADERPAGE.BUTTONINFO}`)}
                             </Menu.Item>
                             <Menu.Item key="2" onClick={logoutAccount}>
-                              {t('description.headercontent.logout')}
+                              {t(`${TRANSLATIONS.HEADERPAGE.BUTTONLOGOUT}`)}
                             </Menu.Item>
                           </Menu>
                         }
                         placement="bottom"
                       >
                         <Button type="link" style={{ color: '#fff', height: '45px' }}>
-                          {`${t('description.headercontent.welcome')} ${User ? User.fullName : ''}`}
-
+                          {`${t(`${TRANSLATIONS.HOMEPAGE.PANNER.WELCOME}`)} ${
+                            User ? User.fullName : ''
+                          }`}
                           <DownOutlined />
                           <Avatar
                             style={{
@@ -230,9 +229,9 @@ const MenuComponent = () => {
                         type="primary"
                         size="large"
                         style={{ backgroundColor: '#00ADB3', width: '120px' }}
-                        onClick={() => setOpenMenu(false)}
+                        onClick={() => loaddataListspecialists()}
                       >
-                        {t('description.headercontent.booking')}
+                        {t(`${TRANSLATIONS.HEADERPAGE.BUTTONBOOKING}`)}
                       </Button>
                     </Menu.Item>
                     <Menu.Item>
@@ -242,7 +241,7 @@ const MenuComponent = () => {
                         style={{ backgroundColor: '#00ADB3', width: '120px' }}
                         onClick={routeLogin}
                       >
-                        {t('description.headercontent.login')}
+                        {t(`${TRANSLATIONS.HEADERPAGE.BUTTONLOGIN}`)}
                       </Button>
                     </Menu.Item>
                     <Menu.Item>
@@ -257,7 +256,7 @@ const MenuComponent = () => {
                         }}
                         onClick={routeRegister}
                       >
-                        {t('description.headercontent.register')}
+                        {t(`${TRANSLATIONS.HEADERPAGE.BUTTONREGISTER}`)}
                       </Button>
                     </Menu.Item>
                   </>
@@ -358,7 +357,8 @@ const MenuComponent = () => {
               }}
               onClick={() => loaddataListspecialists()}
             >
-              {t('description.headercontent.booking')}
+              {/* {t('description.headercontent.booking')} */}
+              {TRANSLATIONS.HEADERPAGE.BUTTONBOOKING}
             </Button>
           </Menu.Item>
           {User !== null ? (
@@ -371,10 +371,12 @@ const MenuComponent = () => {
                   overlay={
                     <Menu>
                       <Menu.Item key="1" onClick={loaddataBeforeRoute}>
-                        {t('description.headercontent.info')}
+                        {/* {t('description.headercontent.info')} */}
+                        {TRANSLATIONS.HEADERPAGE.BUTTONINFO}
                       </Menu.Item>
                       <Menu.Item key="2" onClick={logoutAccount}>
-                        {t('description.headercontent.logout')}
+                        {/* {t('description.headercontent.logout')} */}
+                        {TRANSLATIONS.HEADERPAGE.BUTTONLOGOUT}
                       </Menu.Item>
                     </Menu>
                   }
@@ -389,7 +391,8 @@ const MenuComponent = () => {
                       width: openMenu ? '100%' : '120px',
                     }}
                   >
-                    {`${t('description.headercontent.welcome')} ${User ? User.fullName : ''}`}
+                    {/* {`${t('description.headercontent.welcome')} ${User ? User.fullName : ''}`} */}
+                    {`${TRANSLATIONS.HOMEPAGE.WELCOME} ${User ? User.fullName : ''}`}
                     <DownOutlined />
                     <Avatar
                       style={{
@@ -413,7 +416,8 @@ const MenuComponent = () => {
                   style={{ backgroundColor: '#00ADB3', width: openMenu ? '100%' : '120px' }}
                   onClick={routeLogin}
                 >
-                  {t('description.headercontent.login')}
+                  {/* {t('description.headercontent.login')} */}
+                  {TRANSLATIONS.HEADERPAGE.BUTTONLOGIN}
                 </Button>
               </Menu.Item>
               <Menu.Item
@@ -433,7 +437,8 @@ const MenuComponent = () => {
                   }}
                   onClick={routeRegister}
                 >
-                  {t('description.headercontent.register')}
+                  {/* {t('description.headercontent.register')} */}
+                  {TRANSLATIONS.HEADERPAGE.BUTTONREGISTER}
                 </Button>
               </Menu.Item>
             </>

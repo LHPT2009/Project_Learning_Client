@@ -25,72 +25,40 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-const { Content } = Layout;
-
-const dayMappingvn = {
-  Monday: 'Thứ 2',
-  Tuesday: 'Thứ 3',
-  Wednesday: 'Thứ 4',
-  Thursday: 'Thứ 5',
-  Friday: 'Thứ 6',
-  Saturday: 'Thứ 7',
-  Sunday: 'Chủ nhật',
-};
-
-function formatTimeRange(inputTime) {
-  // Chia chuỗi thành mảng các phần tử
-  var times = inputTime.split(' - ');
-
-  // Chuyển đổi định dạng cho từng phần tử
-  var formattedTimes = times.map(function (time) {
-    var parts = time.split(':');
-    var hours = parts[0];
-    var minutes = parts[1];
-
-    // Thêm "h" vào giữa giờ và phút
-    return hours + 'h' + minutes;
-  });
-
-  // Kết hợp lại thành chuỗi mới
-  var formattedRange = formattedTimes.join(' - ');
-
-  return formattedRange;
-}
-
-function formatDate(inputDateString) {
-  const originalDate = new Date(inputDateString);
-
-  const year = originalDate.getFullYear();
-  const month = (originalDate.getMonth() + 1).toString().padStart(2, '0');
-  const day = originalDate.getDate().toString().padStart(2, '0');
-
-  const formattedDate = `${year}-${month}-${day}`;
-
-  return formattedDate;
-}
-
-function formatDateShow(inputDateString) {
-  const originalDate = new Date(inputDateString);
-
-  const year = originalDate.getFullYear();
-  const month = (originalDate.getMonth() + 1).toString().padStart(2, '0');
-  const day = originalDate.getDate().toString().padStart(2, '0');
-
-  // const formattedDate = `${year}-${month}-${day}`;
-  const formattedDate = `${day}-${month}-${year}`;
-
-  return formattedDate;
-}
 
 export default function Booking() {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  // Constants
   const navigate = useNavigate();
-  const [spinning, setSpinning] = useState(true);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const { Text, Title } = Typography;
+  const { Content } = Layout;
+  const formatter = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  });
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+  const radioStyle = {
+    display: 'block',
+  };
+  const RadioGroup = Radio.Group;
+  const dayMappingvn = {
+    Monday: 'Thứ 2',
+    Tuesday: 'Thứ 3',
+    Wednesday: 'Thứ 4',
+    Thursday: 'Thứ 5',
+    Friday: 'Thứ 6',
+    Saturday: 'Thứ 7',
+    Sunday: 'Chủ nhật',
+  };
+  const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
 
+  // Local State
+  const [spinning, setSpinning] = useState(true);
+
+  // Redux State
   const infoBooking = useSelector((state) => state.booking.infoBooking);
   const infoUser = useSelector((state) => state.client.client);
   const listPayment = useSelector((state) => state.payment.payments);
@@ -120,32 +88,57 @@ export default function Booking() {
     },
   });
 
-  const { Text, Title } = Typography;
+  // useEffect for user-related operations
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-  const formatter = new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-  });
+  useEffect(() => {
+    setTimeout(() => {
+      setSpinning(false);
+    }, 500);
+  }, [infoBooking]);
 
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
-  const radioStyle = {
-    display: 'block',
-  };
-  const RadioGroup = Radio.Group;
-
-  const isValidURL = (url) => {
-    var urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- ;,./?%&=]*)?$/;
-    return urlPattern.test(url);
-  };
-
+  // Event Handlers
   const isURL = (str) => {
-    // Regex pattern for a simple URL validation
     const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
-
     return urlRegex.test(str);
+  };
+
+  const formatTimeRange = (inputTime) => {
+    var times = inputTime.split(' - ');
+    var formattedTimes = times.map(function (time) {
+      var parts = time.split(':');
+      var hours = parts[0];
+      var minutes = parts[1];
+
+      return hours + 'h' + minutes;
+    });
+
+    var formattedRange = formattedTimes.join(' - ');
+
+    return formattedRange;
+  };
+
+  const formatDate = (inputDateString) => {
+    const originalDate = new Date(inputDateString);
+
+    const year = originalDate.getFullYear();
+    const month = (originalDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = originalDate.getDate().toString().padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+    return formattedDate;
+  };
+
+  const formatDateShow = (inputDateString) => {
+    const originalDate = new Date(inputDateString);
+    const year = originalDate.getFullYear();
+    const month = (originalDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = originalDate.getDate().toString().padStart(2, '0');
+    const formattedDate = `${day}-${month}-${year}`;
+    return formattedDate;
   };
 
   const sendBooking = (data) => {
@@ -171,7 +164,6 @@ export default function Booking() {
             });
             navigate('/success/cash');
             setSpinning(false);
-            // fetch ra
             dispatch(fetchSendMail(formatsending));
           } else if (
             item.payload &&
@@ -224,14 +216,6 @@ export default function Booking() {
         });
     }
   };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setSpinning(false);
-    }, 500);
-  }, [infoBooking]);
-
-  const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
 
   if (infoBooking && infoUser && infoDoctor && listPayment && listPayment.length > 0) {
     return (

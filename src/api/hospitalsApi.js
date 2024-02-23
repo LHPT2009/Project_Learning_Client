@@ -1,9 +1,9 @@
 import axiosClient from './axiosClient';
 
 const hospitalsApi = {
-  getHospitalsOutstanding(quantity) {
-    const url = `/api/hospital/random?limit=${quantity}`;
-    return axiosClient.get(url);
+  getHospitalsOutstanding: async (quantity) => {
+    const url = `/hospital/random?limit=${quantity}`;
+    return await axiosClient.get(url);
   },
 };
 
