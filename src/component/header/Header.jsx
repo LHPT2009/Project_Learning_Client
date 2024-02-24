@@ -64,6 +64,8 @@ const MenuComponent = () => {
     dispatch(fetchClientLogout());
     Cookies.remove('accessToken');
     Cookies.remove('refreshToken');
+    Cookies.remove('tokenExpirationMs');
+    Cookies.remove('refreshTokenExpirationMs');
     navigate('/login');
   };
 
@@ -78,24 +80,10 @@ const MenuComponent = () => {
   };
 
   const loadDataBeforeRoute = async () => {
-    try {
-      dispatch(fetchRefreshToken()).then((item) => {
-        console.log(item);
-      });
-      // await dispatch(fetchCheckAccessToken()).then((item) => {
-      //   console.log(item.payload.message);
-      //   if (item.payload && item.payload.message === 'INVALID_JWT_TOKEN') {
-      //   }
-      // });
-      // console.log(checkAuth.message);
-      // if()
-      // setOpenMenu(false);
-      // await dispatch(fetchGetBookingByUserId(User.id));
-      // await dispatch(fetchGetUserById(User.id));
-      // navigate('/userdetail/1');
-    } catch (error) {
-      console.log('Catch err: ', error.response);
-    }
+    setOpenMenu(false);
+    await dispatch(fetchGetBookingByUserId(User.id));
+    await dispatch(fetchGetUserById(User.id));
+    navigate('/userdetail/1');
   };
 
   const loadDataListSpecialists = async () => {

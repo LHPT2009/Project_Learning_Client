@@ -24,6 +24,8 @@ import { useForm, Controller } from 'react-hook-form';
 import IconAvatar from '../../asset/image/Icon_Avatar.png';
 import { fetchGetUserById } from './clientSlice';
 import { fetchGetBookingByUserId } from '../Booking/bookingSlice';
+import { TRANSLATIONS } from '../../constants';
+import { useTranslation } from 'react-i18next';
 
 const schema = yup.object().shape({
   fullname: yup.string().required('Vui lòng nhập tên bệnh viện'),
@@ -81,6 +83,7 @@ const UserDetail = () => {
   // Constants
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { id } = useParams();
   const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
   const { Text } = Typography;
@@ -163,46 +166,46 @@ const UserDetail = () => {
   //Format Columns
   const columns = [
     {
-      title: 'Mã hóa đơn',
+      title: t(`${TRANSLATIONS.USERDETAIL.CODEBILL}`),
       dataIndex: 'id',
       key: 'id',
     },
     {
-      title: 'Mã code',
+      title: t(`${TRANSLATIONS.USERDETAIL.CODE}`),
       dataIndex: 'code',
       key: 'code',
     },
     {
-      title: 'Ngày đặt',
+      title: t(`${TRANSLATIONS.USERDETAIL.DAYBOOKING}`),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (text, record) => <Text>{formatDateTime(text)}</Text>,
     },
     {
-      title: 'Bác sĩ',
+      title: t(`${TRANSLATIONS.USERDETAIL.DOCTOR}`),
       dataIndex: 'fullNameDoctor',
       key: 'fullNameDoctor',
     },
     {
-      title: 'Bắt đầu',
+      title: t(`${TRANSLATIONS.USERDETAIL.START}`),
       dataIndex: 'bookingTimeStart',
       key: 'bookingTimeStart',
       render: (text, record) => <Text>{formatTime(text)}</Text>,
     },
     {
-      title: 'Kết thúc',
+      title: t(`${TRANSLATIONS.USERDETAIL.END}`),
       dataIndex: 'bookingTimeEnd',
       key: 'bookingTimeEnd',
       render: (text, record) => <Text>{formatTime(text)}</Text>,
     },
     {
-      title: 'Ngày Khám',
+      title: t(`${TRANSLATIONS.USERDETAIL.DAYEXAMINATION}`),
       dataIndex: 'bookingDate',
       key: 'bookingDate',
       render: (text, record) => <Text>{formatDate(text)}</Text>,
     },
     {
-      title: 'Trạng thái giao dịch',
+      title: t(`${TRANSLATIONS.USERDETAIL.PAYSTATUS}`),
       dataIndex: 'statusTransaction',
       key: 'statusTransaction',
       render: (text, record) => {
@@ -211,15 +214,15 @@ const UserDetail = () => {
         switch (text) {
           case 'SUCCESS':
             buttonStyle = { backgroundColor: '#B0EEA6', color: 'black' };
-            text = 'Đã thanh toán';
+            text = t(`${TRANSLATIONS.USERDETAIL.PAYSTATUS1}`);
             break;
           case 'PENDING':
             buttonStyle = { backgroundColor: '#E7DE0D', color: 'black' };
-            text = 'Chưa thanh toán';
+            text = t(`${TRANSLATIONS.USERDETAIL.PAYSTATUS2}`);
             break;
           case 'CANCELED':
             buttonStyle = { backgroundColor: '#E7515A', color: 'black' };
-            text = 'Đã hủy';
+            text = t(`${TRANSLATIONS.USERDETAIL.PAYSTATUS3}`);
             break;
           default:
             break;
@@ -231,13 +234,13 @@ const UserDetail = () => {
           </Button>
         ) : (
           <Button size="small" style={buttonStyle} disabled>
-            Chưa cập nhật
+            {t(`${TRANSLATIONS.USERDETAIL.YETUPDATE}`)}
           </Button>
         );
       },
     },
     {
-      title: 'Trạng thái đặt lịch',
+      title: t(`${TRANSLATIONS.USERDETAIL.BOOKINGSTATUS}`),
       dataIndex: 'status',
       key: 'status',
       render: (text, record) => {
@@ -246,15 +249,15 @@ const UserDetail = () => {
         switch (text) {
           case 'FINISHED':
             buttonStyle = { backgroundColor: '#b3efa9', color: 'black' };
-            text = 'Hoàn thành';
+            text = t(`${TRANSLATIONS.USERDETAIL.BOOKINGSTATUS1}`);
             break;
           case 'BOOKED':
             buttonStyle = { backgroundColor: '#f9f69f', color: 'black' };
-            text = 'Đã đặt';
+            text = t(`${TRANSLATIONS.USERDETAIL.BOOKINGSTATUS2}`);
             break;
           case 'CANCELED':
             buttonStyle = { backgroundColor: '#f3a5aa', color: 'black' };
-            text = 'Đã hủy';
+            text = t(`${TRANSLATIONS.USERDETAIL.BOOKINGSTATUS3}`);
             break;
           default:
             break;
@@ -266,7 +269,7 @@ const UserDetail = () => {
           </Button>
         ) : (
           <Button size="small" style={buttonStyle} disabled>
-            Chưa cập nhật
+            {t(`${TRANSLATIONS.USERDETAIL.YETUPDATE}`)}
           </Button>
         );
       },
@@ -283,7 +286,7 @@ const UserDetail = () => {
             style={{ backgroundColor: '#00ADB3' }}
             onClick={() => navigate(`/history/${id}`)}
           >
-            Chi tiết
+            {t(`${TRANSLATIONS.USERDETAIL.DETAIL}`)}
           </Button>
         );
       },
@@ -308,10 +311,10 @@ const UserDetail = () => {
         }}
         items={[
           {
-            label: 'Thông Tin Cá Nhân',
+            label: t(`${TRANSLATIONS.USERDETAIL.INFO}`),
             key: '1',
             children: (
-              <Card title="Thông Tin Cá Nhân">
+              <Card title={t(`${TRANSLATIONS.USERDETAIL.INFO}`)}>
                 <Row>
                   <Col flex={8}>
                     <Space
@@ -333,7 +336,7 @@ const UserDetail = () => {
                         src={IconAvatar}
                       />
                       <Button disabled type="primary" size="large">
-                        Cập nhật ảnh mới
+                        {t(`${TRANSLATIONS.USERDETAIL.IMAGE}`)}
                       </Button>
                     </Space>
                   </Col>
@@ -346,7 +349,7 @@ const UserDetail = () => {
                         // requiredMark={customizeRequiredMark}
                       >
                         <Form.Item
-                          label="Họ và Tên"
+                          label={t(`${TRANSLATIONS.USERDETAIL.FULLNAME}`)}
                           name="fullname"
                           help={<span style={{ color: 'red' }}>{errors.fullname?.message}</span>}
                         >
@@ -364,7 +367,7 @@ const UserDetail = () => {
                           />
                         </Form.Item>
                         <Form.Item
-                          label="Giới Tính"
+                          label={t(`${TRANSLATIONS.USERDETAIL.GENDER}`)}
                           name="gender"
                           help={<span style={{ color: 'red' }}>{errors.gender?.message}</span>}
                         >
@@ -382,7 +385,7 @@ const UserDetail = () => {
                           />
                         </Form.Item>
                         <Form.Item
-                          label="Ngày sinh"
+                          label={t(`${TRANSLATIONS.USERDETAIL.BIRTHDAY}`)}
                           name="dateOfBirth"
                           help={<span style={{ color: 'red' }}>{errors.dateOfBirth?.message}</span>}
                         >
@@ -400,7 +403,7 @@ const UserDetail = () => {
                           />
                         </Form.Item>
                         <Form.Item
-                          label="Số điện thoại"
+                          label={t(`${TRANSLATIONS.USERDETAIL.PHONE}`)}
                           name="phone"
                           help={<span style={{ color: 'red' }}>{errors.phone?.message}</span>}
                         >
@@ -431,7 +434,7 @@ const UserDetail = () => {
                           />
                         </Form.Item>
                         <Form.Item
-                          label="Địa chỉ"
+                          label={t(`${TRANSLATIONS.USERDETAIL.ADDRESS}`)}
                           name="address"
                           help={<span style={{ color: 'red' }}>{errors.address?.message}</span>}
                         >
@@ -465,7 +468,7 @@ const UserDetail = () => {
                                 htmlType="submit"
                                 onClick={routeChangePass}
                               >
-                                Thay đổi mật khẩu
+                                {t(`${TRANSLATIONS.USERDETAIL.BUTTON}`)}
                               </Button>
                             </Form.Item>
                           </Col>
@@ -478,14 +481,18 @@ const UserDetail = () => {
             ),
           },
           {
-            label: 'Lịch Sử Khám',
+            label: t(`${TRANSLATIONS.USERDETAIL.HISTORY}`),
             key: '2',
             children: (
               <>
                 <Table
                   dataSource={listBooking}
                   columns={columns}
-                  title={() => <Text style={{ fontSize: '24px' }}>Lịch sử khám</Text>}
+                  title={() => (
+                    <Text style={{ fontSize: '24px' }}>
+                      {t(`${TRANSLATIONS.USERDETAIL.HISTORY}`)}
+                    </Text>
+                  )}
                   bordered
                 />
               </>

@@ -40,7 +40,7 @@ export default function ChangePassword() {
         .min(8, t(`${VALIDATE.CHANGEPASSWORD.OLDPASS.MIN}`))
         .matches(
           /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
-          t(`${VALIDATE.OLDPASS.MATCHES}`)
+          t(`${VALIDATE.CHANGEPASSWORD.OLDPASS.MATCHES}`)
         ),
       password: yup
         .string()

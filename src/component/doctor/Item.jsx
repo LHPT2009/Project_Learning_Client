@@ -11,6 +11,7 @@ import { addInfoBooking } from '../../features/Booking/bookingSlice';
 import { fetchGetDoctorById } from '../../features/Doctor/doctorSlice';
 import { fetchPayments } from '../../features/Payment/paymentSlice';
 import { useTranslation } from 'react-i18next';
+import { TRANSLATIONS, MESSAGE } from '../../constants';
 dayjs.extend(timezone);
 dayjs.locale('en');
 
@@ -64,9 +65,6 @@ const DataItem = ({ dataItem }) => {
   });
 
   // useEffect for loading data
-  useEffect(() => {
-    CalDate();
-  }, []);
 
   // useEffect for user-related operations
 
@@ -128,6 +126,10 @@ const DataItem = ({ dataItem }) => {
     }
   };
 
+  useEffect(() => {
+    CalDate();
+  }, [dataItem]);
+
   const formatInfo = {
     idDoctor: dataItem.id,
     bookingDay: day,
@@ -137,20 +139,24 @@ const DataItem = ({ dataItem }) => {
     idPackage: idPackage,
     namePackage: namePackage,
     pricePakage: pricePakage,
+    avatarDoctor: dataItem.avatar,
+    fullNameDoctor: dataItem.fullName,
+    hospitalsName: dataItem.nameHospital,
   };
 
   const addInfo = () => {
-    if (idSchedules === null && timeSchedules === null) {
+    message.destroy();
+    if (idSchedules === undefined && timeSchedules === undefined) {
       message.error({
         style: { marginTop: '7vh' },
         content: 'Chọn thời gian của bạn!',
       });
-    } else if (idPackage === null && pricePakage === null) {
+    } else if (idPackage === undefined && pricePakage === undefined) {
       message.error({
         style: { marginTop: '7vh' },
         content: 'Chọn gói khám của bạn!',
       });
-    } else if (checkUser === null) {
+    } else if (checkUser === undefined) {
       message.error({
         style: { marginTop: '7vh' },
         content: 'Mời bạn đăng nhập!',
@@ -199,7 +205,7 @@ const DataItem = ({ dataItem }) => {
                   level={4}
                   style={{ lineHeight: '20px', color: '#005761', fontWeight: 'bold' }}
                 >
-                  {t('description.columncontent.item.doctor')} {dataItem.fullName}
+                  {t(`${TRANSLATIONS.ITEM.DOCTOR}`)} {dataItem.fullName}
                 </Title>
                 <Text style={{ lineHeight: '20px' }}>{dataItem.description}</Text>
                 <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
@@ -213,7 +219,7 @@ const DataItem = ({ dataItem }) => {
         <Col xs={24} sm={12} md={12} lg={12} xl={8}>
           <Space direction="vertical">
             <Select
-              placeholder={t('description.columncontent.item.choiceday')}
+              placeholder={t(`${TRANSLATIONS.ITEM.CHOICEDAY}`)}
               style={{ width: 250 }}
               onChange={(value, option) => {
                 if (option) {
@@ -235,7 +241,7 @@ const DataItem = ({ dataItem }) => {
             </Select>
             <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
               <CalendarOutlined style={{ marginRight: '5px', color: '#005761' }} />
-              {t('description.columncontent.item.calendar')}
+              {t(`${TRANSLATIONS.ITEM.CALENDAR}`)}
             </Text>
             <Flex wrap="wrap" gap="small">
               {sortArrFilterSchedules.length !== 0 ? (
@@ -262,22 +268,22 @@ const DataItem = ({ dataItem }) => {
               ) : (
                 <>
                   <Button type="default" style={{ width: '200px' }} disabled>
-                    {t('description.columncontent.item.nocalendar')}
+                    {t(`${TRANSLATIONS.ITEM.NOCALENDAR}`)}
                   </Button>
                 </>
               )}
             </Flex>
-            <Text style={{ lineHeight: '20px' }}>{t('description.columncontent.item.choice')}</Text>
+            <Text style={{ lineHeight: '20px' }}>{t(`${TRANSLATIONS.ITEM.CHOICE}`)}</Text>
             <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-              {t('description.columncontent.item.address')}
+              {t(`${TRANSLATIONS.ITEM.ADDRESS}`)}
             </Text>
             <Text style={{ lineHeight: '10px' }}>{dataItem.nameHospital}</Text>
             <Text style={{ lineHeight: '10px' }}>{dataItem.addressHospital}</Text>
             <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-              {t('description.columncontent.item.price')}
+              {t(`${TRANSLATIONS.ITEM.PRICE}`)}
             </Text>
             <Select
-              defaultValue={t('description.columncontent.item.choicepackage')}
+              defaultValue={t(`${TRANSLATIONS.ITEM.CHOICEPACKAGE}`)}
               style={{ width: 250 }}
               onChange={(packageId) => {
                 getInfoPackage(packageId);
@@ -296,13 +302,13 @@ const DataItem = ({ dataItem }) => {
               ))}
             </Select>
             <Text style={{ lineHeight: '20px', fontWeight: 'bold' }}>
-              {t('description.columncontent.item.insurance')}{' '}
+              {t(`${TRANSLATIONS.ITEM.INSURANCE}`)}{' '}
               <Link
                 href="https://ant.design"
                 target="_blank"
                 style={{ lineHeight: '20px', fontWeight: 'lighter', color: '#00ADB3' }}
               >
-                {t('description.columncontent.item.detail')}
+                {t(`${TRANSLATIONS.ITEM.DETAIL}`)}
               </Link>
             </Text>
             {checkUser !== null ? (
@@ -313,7 +319,7 @@ const DataItem = ({ dataItem }) => {
                   style={{ width: 250, backgroundColor: '#00ADB3' }}
                   onClick={() => addInfo()}
                 >
-                  {t('description.columncontent.item.booking')}
+                  {t(`${TRANSLATIONS.ITEM.BOOKING}`)}
                 </Button>
               </>
             ) : (
@@ -324,7 +330,7 @@ const DataItem = ({ dataItem }) => {
                     size="middle"
                     style={{ width: 250, backgroundColor: '#00ADB3' }}
                   >
-                    {t('description.columncontent.item.require')}
+                    {t(`${TRANSLATIONS.ITEM.REQUIRE}`)}
                   </Button>
                 </Link>
               </>

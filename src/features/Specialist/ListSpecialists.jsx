@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAllSpecialists } from './specialistSlice';
 import { useNavigate } from 'react-router-dom';
+import { TRANSLATIONS } from '../../constants';
 
 const ListSpecialists = () => {
   // Constants
@@ -108,10 +109,10 @@ const ListSpecialists = () => {
           <Breadcrumb
             items={[
               {
-                title: 'Trang chủ',
+                title:  t(`${TRANSLATIONS.LISTSPECIALISTS.TITLE1}`),
               },
               {
-                title: 'Danh sách chuyên khoa',
+                title: t(`${TRANSLATIONS.LISTSPECIALISTS.TITLE2}`),
               },
             ]}
           />
@@ -120,7 +121,7 @@ const ListSpecialists = () => {
           <Input
             width={'100%'}
             onChange={(e) => setKeyword(e.target.value)}
-            placeholder="Nhập tên chuyên khoa bạn muốn tìm..."
+            placeholder={t(`${TRANSLATIONS.LISTSPECIALISTS.SEARCH}`)}
             size="large"
           />
         </Row>
