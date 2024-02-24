@@ -30,6 +30,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { TRANSLATIONS } from '../../constants';
+import CheckToken from '../../utils/CheckToken';
+import { fetchRefreshToken } from 'features/Jwt/jwtSlice';
+import Cookies from 'js-cookie';
+
+import { logout } from 'features/Client/clientSlice';
+import { fetchClientLogout } from '../../features/Client/clientSlice';
 
 //Style CSS
 const customImageStyle = {
@@ -70,6 +76,7 @@ const HomePage = () => {
   // useEffect for loading data
   useEffect(() => {
     window.scrollTo(0, 0);
+    checkTokenAccesstoken(CheckToken());
   }, []);
 
   useEffect(() => {
@@ -101,6 +108,22 @@ const HomePage = () => {
       return url;
     } catch (error) {
       return imageDefault;
+    }
+  };
+
+  const checkTokenAccesstoken = (item) => {
+    if (item === 1) {
+      dispatch(fetchRefreshToken()).then((item) => {
+        Cookies.set('accessToken', item.payload.accessToken);
+        Cookies.set('tokenExpirationMs', item.payload.tokenExpirationMs);
+      });
+    } else if (item === 2) {
+      dispatch(logout());
+      dispatch(fetchClientLogout());
+      Cookies.remove('accessToken');
+      Cookies.remove('refreshToken');
+      Cookies.remove('tokenExpirationMs');
+      Cookies.remove('refreshTokenExpirationMs');
     }
   };
 

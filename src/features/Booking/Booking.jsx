@@ -25,6 +25,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import { fetchPayments } from '../../features/Payment/paymentSlice';
+import { TRANSLATIONS, MESSAGE } from '../../constants';
 
 export default function Booking() {
   // Constants
@@ -63,12 +65,11 @@ export default function Booking() {
   const infoUser = useSelector((state) => state.client.client);
   const listPayment = useSelector((state) => state.payment.payments);
   const loadFullDataUser = useSelector((state) => state.client.userinfo[0]);
-  const infoDoctor = useSelector((state) => state.doctor.doctorsbyid);
 
   const schema = yup
     .object({
       // description: yup.string().required('Hãy ghi lý do đến khám!'),
-      idPaymentMethod: yup.string().required('Chọn phương thức thanh toán!'),
+      idPaymentMethod: yup.string().required(t(`${TRANSLATIONS.BOOKING.REQUIREPAY}`)),
     })
     .required();
 
@@ -91,6 +92,7 @@ export default function Booking() {
   // useEffect for user-related operations
   useEffect(() => {
     window.scrollTo(0, 0);
+    dispatch(fetchPayments());
   }, []);
 
   useEffect(() => {
@@ -119,6 +121,7 @@ export default function Booking() {
 
     return formattedRange;
   };
+  console.log(formatTimeRange);
 
   function formatISODateToDDMMYYYY(isoDateString) {
     const inputDate = new Date(isoDateString);
@@ -164,7 +167,7 @@ export default function Booking() {
           if (item.payload && item.payload === 'Transaction created successfully') {
             message.success({
               style: { marginTop: '7vh' },
-              content: 'Đã đặt lịch thành công!',
+              content: t(`${TRANSLATIONS.BOOKING.SUCCESS}`),
             });
             navigate('/success/cash');
             setSpinning(false);
@@ -175,7 +178,7 @@ export default function Booking() {
           ) {
             message.error({
               style: { marginTop: '7vh' },
-              content: 'Lịch Khám này đã được đặt bởi người khác!',
+              content: t(`${TRANSLATIONS.BOOKING.ERROR}`),
             });
             setSpinning(false);
           }
@@ -198,7 +201,7 @@ export default function Booking() {
           if (checkUrl) {
             message.loading({
               style: { marginTop: '7vh' },
-              content: `Đang xử lý đặt lịch!`,
+              content: t(`${TRANSLATIONS.BOOKING.LOADING}`),
             });
             navigate('/success/vnpay');
             window.open(`${item.payload}`, '_blank');
@@ -206,7 +209,7 @@ export default function Booking() {
           } else {
             message.error({
               style: { marginTop: '7vh' },
-              content: 'Lịch Khám này đã được đặt bởi người khác!',
+              content: t(`${TRANSLATIONS.BOOKING.ERROR}`),
             });
             setSpinning(false);
           }
@@ -221,7 +224,7 @@ export default function Booking() {
     }
   };
 
-  if (infoBooking && infoUser && infoDoctor && listPayment && listPayment.length > 0) {
+  if (infoBooking && infoUser && listPayment && listPayment.length > 0) {
     return (
       <>
         <Spin
@@ -252,7 +255,7 @@ export default function Booking() {
               color: '#005761',
             }}
           >
-            {t('description.columncontent.booking.title')}
+            {t(`${TRANSLATIONS.BOOKING.TITLE}`)}
           </Title>
           <Content
             style={{
@@ -260,7 +263,7 @@ export default function Booking() {
             }}
           >
             <Title level={3} style={{ color: '#005761' }}>
-              {t('description.columncontent.booking.doctor')}
+              {t(`${TRANSLATIONS.BOOKING.DOCTOR}`)}
             </Title>
             <Row>
               <Col
@@ -270,32 +273,37 @@ export default function Booking() {
                 lg={6}
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
-                <Avatar size={150} icon={<UserOutlined />} src={infoDoctor?.image} />
+                <Avatar size={150} icon={<UserOutlined />} src={infoBooking?.avatarDoctor} />
               </Col>
               <Col xs={24} sm={24} md={24} lg={18}>
                 <Space direction="vertical">
                   <Title level={3} style={{ color: '#005761' }}>
-                    {t('description.columncontent.booking.specialist')} {infoDoctor.fullNameDoctor}
+                    {t(`${TRANSLATIONS.BOOKING.SPECIALIST}`)} {infoBooking.fullNameDoctor}
                   </Title>
-                  <Text>Tên bệnh viện: {infoDoctor.hospitalsName}</Text>
+                  {/* <Text>{t('description.columncontent.booking.namehospital')}: {infoDoctor.hospitalsName}</Text> */}
                   <Text>
-                    {/* {t('description.columncontent.booking.day')}{' '} */}
-                    Gói khám: {infoBooking.namePackage}
+                    {t(`${TRANSLATIONS.BOOKING.NAMEHOSPITAL}`)}: {infoBooking.hospitalsName}
                   </Text>
                   <Text>
                     {/* {t('description.columncontent.booking.day')}{' '} */}
-                    Khung giờ: {formatTimeRange(infoBooking.timeScheduleDetail)}
+                    {t(`${TRANSLATIONS.BOOKING.PACKAGE}`)}: {infoBooking.namePackage}
                   </Text>
                   <Text>
-                    {t('description.columncontent.booking.day')}{' '}
-                    {dayMappingvn[infoBooking.bookingDay]} -{' '}
+                    {/* {t('description.columncontent.booking.day')}{' '} */}
+                    {t(`${TRANSLATIONS.BOOKING.TIME}`)}:{' '}
+                    {formatTimeRange(infoBooking.timeScheduleDetail)}
+                  </Text>
+                  <Text>
+                    {/* {t('description.columncontent.booking.day')}{' '}
+                     */}
+                    {t(`${TRANSLATIONS.BOOKING.DAY}`)} {dayMappingvn[infoBooking.bookingDay]} -{' '}
                     {formatDateShow(infoBooking.bookingDate)}
                   </Text>
                 </Space>
               </Col>
             </Row>
             <Title level={3} style={{ color: '#005761' }}>
-              {t('description.columncontent.booking.customer')}
+              {t(`${TRANSLATIONS.BOOKING.CUSTOMER.TITLE}`)}
             </Title>
             <Row>
               <Col xs={24} sm={24} md={24} lg={24}>
@@ -500,7 +508,7 @@ export default function Booking() {
         />
         <Result
           status="warning"
-          title="Bạn vẫn chưa thông tin đặt"
+          title={t(`${TRANSLATIONS.BOOKING.TITLERESULT}`)}
           extra={
             <Button
               type="primary"
@@ -508,7 +516,7 @@ export default function Booking() {
               onClick={() => navigate('/')}
               style={{ backgroundColor: '#00ADB3' }}
             >
-              Trở về trang chủ
+              {t(`${TRANSLATIONS.BOOKING.BACK}`)}
             </Button>
           }
         />

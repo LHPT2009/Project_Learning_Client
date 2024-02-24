@@ -14,6 +14,7 @@ import { loginClient, fetchGetUserById } from './clientSlice';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { TRANSLATIONS, PLACEHOLDER, MESSAGE, VALIDATE } from '../../constants';
+
 export default function LoginUser() {
   // Constants
   const { t } = useTranslation();
@@ -83,8 +84,10 @@ export default function LoginUser() {
       if (response && response.data.token) {
         if (response.data.roles.includes('ROLE_USER')) {
           await dispatch(loginClient(response.data));
-          Cookies.set('accessToken', response.data.token, { expires: 1 });
-          Cookies.set('refreshToken', response.data.refreshToken, { expires: 1 });
+          Cookies.set('accessToken', response.data.token);
+          Cookies.set('refreshToken', response.data.refreshToken);
+          Cookies.set('tokenExpirationMs', response.data.tokenExpirationMs);
+          Cookies.set('refreshTokenExpirationMs', response.data.refreshTokenExpirationMs);
           updateAuthorizationHeader();
           dispatch(fetchGetUserById(response.data.id));
           if (checkgoback === null) {

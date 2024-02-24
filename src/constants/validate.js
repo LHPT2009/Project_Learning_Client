@@ -19,6 +19,7 @@ export const VALIDATE = {
            CONPASS2:  'description.columncontent.register.conpass2',        
         },
         FULLNAME: 'description.columncontent.register.inputfullname',
+        FULLNAME1: 'description.columncontent.register.inputfullname1',
         GENDER: 'description.columncontent.register.inputgender',
         DATEOFBIRTH: {
             INPUT: 'description.columncontent.register.inputdateOfBirth',

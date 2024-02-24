@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { TRANSLATIONS } from '../../constants';
 const { Title } = Typography;
 
 export default function Success() {
@@ -99,7 +100,7 @@ export default function Success() {
               preview={false}
             />
             <Title level={2} style={{ lineHeight: '15px' }}>
-              {t('description.columncontent.success.title')}
+            {t(`${TRANSLATIONS.SUCCESS.TITLE}`)}
             </Title>
             <Button
               type="primary"
@@ -107,7 +108,7 @@ export default function Success() {
               onClick={() => navigate('/')}
               style={{ backgroundColor: '#00ADB3' }}
             >
-              {t('description.columncontent.success.buttonback')}
+              {t(`${TRANSLATIONS.SUCCESS.BUTTON}`)}
             </Button>
           </Space>
         </div>
@@ -148,7 +149,7 @@ export default function Success() {
                 preview={false}
               />
               <Title level={2} style={{ lineHeight: '15px' }}>
-                {t('description.columncontent.success.title')}
+              {t(`${TRANSLATIONS.SUCCESS.TITLE}`)}
               </Title>
               <Button
                 type="primary"
@@ -156,7 +157,7 @@ export default function Success() {
                 onClick={() => navigate('/')}
                 style={{ backgroundColor: '#00ADB3' }}
               >
-                {t('description.columncontent.success.buttonback')}
+                {t(`${TRANSLATIONS.SUCCESS.BUTTON}`)}
               </Button>
             </Space>
           </div>
@@ -190,7 +191,7 @@ export default function Success() {
                 onClick={() => navigate('/booking')}
                 style={{ backgroundColor: '#00ADB3' }}
               >
-                {t('description.columncontent.success.buttonbackbooking')}
+                {t(`${TRANSLATIONS.SUCCESS.BUTTONRESULT}`)}
               </Button>
             }
           />
@@ -214,7 +215,7 @@ export default function Success() {
             fullscreen
             style={{ background: '#ECF3F4' }}
           /> */}
-          <Result status="info" title="Mời bạn chờ đến bước thanh toán tiếp theo..." />
+          <Result status="info" title={t(`${TRANSLATIONS.SUCCESS.TITLE2}`)} />
         </div>
       );
     }

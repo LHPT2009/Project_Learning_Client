@@ -37,7 +37,9 @@ export default function Register() {
           /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z])\S{8,}$/,
           t(`${VALIDATE.REGISTER.PASSWORD.CONPASS2}`)
         ),
-      fullname: yup.string().trim().required(t(`${VALIDATE.REGISTER.FULLNAME}`)),
+      fullname: yup.string().trim()
+      .min(4, t(`${VALIDATE.REGISTER.FULLNAME1}`))
+      .required(t(`${VALIDATE.REGISTER.FULLNAME}`)),
       gender: yup.string().required(t(`${VALIDATE.REGISTER.GENDER}`)),
       dateOfBirth: yup
         .date()
