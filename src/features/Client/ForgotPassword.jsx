@@ -86,7 +86,7 @@ export default function ForgotPassword() {
             content: t(`${MESSAGE.FORGOTPASSWORD.SUCCESS}`),
           });
           navigate('/forgot');
-        } else if (response.payload && response.payload.data === 'ERR_EMAIL_NOT_EXISTED')
+        } else if (response.payload && response.payload.data.message === 'ERR_EMAIL_NOT_EXISTED')
           message.error({
             style: { marginTop: '7vh' },
             content: t(`${MESSAGE.FORGOTPASSWORD.ERROR}`),

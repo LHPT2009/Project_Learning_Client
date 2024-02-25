@@ -49,11 +49,18 @@ export default function Success() {
   console.log(vnp, statusPayment);
   // Event Handlers
   const loadVNP = async () => {
-    if (statusPayment === 'cash' && requestData !== null) {
+    if (
+      statusPayment === 'cash'
+      // && requestData !== null
+    ) {
       console.log('Cash đang làm việc!');
       dispatch(clearInfoBooking());
       dispatch(clearTempBooking());
-    } else if (statusPayment === 'vnpay' && vnp !== null && requestData !== null) {
+    } else if (
+      statusPayment === 'vnpay' &&
+      vnp !== null
+      // && requestData !== null
+    ) {
       if (vnp === '00') {
         console.log('Vnpay đang làm việc!');
         dispatch(fetchTransactionCallback({ vnp: vnp, data: requestData }));
@@ -66,7 +73,7 @@ export default function Success() {
     }
   };
 
-  if (statusPayment === 'cash') {
+  if (statusPayment === 'cash' && requestData) {
     return (
       <div>
         <Spin
@@ -100,7 +107,7 @@ export default function Success() {
               preview={false}
             />
             <Title level={2} style={{ lineHeight: '15px' }}>
-            {t(`${TRANSLATIONS.SUCCESS.TITLE}`)}
+              {t(`${TRANSLATIONS.SUCCESS.TITLE}`)}
             </Title>
             <Button
               type="primary"
@@ -114,56 +121,30 @@ export default function Success() {
         </div>
       </div>
     );
+  }
+  if (statusPayment === 'cash' && !requestData) {
+    return (
+      <div
+        style={{
+          color: '#fff',
+          height: '80vh',
+          color: '#000',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Spin
+          spinning={spinning}
+          indicator={antIcon}
+          fullscreen
+          style={{ background: '#ECF3F4' }}
+        />
+        <Result status="warning" title={`Đơn thanh toán không tồn tại!`} />
+      </div>
+    );
   } else if (statusPayment === 'vnpay') {
-    if (vnp !== '24' && vnp !== null) {
-      return (
-        <div>
-          <Spin
-            spinning={spinning}
-            indicator={antIcon}
-            fullscreen
-            style={{ background: '#ECF3F4' }}
-          />
-          <div
-            style={{
-              background: '#ECF3F4',
-              height: '70vh',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Space
-              direction="vertical"
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Image
-                key="custom-image"
-                alt="Custom Image"
-                src={SuccessImage}
-                style={{ width: '237px', height: '237px' }}
-                preview={false}
-              />
-              <Title level={2} style={{ lineHeight: '15px' }}>
-              {t(`${TRANSLATIONS.SUCCESS.TITLE}`)}
-              </Title>
-              <Button
-                type="primary"
-                size="large"
-                onClick={() => navigate('/')}
-                style={{ backgroundColor: '#00ADB3' }}
-              >
-                {t(`${TRANSLATIONS.SUCCESS.BUTTON}`)}
-              </Button>
-            </Space>
-          </div>
-        </div>
-      );
-    } else if (vnp === '24' && vnp !== null) {
+    if (vnp === '24') {
       return (
         <div
           style={{
@@ -175,12 +156,12 @@ export default function Success() {
             justifyContent: 'center',
           }}
         >
-          {/* <Spin
+          <Spin
             spinning={spinning}
             indicator={antIcon}
             fullscreen
             style={{ background: '#ECF3F4' }}
-          /> */}
+          />
           <Result
             status="error"
             title="Thanh toán đã bị hủy!"
@@ -197,7 +178,7 @@ export default function Success() {
           />
         </div>
       );
-    } else if (vnp === null) {
+    } else if (vnp === '11') {
       return (
         <div
           style={{
@@ -209,13 +190,68 @@ export default function Success() {
             justifyContent: 'center',
           }}
         >
-          {/* <Spin
+          <Spin
             spinning={spinning}
             indicator={antIcon}
             fullscreen
             style={{ background: '#ECF3F4' }}
-          /> */}
+          />
+          <Result
+            status="error"
+            title="Thanh toán đã quá hạn sử dụng !"
+            extra={
+              <Button
+                type="primary"
+                key="console"
+                onClick={() => navigate('/booking')}
+                style={{ backgroundColor: '#00ADB3' }}
+              >
+                {t(`${TRANSLATIONS.SUCCESS.BUTTONRESULT}`)}
+              </Button>
+            }
+          />
+        </div>
+      );
+    } else if (vnp === null && requestData) {
+      return (
+        <div
+          style={{
+            color: '#fff',
+            height: '80vh',
+            color: '#000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Spin
+            spinning={spinning}
+            indicator={antIcon}
+            fullscreen
+            style={{ background: '#ECF3F4' }}
+          />
           <Result status="info" title={t(`${TRANSLATIONS.SUCCESS.TITLE2}`)} />
+        </div>
+      );
+    } else {
+      return (
+        <div
+          style={{
+            color: '#fff',
+            height: '80vh',
+            color: '#000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Spin
+            spinning={spinning}
+            indicator={antIcon}
+            fullscreen
+            style={{ background: '#ECF3F4' }}
+          />
+          <Result status="warning" title={`Đơn thanh toán không tồn tại!`} />
         </div>
       );
     }
