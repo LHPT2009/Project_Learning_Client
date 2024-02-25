@@ -26,7 +26,7 @@ import { fetchGetUserById, fetchClientLogout } from '../../features/Client/clien
 import { fetchGetBookingByUserId } from '../../features/Booking/bookingSlice';
 import { fetchAllSpecialists } from '../../features/Specialist/specialistSlice';
 import Cookies from 'js-cookie';
-import { TRANSLATIONS } from '../../constants';
+import { TRANSLATIONS,MESSAGE } from '../../constants';
 import { fetchCheckAccessToken, fetchRefreshToken } from 'features/Jwt/jwtSlice';
 
 const { Header } = Layout;
@@ -57,7 +57,7 @@ const MenuComponent = () => {
   const logoutAccount = () => {
     message.success({
       style: { marginTop: '7vh' },
-      content: 'Cảm ơn bạn đã sử dụng dịch vụ!',
+      content: t(`${MESSAGE.LOGOUT.CONTENTLOGOUT}`),
     });
     setOpenMenu(false);
     dispatch(logout());

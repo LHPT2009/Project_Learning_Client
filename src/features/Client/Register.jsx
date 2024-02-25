@@ -156,7 +156,10 @@ export default function Register() {
         }
       });
     } catch (error) {
-      console.error('Error while submitting form:', error);
+      message.error({
+        style: { marginTop: '7vh' },
+        content: t(`${MESSAGE.LOGIN.ERRORSERVER}`),
+      });
     }
   };
 

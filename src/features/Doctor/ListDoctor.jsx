@@ -9,7 +9,7 @@ import { fetchDoctorsBySpecialty } from './doctorSlice';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { Footer } from 'antd/es/layout/layout';
-import { TRANSLATIONS } from '../../constants';
+import { PLACEHOLDER, TRANSLATIONS } from '../../constants';
 const ListDotor = () => {
   // Constants
   const { Content, Header } = Layout;
@@ -124,7 +124,7 @@ const ListDotor = () => {
         <>
           <Result
             status="warning"
-            title="Đang trong quá trình xử lý..."
+            title={`${t(PLACEHOLDER.ALT)}`}
             style={{
               width: '100%',
               height: '70vh',

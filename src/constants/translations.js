@@ -154,6 +154,7 @@ export const TRANSLATIONS = {
     CONFIRMPASS: 'description.columncontent.reset.confirmpass',
     INPUTCONFIRMPASS: 'description.columncontent.reset.inputconfirmpass',
     PASSWORDSMATCH: 'description.columncontent.reset.passwordsMatch',
+    SUBMIT: 'description.columncontent.reset.submit',
   },
   BOOKING:{
     TITLE: 'description.columncontent.booking.title',
@@ -249,6 +250,10 @@ export const TRANSLATIONS = {
     DETAIL: 'description.columncontent.item.detail',
     BOOKING: 'description.columncontent.item.booking',
     REQUIRE: 'description.columncontent.item.require'
+  },
+  NOTFOUND: {
+    SUBTITLE: 'description.columncontent.notfound.subTitle',
+    BUTTON: 'description.columncontent.notfound.button'
 
   }
 

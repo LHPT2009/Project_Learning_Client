@@ -3,6 +3,7 @@ import { Result, Spin, Button } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { TRANSLATIONS } from '../../constants';
 
 export default function NotFound() {
   // Constants
@@ -43,7 +44,7 @@ export default function NotFound() {
       <Result
         status="404"
         title="404"
-        subTitle={t('description.columncontent.notfound.subTitle')}
+        subTitle={t(`${TRANSLATIONS.NOTFOUND.SUBTITLE}`)}
         extra={
           <Button
             type="primary"
@@ -51,7 +52,7 @@ export default function NotFound() {
             onClick={() => navigate('/')}
             style={{ backgroundColor: '#00ADB3' }}
           >
-            {t('description.columncontent.notfound.subTitle')}
+            {t(`${TRANSLATIONS.NOTFOUND.BUTTON}`)}
           </Button>
         }
       />

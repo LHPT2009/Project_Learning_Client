@@ -6,6 +6,9 @@ export const MESSAGE = {
     ERROR: 'description.columncontent.login.error',
     ERRORSERVER: 'description.columncontent.login.errorsever'
   },
+  LOGOUT: {
+    CONTENTLOGOUT: 'description.headercontent.contentlogout'
+  },
   REGISTER: {
     USERNAME: 'description.columncontent.register.existusername',
     EMAIL: 'description.columncontent.register.existemail',
