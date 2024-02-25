@@ -10,7 +10,7 @@ const translationsVN = {
       info: 'Thông tin cá nhân',
       logout: 'Đăng xuất',
       search: 'Tìm kiếm',
-      contentlogout: 'Cảm ơn bạn đã sử dụng dịch vụ!'
+      contentlogout: 'Cảm ơn bạn đã sử dụng dịch vụ!',
     },
     columncontent: {
       login: {
@@ -24,7 +24,7 @@ const translationsVN = {
         success: 'Mời bạn tiếp tục',
         role: 'Bạn không có quyền truy cập!',
         error: 'Tài khoản hoặc mật khẩu của bạn hiện đang không đúng!',
-        errorsever: 'Lỗi server!'
+        errorsever: 'Lỗi server!',
       },
       homepage: {
         welcome: 'Chào mừng bạn đến với HealthCare',
@@ -92,7 +92,7 @@ const translationsVN = {
         existphone: 'Số điện thoại đã tồn tại!',
         success: 'Đăng ký thành công!',
         error: 'Vui lòng điền đầy đủ thông tin!',
-        choiceday: 'Chọn ngày sinh'
+        choiceday: 'Chọn ngày sinh',
       },
       listdoctor: {
         title1: 'Cơ Xương Khớp',
@@ -122,8 +122,7 @@ const translationsVN = {
         choiceday: 'Chọn ngày',
         choicepackage: 'Chọn gói khám',
         choicetime: 'Chọn thời gian của bạn!',
-        login: 'Mời bạn đăng nhập!'
-    
+        login: 'Mời bạn đăng nhập!',
       },
       forgotpass: {
         title: 'Quên mật khẩu',
@@ -161,8 +160,8 @@ const translationsVN = {
         namehospital: 'Tên bệnh viện',
         package: 'Gói khám',
         time: 'Khung giờ',
-        titleresult: 'Bạn vẫn chưa thông tin đặt' ,
-        back: 'Trở về trang chủ'
+        titleresult: 'Bạn vẫn chưa thông tin đặt',
+        back: 'Trở về trang chủ',
       },
       notfound: {
         subTitle: 'Xin lỗi, những chúng tôi không tìm thấy trang của bạn.',
@@ -196,7 +195,10 @@ const translationsVN = {
         title: 'Bạn đã đặt lịch thành công!',
         buttonback: 'Trở lại trang chủ',
         buttonbackbooking: 'Trở về trang đặt lịch',
-        title2: 'Mời bạn chờ đến bước thanh toán tiếp theo...'
+        title2: 'Mời bạn chờ đến bước thanh toán tiếp theo...',
+        titlenotfound: 'Không có lịch trình!',
+        titleexpires: 'Hết hạn thanh toán!',
+        titlecancle: 'Thanh toán đã bị hủy!',
       },
       search: {
         specialist: 'Chuyên khoa',
@@ -264,14 +266,13 @@ const translationsVN = {
         button: 'Thay đổi mật khẩu',
         historybooking: 'Lịch sử khám',
       },
-      listspecialists:{
+      listspecialists: {
         title1: 'Trang chủ',
         title2: 'Danh sách chuyên khoa',
-        search: 'Nhập tên chuyên khoa bạn muốn tìm...'
+        search: 'Nhập tên chuyên khoa bạn muốn tìm...',
       },
-      atl: 'Đang cập nhật'
+      atl: 'Đang cập nhật',
     },
-    
   },
 };
 

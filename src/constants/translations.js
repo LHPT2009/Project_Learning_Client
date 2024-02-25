@@ -67,8 +67,8 @@ export const TRANSLATIONS = {
       USERNAME: 'description.columncontent.login.username',
       PASSWORD: 'description.columncontent.login.password',
       FORGOTPASS: 'description.columncontent.login.forgotpass',
-      SUBMIT: 'description.columncontent.login.submit'
-    }
+      SUBMIT: 'description.columncontent.login.submit',
+    },
   },
   REGISTER: {
     TITLE: 'description.columncontent.register.title',
@@ -76,8 +76,7 @@ export const TRANSLATIONS = {
       USERNAME: 'description.columncontent.register.username',
       PASSWORD: 'description.columncontent.register.password',
       FULLNAME: 'description.columncontent.register.fullname',
-      GENDER:
-      {
+      GENDER: {
         TITLE: 'description.columncontent.register.gender',
         MALE: 'description.columncontent.register.male',
         FEMALE: 'description.columncontent.register.female',
@@ -85,8 +84,8 @@ export const TRANSLATIONS = {
       DATEOFBIRTH: 'description.columncontent.register.dateOfBirth',
       PHONE: 'description.columncontent.register.phone',
       ADDRESS: 'description.columncontent.register.address',
-      BUTTON: 'description.columncontent.register.submit'
-    }
+      BUTTON: 'description.columncontent.register.submit',
+    },
   },
   HISTORY: {
     DISEASE: 'description.columncontent.history.disease',
@@ -125,7 +124,6 @@ export const TRANSLATIONS = {
     },
     RESULT: 'description.columncontent.history.result',
     UPDATING: 'description.columncontent.history.updating',
-
   },
   CHANGEPASSWORD: {
     TITLE: 'description.columncontent.changepass.title',
@@ -156,7 +154,7 @@ export const TRANSLATIONS = {
     PASSWORDSMATCH: 'description.columncontent.reset.passwordsMatch',
     SUBMIT: 'description.columncontent.reset.submit',
   },
-  BOOKING:{
+  BOOKING: {
     TITLE: 'description.columncontent.booking.title',
     REQUIREPAY: 'description.columncontent.booking.requirepay',
     SUCCESS: 'description.columncontent.booking.success',
@@ -182,44 +180,42 @@ export const TRANSLATIONS = {
     },
     COST: {
       PRICE: 'description.columncontent.booking.cost',
-      TOTAL: 'description.columncontent.booking.total'
+      TOTAL: 'description.columncontent.booking.total',
     },
-    BUTTON: 'description.columncontent.booking.confirm'
-       
+    BUTTON: 'description.columncontent.booking.confirm',
   },
   USERDETAIL: {
-   CODEBILL: 'description.columncontent.userdetail.codeBill',
-   CODE: 'description.columncontent.userdetail.code',
-   DAYBOOKING: 'description.columncontent.userdetail.daybooking',
-   DOCTOR: 'description.columncontent.userdetail.doctor',
-   START: 'description.columncontent.userdetail.start',
-   END: 'description.columncontent.userdetail.end',
-   DAYEXAMINATION: 'description.columncontent.userdetail.dayexamination',
-   PAYSTATUS: 'description.columncontent.userdetail.paystatus',
-   PAYSTATUS1: 'description.columncontent.userdetail.paystatus1',
-   PAYSTATUS2: 'description.columncontent.userdetail.paystatus2',
-   PAYSTATUS3: 'description.columncontent.userdetail.paystatus3',
-   YETUPDATE: 'description.columncontent.userdetail.yetupdate',
-   BOOKINGSTATUS: 'description.columncontent.userdetail.bookingstatus',
-   BOOKINGSTATUS1: 'description.columncontent.userdetail.bookingstatus1',
-   BOOKINGSTATUS2: 'description.columncontent.userdetail.bookingstatus2',
-   BOOKINGSTATUS3: 'description.columncontent.userdetail.bookingstatus3',
-   DETAIL: 'description.columncontent.userdetail.detail',
-   INFO: 'description.columncontent.userdetail.info',
-   IMAGE: 'description.columncontent.userdetail.image',
-   FULLNAME: 'description.columncontent.userdetail.fullname',
-   GENDER: 'description.columncontent.userdetail.gender',
-   BIRTHDAY: 'description.columncontent.userdetail.birthday',
-   PHONE: 'description.columncontent.userdetail.phone',
-   ADDRESS: 'description.columncontent.userdetail.address',
-   BUTTON: 'description.columncontent.userdetail.button',
-   HISTORY: 'description.columncontent.userdetail.historybooking',
-
+    CODEBILL: 'description.columncontent.userdetail.codeBill',
+    CODE: 'description.columncontent.userdetail.code',
+    DAYBOOKING: 'description.columncontent.userdetail.daybooking',
+    DOCTOR: 'description.columncontent.userdetail.doctor',
+    START: 'description.columncontent.userdetail.start',
+    END: 'description.columncontent.userdetail.end',
+    DAYEXAMINATION: 'description.columncontent.userdetail.dayexamination',
+    PAYSTATUS: 'description.columncontent.userdetail.paystatus',
+    PAYSTATUS1: 'description.columncontent.userdetail.paystatus1',
+    PAYSTATUS2: 'description.columncontent.userdetail.paystatus2',
+    PAYSTATUS3: 'description.columncontent.userdetail.paystatus3',
+    YETUPDATE: 'description.columncontent.userdetail.yetupdate',
+    BOOKINGSTATUS: 'description.columncontent.userdetail.bookingstatus',
+    BOOKINGSTATUS1: 'description.columncontent.userdetail.bookingstatus1',
+    BOOKINGSTATUS2: 'description.columncontent.userdetail.bookingstatus2',
+    BOOKINGSTATUS3: 'description.columncontent.userdetail.bookingstatus3',
+    DETAIL: 'description.columncontent.userdetail.detail',
+    INFO: 'description.columncontent.userdetail.info',
+    IMAGE: 'description.columncontent.userdetail.image',
+    FULLNAME: 'description.columncontent.userdetail.fullname',
+    GENDER: 'description.columncontent.userdetail.gender',
+    BIRTHDAY: 'description.columncontent.userdetail.birthday',
+    PHONE: 'description.columncontent.userdetail.phone',
+    ADDRESS: 'description.columncontent.userdetail.address',
+    BUTTON: 'description.columncontent.userdetail.button',
+    HISTORY: 'description.columncontent.userdetail.historybooking',
   },
-  LISTSPECIALISTS:{
+  LISTSPECIALISTS: {
     TITLE1: 'description.columncontent.listspecialists.title1',
     TITLE2: 'description.columncontent.listspecialists.title1',
-    SEARCH: 'description.columncontent.listspecialists.search'
+    SEARCH: 'description.columncontent.listspecialists.search',
   },
   LISTDOCTOR: {
     TITLE1: 'description.columncontent.listdoctor.title1',
@@ -235,7 +231,10 @@ export const TRANSLATIONS = {
     TITLE: 'description.columncontent.success.title',
     BUTTON: 'description.columncontent.success.buttonback',
     BUTTONRESULT: 'description.columncontent.success.buttonbackbooking',
-    TITLE2: 'description.columncontent.success.title2'
+    TITLE2: 'description.columncontent.success.title2',
+    TITLENOTFOUND: 'description.columncontent.success.titlenotfound',
+    TITLEEXPIRES: 'description.columncontent.success.titleexpires',
+    TITLECANCLE: 'description.columncontent.success.titlecancle',
   },
   ITEM: {
     DOCTOR: 'description.columncontent.item.doctor',
@@ -249,13 +248,10 @@ export const TRANSLATIONS = {
     INSURANCE: 'description.columncontent.item.insurance',
     DETAIL: 'description.columncontent.item.detail',
     BOOKING: 'description.columncontent.item.booking',
-    REQUIRE: 'description.columncontent.item.require'
+    REQUIRE: 'description.columncontent.item.require',
   },
   NOTFOUND: {
     SUBTITLE: 'description.columncontent.notfound.subTitle',
-    BUTTON: 'description.columncontent.notfound.button'
-
-  }
-
-
+    BUTTON: 'description.columncontent.notfound.button',
+  },
 };

@@ -46,29 +46,18 @@ export default function Success() {
       loadVNP();
     }
   });
-  console.log(vnp, statusPayment);
   // Event Handlers
   const loadVNP = async () => {
-    if (
-      statusPayment === 'cash'
-      // && requestData !== null
-    ) {
-      console.log('Cash đang làm việc!');
+    if (statusPayment === 'cash') {
       dispatch(clearInfoBooking());
       dispatch(clearTempBooking());
-    } else if (
-      statusPayment === 'vnpay' &&
-      vnp !== null
-      // && requestData !== null
-    ) {
+    } else if (statusPayment === 'vnpay' && vnp !== null) {
       if (vnp === '00') {
-        console.log('Vnpay đang làm việc!');
         dispatch(fetchTransactionCallback({ vnp: vnp, data: requestData }));
         dispatch(clearInfoBooking());
         dispatch(clearTempBooking());
       } else {
         dispatch(fetchUpdateScheduleStatus(requestData));
-        console.log('Vào Vnpay nhưng ko làm việc!');
       }
     }
   };
@@ -140,7 +129,7 @@ export default function Success() {
           fullscreen
           style={{ background: '#ECF3F4' }}
         />
-        <Result status="warning" title={`Đơn thanh toán không tồn tại!`} />
+        <Result status="warning" title={t(`${TRANSLATIONS.SUCCESS.TITLENOTFOUND}`)} />
       </div>
     );
   } else if (statusPayment === 'vnpay') {
@@ -164,7 +153,7 @@ export default function Success() {
           />
           <Result
             status="error"
-            title="Thanh toán đã bị hủy!"
+            title={t(`${TRANSLATIONS.SUCCESS.TITLECANCLE}`)}
             extra={
               <Button
                 type="primary"
@@ -198,7 +187,7 @@ export default function Success() {
           />
           <Result
             status="error"
-            title="Thanh toán đã quá hạn sử dụng !"
+            title={t(`${TRANSLATIONS.SUCCESS.TITLEEXPIRES}`)}
             extra={
               <Button
                 type="primary"
@@ -251,7 +240,7 @@ export default function Success() {
             fullscreen
             style={{ background: '#ECF3F4' }}
           />
-          <Result status="warning" title={`Đơn thanh toán không tồn tại!`} />
+          <Result status="warning" title={t(`${TRANSLATIONS.SUCCESS.TITLENOTFOUND}`)} />
         </div>
       );
     }

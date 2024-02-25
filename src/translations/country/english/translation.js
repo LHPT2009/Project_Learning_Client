@@ -10,7 +10,7 @@ const translationsEN = {
       info: 'Personal Information',
       logout: 'Logout',
       search: 'Search',
-      contentlogout: 'Thank you for using the service!'
+      contentlogout: 'Thank you for using the service!',
     },
     columncontent: {
       login: {
@@ -24,7 +24,7 @@ const translationsEN = {
         success: 'Please continue',
         role: "You don't have access!",
         error: 'Your account or password is currently incorrect!',
-        errorsever: 'Server error!'
+        errorsever: 'Server error!',
       },
       homepage: {
         welcome: 'Welcome to HealthCare',
@@ -91,7 +91,7 @@ const translationsEN = {
         existphone: 'Phone number already exists!',
         success: 'Registration successful!',
         error: 'Please fill in all required information!',
-        choiceday: 'Choose your date of birth'
+        choiceday: 'Choose your date of birth',
       },
       listdoctor: {
         title1: 'Orthopedics',
@@ -121,8 +121,7 @@ const translationsEN = {
         choiceday: 'Select day',
         choicepackage: 'Select package',
         choicetime: 'Choose your time!',
-        login: 'Please log in!'
-
+        login: 'Please log in!',
       },
       forgotpass: {
         title: 'Forgot password',
@@ -130,11 +129,10 @@ const translationsEN = {
         submit: 'Reset your password',
         success: 'Submitted!',
         error: 'Your email is not correct!',
-        text1: "Check your email to take the next step to change your password",
-        text2: "If not found email, just",
-        text3: "email us again!",
-        back: "back"
-
+        text1: 'Check your email to take the next step to change your password',
+        text2: 'If not found email, just',
+        text3: 'email us again!',
+        back: 'back',
       },
       booking: {
         title: 'Appointment Booking',
@@ -162,7 +160,7 @@ const translationsEN = {
         package: 'Package',
         time: 'Time Slot',
         titleresult: "You still haven't provided booking information",
-        back: 'Back to Homepage'
+        back: 'Back to Homepage',
       },
       notfound: {
         subTitle: "Sorry, we couldn't find the page you're looking for.",
@@ -189,13 +187,16 @@ const translationsEN = {
         submit: 'Submit',
         buttonback: 'Back to homepage',
         success: 'Update successful!',
-        error: 'Old Password incorrect'
+        error: 'Old Password incorrect',
       },
       success: {
         title: 'You have successfully booked an appointment!',
         buttonback: 'Return to homepage',
         buttonbackbooking: 'Return to booking page',
-        title2: 'Please wait until the next payment step...'
+        title2: 'Please wait until the next payment step...',
+        titlenotfound: 'No schedule!',
+        titleexpires: 'Payment expires!',
+        titlecancle: 'Payment has been cancelled!',
       },
       search: {
         specialist: 'Specialist',
@@ -217,7 +218,7 @@ const translationsEN = {
         choiceday: 'Select day',
         choicepackage: 'Select package',
         choicetime: 'Please select your times',
-        login: 'Please login!'
+        login: 'Please login!',
       },
       forgotpass: {
         title: 'Forgot password',
@@ -275,11 +276,6 @@ const translationsEN = {
         buttonback: 'Back to homepage',
         success: 'Update successful!',
         error: 'Your old password is not correct!',
-      },
-      success: {
-        title: 'You have successfully booked an appointment!',
-        buttonback: 'Return to homepage',
-        buttonbackbooking: 'Return to booking page',
       },
       search: {
         specialist: 'Specialist',
@@ -350,9 +346,9 @@ const translationsEN = {
       listspecialists: {
         title1: 'Home',
         title2: 'List of Specializations',
-        search: 'Enter the specialization name you want to find...'
+        search: 'Enter the specialization name you want to find...',
       },
-      atl: 'Updating'
+      atl: 'Updating',
     },
   },
 };

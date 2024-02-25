@@ -4,17 +4,17 @@ export const MESSAGE = {
     SUCCESS: 'description.columncontent.login.success',
     ROLE: 'description.columncontent.login.role',
     ERROR: 'description.columncontent.login.error',
-    ERRORSERVER: 'description.columncontent.login.errorsever'
+    ERRORSERVER: 'description.columncontent.login.errorsever',
   },
   LOGOUT: {
-    CONTENTLOGOUT: 'description.headercontent.contentlogout'
+    CONTENTLOGOUT: 'description.headercontent.contentlogout',
   },
   REGISTER: {
     USERNAME: 'description.columncontent.register.existusername',
     EMAIL: 'description.columncontent.register.existemail',
     PHONE: 'description.columncontent.register.existphone',
     SUCCESS: 'description.columncontent.register.success',
-    ERROR: 'description.columncontent.register.error'
+    ERROR: 'description.columncontent.register.error',
   },
 
   CHANGEPASSWORD: {
@@ -31,6 +31,7 @@ export const MESSAGE = {
   ITEM: {
     PACKAGE: 'description.columncontent.item.choicepackage',
     TIME: 'description.columncontent.item.choicetime',
-    LOGIN: 'description.columncontent.item.login'
-  }
+    LOGIN: 'description.columncontent.item.login',
+  },
+  SUCCESS: {},
 };
