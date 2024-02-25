@@ -139,6 +139,7 @@ export default function Register() {
     };
     try {
       await dispatch(fetchregister(dataRegister)).then((item) => {
+        console.log(item.payload)
         const checkStatus = item.payload ? item.payload.status || item.payload.statusCode : '';
         if (checkStatus === 200) {
           message.success({

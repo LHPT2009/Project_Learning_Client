@@ -1,4 +1,4 @@
-import './Style.css';
+import './style.css';
 import React, { useState } from 'react';
 import {
   Drawer,

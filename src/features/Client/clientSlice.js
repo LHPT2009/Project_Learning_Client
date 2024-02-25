@@ -7,8 +7,12 @@ export const fetchClientLogin = createAsyncThunk('client/fetchClientLogin', asyn
 });
 
 export const fetchregister = createAsyncThunk('user/fetchRegister', async (dataRegister) => {
-  const response = await clientApi.register(dataRegister);
-  return response;
+  try {
+    const response = await clientApi.register(dataRegister);
+    return response;
+  } catch (err) {
+    return err.response;
+  }
 });
 
 export const fetchGetUserById = createAsyncThunk('user/fetchGetUserById', async (id) => {
@@ -17,8 +21,16 @@ export const fetchGetUserById = createAsyncThunk('user/fetchGetUserById', async 
 });
 
 export const fetchForgot = createAsyncThunk('user/fetchForgot', async (dataForgot) => {
-  const response = await clientApi.forgot(dataForgot);
-  return response.data;
+  // const response = await clientApi.forgot(dataForgot);
+  // return response.data;
+
+    try {
+      const response = await clientApi.forgot(dataForgot);
+      return response.data;
+    } catch (err) {
+      return err.response;
+    }
+
 });
 
 export const updateNewPass = createAsyncThunk('user/updateNewPass', async (dataNewPass) => {
