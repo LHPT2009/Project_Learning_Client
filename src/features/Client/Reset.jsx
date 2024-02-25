@@ -98,7 +98,10 @@ export default function Reset() {
       });
       navigate('/login');
     } catch (error) {
-      console.error('Error while submitting form:', error);
+      message.error({
+        style: { marginTop: '7vh' },
+        content: t(`${MESSAGE.LOGIN.ERRORSERVER}`),
+      });
     }
   };
 

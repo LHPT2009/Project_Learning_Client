@@ -10,6 +10,7 @@ const translationsVN = {
       info: 'Thông tin cá nhân',
       logout: 'Đăng xuất',
       search: 'Tìm kiếm',
+      contentlogout: 'Cảm ơn bạn đã sử dụng dịch vụ!'
     },
     columncontent: {
       login: {
@@ -267,7 +268,8 @@ const translationsVN = {
         title1: 'Trang chủ',
         title2: 'Danh sách chuyên khoa',
         search: 'Nhập tên chuyên khoa bạn muốn tìm...'
-      }
+      },
+      atl: 'Đang cập nhật'
     },
     
   },

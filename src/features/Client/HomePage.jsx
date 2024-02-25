@@ -29,7 +29,7 @@ import { fetchSpecialists } from '../Specialist/specialistSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import { TRANSLATIONS } from '../../constants';
+import { PLACEHOLDER, TRANSLATIONS } from '../../constants';
 import CheckToken from '../../utils/CheckToken';
 import { fetchRefreshToken } from 'features/Jwt/jwtSlice';
 import Cookies from 'js-cookie';
@@ -459,7 +459,7 @@ const HomePage = () => {
             <>
               <Result
                 status="info"
-                title="Đang trong quá trình cập nhật..."
+                title={`${t(PLACEHOLDER.ALT)}`}
                 style={{
                   width: '100%',
                   height: '300px',
@@ -555,7 +555,7 @@ const HomePage = () => {
             <>
               <Result
                 status="info"
-                title="Đang trong quá trình cập nhật..."
+                title={`${t(PLACEHOLDER.ALT)}`}
                 style={{
                   width: '100%',
                   height: '300px',

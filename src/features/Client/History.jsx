@@ -7,7 +7,7 @@ import NoImage from '../../asset/image/NoImage.png';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { fetchGetBookingByUserId } from '../Booking/bookingSlice';
 import { LoadingOutlined } from '@ant-design/icons';
-import { TRANSLATIONS } from '../../constants';
+import { TRANSLATIONS, PLACEHOLDER } from '../../constants';
 import { useTranslation } from 'react-i18next';
  
 function formatTime(timeString) {
@@ -344,7 +344,7 @@ export default function History() {
                 {data && data.urlNameImage !== null ? (
                   <Image
                     src={`${data.urlNameImage}`}
-                    alt="đang cập nhật"
+                    alt= {t(`${PLACEHOLDER.ALT}`)}
                     width={'140px'}
                     height={'140px'}
                     style={{
@@ -358,7 +358,7 @@ export default function History() {
                 ) : (
                   <Image
                     src={NoImage}
-                    alt="đang cập nhật"
+                    alt= {t(`${PLACEHOLDER.ALT}`)}
                     width={'120px'}
                     height={'140px'}
                     style={{

@@ -78,28 +78,28 @@ const ListSpecialists = () => {
         <Content style={{ padding: '0px 50px' }}>
           <Space direction="vertical" size="middle">
             <Title level={2} style={{ lineHeight: '15px' }}>
-              {t('description.columncontent.listdoctor.title1')}
+              {t(`${TRANSLATIONS.LISTDOCTOR.TITLE1}`)}
             </Title>
             <Title level={3} style={{ lineHeight: '25px' }}>
-              {t('description.columncontent.listdoctor.title2')}
+              {t(`${TRANSLATIONS.LISTDOCTOR.TITLE2}`)}
             </Title>
             <Title level={4} style={{ lineHeight: '20px' }}>
-              {t('description.columncontent.listdoctor.title3')}
+              {t(`${TRANSLATIONS.LISTDOCTOR.TITLE3}`)}
             </Title>
             <Text style={{ lineHeight: '15px' }}>
-              {t('description.columncontent.listdoctor.title4')}
+              {t(`${TRANSLATIONS.LISTDOCTOR.TITLE4}`)}
             </Text>
             <Text style={{ lineHeight: '15px' }}>
-              {t('description.columncontent.listdoctor.title5')}
+              {t(`${TRANSLATIONS.LISTDOCTOR.TITLE5}`)}
             </Text>
             <Text style={{ lineHeight: '15px' }}>
-              {t('description.columncontent.listdoctor.title6')}
+              {t(`${TRANSLATIONS.LISTDOCTOR.TITLE6}`)}
             </Text>
             <Text style={{ lineHeight: '15px' }}>
-              {t('description.columncontent.listdoctor.title7')}{' '}
+              {t(`${TRANSLATIONS.LISTDOCTOR.TITLE7}`)}{' '}
             </Text>
             <Text style={{ lineHeight: '15px' }}>
-              {t('description.columncontent.listdoctor.title8')}
+              {t(`${TRANSLATIONS.LISTDOCTOR.TITLE8}`)}
             </Text>
           </Space>
         </Content>
@@ -109,7 +109,7 @@ const ListSpecialists = () => {
           <Breadcrumb
             items={[
               {
-                title:  t(`${TRANSLATIONS.LISTSPECIALISTS.TITLE1}`),
+                title: t(`${TRANSLATIONS.LISTSPECIALISTS.TITLE1}`),
               },
               {
                 title: t(`${TRANSLATIONS.LISTSPECIALISTS.TITLE2}`),

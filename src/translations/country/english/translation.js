@@ -10,6 +10,7 @@ const translationsEN = {
       info: 'Personal Information',
       logout: 'Logout',
       search: 'Search',
+      contentlogout: 'Thank you for using the service!'
     },
     columncontent: {
       login: {
@@ -215,6 +216,8 @@ const translationsEN = {
         require: 'Please log in before booking',
         choiceday: 'Select day',
         choicepackage: 'Select package',
+        choicetime: 'Please select your times',
+        login: 'Please login!'
       },
       forgotpass: {
         title: 'Forgot password',
@@ -348,7 +351,8 @@ const translationsEN = {
         title1: 'Home',
         title2: 'List of Specializations',
         search: 'Enter the specialization name you want to find...'
-      }
+      },
+      atl: 'Updating'
     },
   },
 };

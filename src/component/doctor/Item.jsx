@@ -149,17 +149,17 @@ const DataItem = ({ dataItem }) => {
     if (idSchedules === undefined && timeSchedules === undefined) {
       message.error({
         style: { marginTop: '7vh' },
-        content: 'Chọn thời gian của bạn!',
+        content: t(`${MESSAGE.ITEM.TIME}`),
       });
     } else if (idPackage === undefined && pricePakage === undefined) {
       message.error({
         style: { marginTop: '7vh' },
-        content: 'Chọn gói khám của bạn!',
+        content: t(`${MESSAGE.ITEM.PACKAGE}`),
       });
     } else if (checkUser === undefined) {
       message.error({
         style: { marginTop: '7vh' },
-        content: 'Mời bạn đăng nhập!',
+        content: t(`${MESSAGE.ITEM.LOGIN}`),
       });
       navigate('/login');
     } else {

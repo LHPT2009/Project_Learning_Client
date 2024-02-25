@@ -93,7 +93,10 @@ export default function ForgotPassword() {
           });
       });
     } catch (error) {
-      console.error('Error while submitting form:', error);
+      message.error({
+        style: { marginTop: '7vh' },
+        content: t(`${MESSAGE.LOGIN.ERRORSERVER}`),
+      });
     }
   };
 

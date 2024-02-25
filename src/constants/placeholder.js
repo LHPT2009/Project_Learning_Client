@@ -5,5 +5,6 @@ export const PLACEHOLDER = {
     },
     REGISTER: {
         DATEOFBIRTH: 'description.columncontent.register.choiceday'
-    }
+    },
+    ALT: 'description.columncontent.alt'
 };
