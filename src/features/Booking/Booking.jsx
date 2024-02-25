@@ -26,7 +26,7 @@ import * as yup from 'yup';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { fetchPayments } from '../../features/Payment/paymentSlice';
-import { TRANSLATIONS, MESSAGE } from '../../constants';
+import { TRANSLATIONS } from '../../constants';
 
 export default function Booking() {
   // Constants
@@ -68,7 +68,6 @@ export default function Booking() {
 
   const schema = yup
     .object({
-      // description: yup.string().required('Hãy ghi lý do đến khám!'),
       idPaymentMethod: yup.string().required(t(`${TRANSLATIONS.BOOKING.REQUIREPAY}`)),
     })
     .required();
@@ -280,22 +279,17 @@ export default function Booking() {
                   <Title level={3} style={{ color: '#005761' }}>
                     {t(`${TRANSLATIONS.BOOKING.SPECIALIST}`)} {infoBooking.fullNameDoctor}
                   </Title>
-                  {/* <Text>{t('description.columncontent.booking.namehospital')}: {infoDoctor.hospitalsName}</Text> */}
                   <Text>
                     {t(`${TRANSLATIONS.BOOKING.NAMEHOSPITAL}`)}: {infoBooking.hospitalsName}
                   </Text>
                   <Text>
-                    {/* {t('description.columncontent.booking.day')}{' '} */}
                     {t(`${TRANSLATIONS.BOOKING.PACKAGE}`)}: {infoBooking.namePackage}
                   </Text>
                   <Text>
-                    {/* {t('description.columncontent.booking.day')}{' '} */}
                     {t(`${TRANSLATIONS.BOOKING.TIME}`)}:{' '}
                     {formatTimeRange(infoBooking.timeScheduleDetail)}
                   </Text>
                   <Text>
-                    {/* {t('description.columncontent.booking.day')}{' '}
-                     */}
                     {t(`${TRANSLATIONS.BOOKING.DAY}`)} {dayMappingvn[infoBooking.bookingDay]} -{' '}
                     {formatDateShow(infoBooking.bookingDate)}
                   </Text>
