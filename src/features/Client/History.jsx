@@ -58,7 +58,6 @@ export default function History() {
     phone: userInfo ? userInfo.phone : '',
     gender: userInfo ? userInfo.gender : '',
     dob: formatDateBOD(userInfo ? userInfo.dateOfBirth : ''),
-    dob: userInfo ? userInfo.dateOfBirth : '',
     address: userInfo ? userInfo.address : '',
     disease: data && data.description ? data.description : t(`${TRANSLATIONS.HISTORY.DISEASE}`),
     paymentMethod: data ? data.paymentMethod : '',

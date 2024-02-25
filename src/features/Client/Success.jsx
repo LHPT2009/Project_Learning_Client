@@ -33,7 +33,7 @@ export default function Success() {
   // useEffect for loading data
 
   // useEffect for user-related operations
-  useEffect(() => {
+  useEffect(() => {   
     window.scrollTo(0, 0);
   }, []);
   useEffect(() => {
@@ -62,7 +62,7 @@ export default function Success() {
     }
   };
 
-  if (statusPayment === 'cash' && requestData) {
+  if (statusPayment === 'cash') {
     return (
       <div>
         <Spin
@@ -111,28 +111,7 @@ export default function Success() {
       </div>
     );
   }
-  if (statusPayment === 'cash' && !requestData) {
-    return (
-      <div
-        style={{
-          color: '#fff',
-          height: '80vh',
-          color: '#000',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Spin
-          spinning={spinning}
-          indicator={antIcon}
-          fullscreen
-          style={{ background: '#ECF3F4' }}
-        />
-        <Result status="warning" title={t(`${TRANSLATIONS.SUCCESS.TITLENOTFOUND}`)} />
-      </div>
-    );
-  } else if (statusPayment === 'vnpay') {
+   else if (statusPayment === 'vnpay') {
     if (vnp === '24') {
       return (
         <div
@@ -201,7 +180,55 @@ export default function Success() {
           />
         </div>
       );
-    } else if (vnp === null && requestData) {
+    } else if (vnp === "00") {
+      return (
+        <div>
+        <Spin
+          spinning={spinning}
+          indicator={antIcon}
+          fullscreen
+          style={{ background: '#ECF3F4' }}
+        />
+        <div
+          style={{
+            background: '#ECF3F4',
+            height: '70vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Space
+            direction="vertical"
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Image
+              key="custom-image"
+              alt="Custom Image"
+              src={SuccessImage}
+              style={{ width: '237px', height: '237px' }}
+              preview={false}
+            />
+            <Title level={2} style={{ lineHeight: '15px' }}>
+              {t(`${TRANSLATIONS.SUCCESS.TITLE}`)}
+            </Title>
+            <Button
+              type="primary"
+              size="large"
+              onClick={() => navigate('/')}
+              style={{ backgroundColor: '#00ADB3' }}
+            >
+              {t(`${TRANSLATIONS.SUCCESS.BUTTON}`)}
+            </Button>
+          </Space>
+        </div>
+      </div>    
+      );
+    }else if (vnp === null) {
       return (
         <div
           style={{
