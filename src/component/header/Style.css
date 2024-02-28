@@ -1,0 +1,19 @@
+@media (max-width: 650px) {
+  .headerMenu {
+    display: none;
+  }
+
+  .menuIcon {
+    display: inline-block;
+  }
+}
+
+@media (min-width: 651px) {
+  .headerMenu {
+    display: block;
+  }
+
+  .menuIcon {
+    display: none;
+  }
+}
