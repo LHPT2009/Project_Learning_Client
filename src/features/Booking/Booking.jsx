@@ -59,6 +59,7 @@ export default function Booking() {
 
   // Local State
   const [spinning, setSpinning] = useState(true);
+  const [changeWidth, setChangeWidth] = useState(window.innerWidth);
 
   // Redux State
   const infoBooking = useSelector((state) => state.booking.infoBooking);
@@ -100,6 +101,13 @@ export default function Booking() {
     }, 500);
   }, [infoBooking]);
 
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   // Event Handlers
   const isURL = (str) => {
     const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
@@ -120,7 +128,6 @@ export default function Booking() {
 
     return formattedRange;
   };
-  console.log(formatTimeRange);
 
   function formatISODateToDDMMYYYY(isoDateString) {
     const inputDate = new Date(isoDateString);
@@ -129,7 +136,6 @@ export default function Booking() {
     const month = inputDate.getUTCMonth() + 1; // Tháng bắt đầu từ 0
     const year = inputDate.getUTCFullYear();
 
-    // Chuyển đổi thành chuỗi và thêm số 0 nếu cần thiết
     const formattedDay = day < 10 ? `0${day}` : `${day}`;
     const formattedMonth = month < 10 ? `0${month}` : `${month}`;
 
@@ -147,6 +153,22 @@ export default function Booking() {
     return formattedDate;
   };
 
+  function generateString() {
+    const firstTwoChars =
+      String.fromCharCode(Math.floor(Math.random() * 26) + 65) +
+      String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+
+    const remainingChars = Math.random().toString().slice(2, 8);
+
+    const resultString = firstTwoChars + remainingChars;
+
+    return resultString;
+  }
+
+  const handleResize = () => {
+    setChangeWidth(window.innerWidth);
+  };
+
   const sendBooking = (data) => {
     message.destroy();
     setSpinning(true);
@@ -158,6 +180,7 @@ export default function Booking() {
       idScheduleDetail: infoBooking.idScheduleDetail,
       idPaymentMethod: data.idPaymentMethod,
       description: data.description,
+      code: generateString(),
     };
 
     if (formatsending.idPaymentMethod === '1') {
@@ -233,17 +256,28 @@ export default function Booking() {
           style={{ background: '#ECF3F4' }}
         />
         <Layout
-          style={{
-            padding: '0 24px',
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-            height: 'auto',
-            margin: '40px 0',
-            width: '50%',
-            position: 'relative',
-            left: '50%',
-            transform: 'translateX( -50%)',
-          }}
+          style={
+            changeWidth > 750
+              ? {
+                  padding: '24px',
+                  background: colorBgContainer,
+                  borderRadius: borderRadiusLG,
+                  height: 'auto',
+                  margin: '20px',
+                  width: '700px',
+                  position: 'relative',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                }
+              : {
+                  padding: '24px',
+                  background: colorBgContainer,
+                  borderRadius: borderRadiusLG,
+                  height: 'auto',
+                  margin: '20px',
+                  width: 'auto',
+                }
+          }
         >
           <Title
             level={3}

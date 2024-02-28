@@ -11,6 +11,8 @@ import {
   Breadcrumb,
   Input,
   Pagination,
+  Spin,
+  Result,
 } from 'antd';
 import bglist from '../../asset/image/Background_List.png';
 import IconFive from '../../asset/image/Icon_Five.png';
@@ -19,6 +21,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchAllSpecialists } from './specialistSlice';
 import { useNavigate } from 'react-router-dom';
 import { TRANSLATIONS } from '../../constants';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const ListSpecialists = () => {
   // Constants
@@ -35,10 +38,14 @@ const ListSpecialists = () => {
   // Local State
   const [keyword, setKeyword] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [filtered, setFiltered] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [spinningLoading, setSpinningLoading] = useState(false);
 
   // useEffect for loading data
   useEffect(() => {
     dispatch(fetchAllSpecialists());
+    setSpinningLoading(true);
   }, []);
 
   // useEffect for user-related operations
@@ -47,9 +54,18 @@ const ListSpecialists = () => {
   }, []);
 
   // Event Handlers
+  useEffect(() => {
+    const delaySearch = setTimeout(() => {
+      const filteredList = list.filter((item) =>
+        item.name.toLowerCase().includes(keyword.toLowerCase())
+      );
+      setFiltered(filteredList);
+      setTotalItems(filteredList.length);
+      setSpinningLoading(false);
+    }, 1000);
 
-  const filtered = list.filter((item) => item.name.toLowerCase().includes(keyword.toLowerCase()));
-  const totalItems = filtered.length;
+    return () => clearTimeout(delaySearch);
+  }, [keyword, list]);
 
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * pageSize;
@@ -86,21 +102,11 @@ const ListSpecialists = () => {
             <Title level={4} style={{ lineHeight: '20px' }}>
               {t(`${TRANSLATIONS.LISTDOCTOR.TITLE3}`)}
             </Title>
-            <Text style={{ lineHeight: '15px' }}>
-              {t(`${TRANSLATIONS.LISTDOCTOR.TITLE4}`)}
-            </Text>
-            <Text style={{ lineHeight: '15px' }}>
-              {t(`${TRANSLATIONS.LISTDOCTOR.TITLE5}`)}
-            </Text>
-            <Text style={{ lineHeight: '15px' }}>
-              {t(`${TRANSLATIONS.LISTDOCTOR.TITLE6}`)}
-            </Text>
-            <Text style={{ lineHeight: '15px' }}>
-              {t(`${TRANSLATIONS.LISTDOCTOR.TITLE7}`)}{' '}
-            </Text>
-            <Text style={{ lineHeight: '15px' }}>
-              {t(`${TRANSLATIONS.LISTDOCTOR.TITLE8}`)}
-            </Text>
+            <Text style={{ lineHeight: '15px' }}>{t(`${TRANSLATIONS.LISTDOCTOR.TITLE4}`)}</Text>
+            <Text style={{ lineHeight: '15px' }}>{t(`${TRANSLATIONS.LISTDOCTOR.TITLE5}`)}</Text>
+            <Text style={{ lineHeight: '15px' }}>{t(`${TRANSLATIONS.LISTDOCTOR.TITLE6}`)}</Text>
+            <Text style={{ lineHeight: '15px' }}>{t(`${TRANSLATIONS.LISTDOCTOR.TITLE7}`)} </Text>
+            <Text style={{ lineHeight: '15px' }}>{t(`${TRANSLATIONS.LISTDOCTOR.TITLE8}`)}</Text>
           </Space>
         </Content>
       </Header>
@@ -120,50 +126,84 @@ const ListSpecialists = () => {
         <Row style={{ marginBottom: '20px' }}>
           <Input
             width={'100%'}
-            onChange={(e) => setKeyword(e.target.value)}
+            onChange={(e) => {
+              setKeyword(e.target.value);
+              setSpinningLoading(true);
+            }}
             placeholder={t(`${TRANSLATIONS.LISTSPECIALISTS.SEARCH}`)}
             size="large"
           />
         </Row>
-        <Row gutter={[16, 16]} style={{ height: 'auto' }}>
-          {getCurrentPageData().map((item) => (
-            <Col xs={24} sm={12} md={8} lg={6} xl={4} key={item.id}>
-              <Card
-                bodyStyle={{
-                  padding: '10px',
-                  width: '100%',
-                }}
-                hoverable
-                bordered={true}
-                cover={
-                  <Image
-                    preview={false}
-                    alt="example"
-                    src={IconFive}
-                    style={{
-                      height: '200px',
+        <Spin
+          spinning={spinningLoading}
+          indicator={
+            <LoadingOutlined
+              style={{
+                color: '#005761',
+                fontSize: '70px',
+                marginLeft: '-40px',
+                marginTop: '15px',
+              }}
+              spin
+            />
+          }
+          size="large"
+        >
+          {getCurrentPageData().length === 0 ? (
+            <Row
+              style={{
+                height: '500px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Col>
+                <Result title="No Data" />
+              </Col>
+            </Row>
+          ) : (
+            <Row gutter={[16, 16]}>
+              {getCurrentPageData().map((item) => (
+                <Col xs={24} sm={12} md={8} lg={6} xl={4} key={item.id}>
+                  <Card
+                    bodyStyle={{
+                      padding: '10px',
                       width: '100%',
-                      padding: '30px',
                     }}
-                  />
-                }
-                onClick={() => navigate(`/list?specialists=${item.id}`)}
-              >
-                <Text
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: '16px',
-                  }}
-                  strong
-                >
-                  {item.name}
-                </Text>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+                    hoverable
+                    bordered={true}
+                    cover={
+                      <Image
+                        preview={false}
+                        alt="example"
+                        src={IconFive}
+                        style={{
+                          height: '200px',
+                          width: '100%',
+                          padding: '30px',
+                        }}
+                      />
+                    }
+                    onClick={() => navigate(`/list?specialists=${item.id}`)}
+                  >
+                    <Text
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        fontSize: '16px',
+                      }}
+                      strong
+                    >
+                      {item.name}
+                    </Text>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          )}
+        </Spin>
         <Row
           style={{
             display: 'flex',

@@ -1,4 +1,4 @@
-import './style.css';
+import './Style.css';
 import React, { useState } from 'react';
 import {
   Drawer,
@@ -26,8 +26,7 @@ import { fetchGetUserById, fetchClientLogout } from '../../features/Client/clien
 import { fetchGetBookingByUserId } from '../../features/Booking/bookingSlice';
 import { fetchAllSpecialists } from '../../features/Specialist/specialistSlice';
 import Cookies from 'js-cookie';
-import { TRANSLATIONS,MESSAGE } from '../../constants';
-import { fetchCheckAccessToken, fetchRefreshToken } from 'features/Jwt/jwtSlice';
+import { TRANSLATIONS, MESSAGE } from '../../constants';
 
 const { Header } = Layout;
 
@@ -402,7 +401,7 @@ const MenuComponent = () => {
                       width: openMenu ? '100%' : '120px',
                     }}
                   >
-                    {`t(${TRANSLATIONS.HOMEPAGE.WELCOME} ${User ? User.fullName : ''})`}
+                    {`${t(`${TRANSLATIONS.HOMEPAGE.PANNER.WELCOME}`)} ${User ? User.fullName : ''}`}
                     <DownOutlined />
                     <Avatar
                       style={{

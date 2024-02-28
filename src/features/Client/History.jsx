@@ -9,29 +9,29 @@ import { fetchGetBookingByUserId } from '../Booking/bookingSlice';
 import { LoadingOutlined } from '@ant-design/icons';
 import { TRANSLATIONS, PLACEHOLDER } from '../../constants';
 import { useTranslation } from 'react-i18next';
- 
+
 function formatTime(timeString) {
   const [hours, minutes] = timeString.split(':');
   const formattedTime = `${hours}h${minutes}`;
   return formattedTime;
 }
- 
+
 const formatDate = (originalDate) => {
   const [year, month, day] = originalDate.split('-');
   const formattedDate = `${day}/${month}/${year}`;
   return formattedDate;
 };
- 
+
 const formatDateBOD = (originalDate) => {
   const dateObject = new Date(originalDate);
- 
+
   const day = dateObject.getDate().toString().padStart(2, '0');
   const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
   const year = dateObject.getFullYear();
- 
+
   return `${day}/${month}/${year}`;
 };
- 
+
 export default function History() {
   // Constants
   const dispatch = useDispatch();
@@ -44,14 +44,14 @@ export default function History() {
     currency: 'VND',
   });
   const antIcon = <LoadingOutlined style={{ fontSize: 70, color: '#005761' }} spin />;
- 
+
   // Redux State
   const idUser = useSelector((state) => (state.client.client ? state.client.client.id : ''));
   const userInfo = useSelector((state) => state.client.userinfo[0]);
   const listBooking = useSelector((state) => state.booking.listBooking);
- 
+
   // Get Data Redux State
-  const filteredArray = listBooking.filter((item) => item.id ===  parseInt(id));
+  const filteredArray = listBooking.filter((item) => item.id === parseInt(id));
   const data = filteredArray[0];
   const bookingInfo = {
     name: userInfo ? userInfo.fullName : '',
@@ -64,8 +64,8 @@ export default function History() {
     total: formatter.format(data ? data.pricePackage : ''),
     statusTransaction: data ? data.statusTransaction : '',
   };
-  console.log(bookingInfo)
-  
+  console.log(bookingInfo);
+
   const doctorInfo = {
     name: data ? data.fullNameDoctor : '',
     disease: data ? data.specialistName : '',
@@ -80,23 +80,23 @@ export default function History() {
     location: data ? data.addressHospital : '',
     status: data ? data.status : '',
   };
- 
+
   // Local State
   const [spinning, setSpinning] = useState(true);
- 
+
   // useEffect for loading data
- 
+
   // useEffect for user-related operations
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
- 
+
   useEffect(() => {
     if (listBooking === null) {
       navigate('/error');
     }
   }, []);
- 
+
   useEffect(() => {
     dispatch(fetchGetBookingByUserId(idUser)).then((item) => {
       setTimeout(() => {
@@ -104,9 +104,9 @@ export default function History() {
       }, 500);
     });
   }, []);
- 
+
   // Event Handlers
- 
+
   return (
     <div
       className="login-container"
@@ -125,14 +125,14 @@ export default function History() {
           background: 'white',
           borderRadius: '10px',
           padding: '50px 50px',
-          margin: '50px 0',
+          margin: '50px 20px',
         }}
         initialValues={{ remember: true }}
         autoComplete="off"
         layout="horizontal"
       >
         <Row gutter={[16, 16]}>
-          <Col span={8}>
+          <Col span={8} xs={24} sm={24} md={24} lg={24} xl={8}>
             <div
               style={{
                 display: 'flex',
@@ -151,7 +151,7 @@ export default function History() {
               </Button>
             </div>
           </Col>
-          <Col span={8}>
+          <Col span={8} xs={24} sm={24} md={24} lg={24} xl={8}>
             <div
               style={{
                 display: 'flex',
@@ -164,7 +164,7 @@ export default function History() {
               </Text>
             </div>
           </Col>
-          <Col span={8}>
+          <Col span={8} xs={24} sm={24} md={24} lg={24} xl={8}>
             <div
               style={{
                 display: 'flex',
@@ -174,7 +174,7 @@ export default function History() {
             ></div>
           </Col>
         </Row>
- 
+
         <Row gutter={[16, 16]} style={{ justifyContent: 'space-between' }}>
           <Col xs={24} sm={24} md={24} lg={12}>
             <Row gutter={[16, 16]}>
@@ -227,13 +227,13 @@ export default function History() {
                         style={{
                           backgroundColor:
                             value === 'SUCCESS'
-                              ? '#00ADB3'
+                              ? '#B0EEA6'
                               : value === 'PENDING'
                               ? '#E7DE0D'
                               : value === 'CANCELED'
-                              ? '#E7515A'
+                              ? '#ff7676'
                               : '',
-                          color: '#fff',
+                          color: '#000',
                         }}
                         disabled
                       >
@@ -251,7 +251,7 @@ export default function History() {
               </Col>
             </Row>
           </Col>
- 
+
           <Col xs={24} sm={24} md={24} lg={12}>
             <Row>
               <div>
@@ -317,11 +317,11 @@ export default function History() {
                           value === 'BOOKED'
                             ? '#B0EEA6'
                             : value === 'FINISHED'
-                            ? '#E7DE0D'
+                            ? '#e8e6e6'
                             : value === 'CANCELED'
                             ? '#E7515A'
-                            : '#000',
-                        color: '#fff',
+                            : '',
+                        color: '#000',
                       }}
                       disabled
                     >
@@ -343,7 +343,7 @@ export default function History() {
                 {data && data.urlNameImage !== null ? (
                   <Image
                     src={`${data.urlNameImage}`}
-                    alt= {t(`${PLACEHOLDER.ALT}`)}
+                    alt={t(`${PLACEHOLDER.ALT}`)}
                     width={'140px'}
                     height={'140px'}
                     style={{
@@ -357,7 +357,7 @@ export default function History() {
                 ) : (
                   <Image
                     src={NoImage}
-                    alt= {t(`${PLACEHOLDER.ALT}`)}
+                    alt={t(`${PLACEHOLDER.ALT}`)}
                     width={'120px'}
                     height={'140px'}
                     style={{

@@ -141,7 +141,7 @@ export default function ChangePassword() {
       <Form
         name="basic"
         style={{
-          width: '500px',
+          width: '450px',
           height: 'auto',
           background: '#ecf3f4',
           display: 'flex',
