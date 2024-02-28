@@ -153,16 +153,27 @@ export default function Booking() {
     return formattedDate;
   };
 
-  function generateString() {
-    const firstTwoChars =
-      String.fromCharCode(Math.floor(Math.random() * 26) + 65) +
-      String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+  function generateFormattedNumber() {
+    let currentDate = new Date();
 
-    const remainingChars = Math.random().toString().slice(2, 8);
+    let day = currentDate.getDate();
+    let month = currentDate.getMonth() + 1;
 
-    const resultString = firstTwoChars + remainingChars;
+    let dayString = ('0' + day).slice(-2);
+    let monthString = ('0' + month).slice(-2);
+    let randomYear = Math.floor(Math.random() * 100);
+    let yearString = ('00' + randomYear).slice(-2);
 
-    return resultString;
+    function generateRandomUppercaseChars() {
+      return (
+        String.fromCharCode(Math.floor(Math.random() * 26) + 65) +
+        String.fromCharCode(Math.floor(Math.random() * 26) + 65)
+      );
+    }
+    let randomChars = generateRandomUppercaseChars();
+    let formattedNumber = dayString + monthString + yearString;
+    let result = randomChars + formattedNumber;
+    return result;
   }
 
   const handleResize = () => {
@@ -180,7 +191,7 @@ export default function Booking() {
       idScheduleDetail: infoBooking.idScheduleDetail,
       idPaymentMethod: data.idPaymentMethod,
       description: data.description,
-      code: generateString(),
+      code: generateFormattedNumber(),
     };
 
     if (formatsending.idPaymentMethod === '1') {
