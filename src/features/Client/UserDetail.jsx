@@ -40,10 +40,9 @@ function formatISODateToDDMMYYYY(isoDateString) {
   const inputDate = new Date(isoDateString);
 
   const day = inputDate.getUTCDate();
-  const month = inputDate.getUTCMonth() + 1; // Tháng bắt đầu từ 0
+  const month = inputDate.getUTCMonth() + 1;
   const year = inputDate.getUTCFullYear();
 
-  // Chuyển đổi thành chuỗi và thêm số 0 nếu cần thiết
   const formattedDay = day < 10 ? `0${day}` : `${day}`;
   const formattedMonth = month < 10 ? `0${month}` : `${month}`;
 
@@ -125,7 +124,7 @@ const UserDetail = () => {
   }, [infoUser, reset]);
 
   // Local State
-  const [mode, setMode] = useState('left');
+  const [mode, setMode] = useState(window.innerWidth < 651 ? 'top' : 'left');
   const [spinning, setSpinning] = useState(true);
 
   // useEffect for loading data
@@ -151,7 +150,22 @@ const UserDetail = () => {
     }
   }, [infoUser, listBooking, navigate]);
 
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   // Event Handlers
+  const handleResize = () => {
+    if (window.innerWidth < 651) {
+      setMode('top');
+    } else {
+      setMode('left');
+    }
+  };
+
   const routeChangePass = () => {
     navigate('/changepass');
   };
@@ -221,7 +235,7 @@ const UserDetail = () => {
             text = t(`${TRANSLATIONS.USERDETAIL.PAYSTATUS2}`);
             break;
           case 'CANCELED':
-            buttonStyle = { backgroundColor: '#E7515A', color: 'black' };
+            buttonStyle = { backgroundColor: '#ff7676', color: 'black' };
             text = t(`${TRANSLATIONS.USERDETAIL.PAYSTATUS3}`);
             break;
           default:
@@ -248,15 +262,15 @@ const UserDetail = () => {
 
         switch (text) {
           case 'FINISHED':
-            buttonStyle = { backgroundColor: '#b3efa9', color: 'black' };
+            buttonStyle = { backgroundColor: '#e8e6e6', color: 'black' };
             text = t(`${TRANSLATIONS.USERDETAIL.BOOKINGSTATUS1}`);
             break;
           case 'BOOKED':
-            buttonStyle = { backgroundColor: '#f9f69f', color: 'black' };
+            buttonStyle = { backgroundColor: '#B0EEA6', color: 'black' };
             text = t(`${TRANSLATIONS.USERDETAIL.BOOKINGSTATUS2}`);
             break;
           case 'CANCELED':
-            buttonStyle = { backgroundColor: '#f3a5aa', color: 'black' };
+            buttonStyle = { backgroundColor: '#E7515A', color: 'black' };
             text = t(`${TRANSLATIONS.USERDETAIL.BOOKINGSTATUS3}`);
             break;
           default:
@@ -265,7 +279,7 @@ const UserDetail = () => {
 
         return text ? (
           <Button size="small" style={buttonStyle} disabled>
-            {text}
+            <Text style={{ color: '#000' }}>{text}</Text>
           </Button>
         ) : (
           <Button size="small" style={buttonStyle} disabled>
@@ -316,7 +330,7 @@ const UserDetail = () => {
             children: (
               <Card title={t(`${TRANSLATIONS.USERDETAIL.INFO}`)}>
                 <Row>
-                  <Col flex={8}>
+                  <Col xs={24} sm={24} md={24} lg={24} xl={12}>
                     <Space
                       direction="vertical"
                       size="middle"
@@ -324,15 +338,7 @@ const UserDetail = () => {
                       style={{ display: 'flex' }}
                     >
                       <Avatar
-                        style={{ marginTop: '50px' }}
-                        size={{
-                          xs: 24,
-                          sm: 32,
-                          md: 40,
-                          lg: 64,
-                          xl: 80,
-                          xxl: 250,
-                        }}
+                        style={{ marginTop: '50px', width: '250px', height: '250px' }}
                         src={IconAvatar}
                       />
                       <Button disabled type="primary" size="large">
@@ -340,14 +346,9 @@ const UserDetail = () => {
                       </Button>
                     </Space>
                   </Col>
-                  <Col flex={16}>
+                  <Col xs={24} sm={24} md={24} lg={24} xl={12}>
                     <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                      <Form
-                        onFinish={handleSubmit(handleOk)}
-                        // onFinishFailed={handleFailed}
-                        layout="vertical"
-                        // requiredMark={customizeRequiredMark}
-                      >
+                      <Form onFinish={handleSubmit(handleOk)} layout="vertical">
                         <Form.Item
                           label={t(`${TRANSLATIONS.USERDETAIL.FULLNAME}`)}
                           name="fullname"
@@ -447,18 +448,6 @@ const UserDetail = () => {
                           />
                         </Form.Item>
                         <Row gutter={16}>
-                          {/* <Col>
-                          <Form.Item>
-                          <Button
-                            type="primary"
-                            size="large"
-                            style={{ backgroundColor: '#00adb3', width: '100px' }}
-                            htmlType="submit"
-                          >
-                            Lưu
-                          </Button>
-                        </Form.Item>
-                          </Col> */}
                           <Col>
                             <Form.Item>
                               <Button
@@ -494,6 +483,8 @@ const UserDetail = () => {
                     </Text>
                   )}
                   bordered
+                  scroll={{ x: true }}
+                  pagination={{ responsive: true }}
                 />
               </>
             ),
